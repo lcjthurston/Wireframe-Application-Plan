@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import kilowattImage from '../assets/image.png';
 
-const HomePage = ({ onLogout, onNavigate }) => {
+const HomePage = ({ onLogout, onNavigate, onOpenDataEntry }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [userProfile, setUserProfile] = useState({
     name: 'John Doe',
@@ -193,12 +193,21 @@ const HomePage = ({ onLogout, onNavigate }) => {
       {/* Main Dashboard Content */}
       <DashboardContainer>
         <DashboardHeader>
-          <WelcomeMessage>
-            Welcome back, {userProfile.name}! 👋
-          </WelcomeMessage>
-          <DashboardSubtitle>
-            Here's what's happening with your business today
-          </DashboardSubtitle>
+          <HeaderContent>
+            <HeaderLeft>
+              <WelcomeMessage>
+                Welcome back, {userProfile.name}! 👋
+              </WelcomeMessage>
+              <DashboardSubtitle>
+                Here's what's happening with your business today
+              </DashboardSubtitle>
+            </HeaderLeft>
+            <HeaderRight>
+              <NewAccountButton onClick={onOpenDataEntry}>
+                ➕ New Account
+              </NewAccountButton>
+            </HeaderRight>
+          </HeaderContent>
         </DashboardHeader>
 
         <WidgetGrid>
@@ -663,7 +672,41 @@ const DashboardContainer = styled.div`
 
 const DashboardHeader = styled.div`
   margin-bottom: 32px;
-  text-align: center;
+`;
+
+const HeaderContent = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+`;
+
+const HeaderLeft = styled.div`
+  text-align: left;
+`;
+
+const HeaderRight = styled.div`
+  display: flex;
+  gap: 12px;
+`;
+
+const NewAccountButton = styled.button`
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+  }
 `;
 
 const WelcomeMessage = styled.h1`

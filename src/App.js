@@ -7,11 +7,13 @@ import ManagerDashboard from './components/ManagerDashboard';
 import EmailDraftDashboard from './components/EmailDraftDashboard';
 import CommissionDashboard from './components/CommissionDashboard';
 import ProviderDashboard from './components/ProviderDashboard';
+import DataEntryModal from './components/DataEntryModal';
 import './App.css';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [currentPage, setCurrentPage] = useState('home');
+  const [isDataEntryModalOpen, setIsDataEntryModalOpen] = useState(false);
 
   const handleLogin = () => {
     setIsLoggedIn(true);
@@ -27,10 +29,23 @@ function App() {
     setCurrentPage(page);
   };
 
+  const handleOpenDataEntry = () => {
+    setIsDataEntryModalOpen(true);
+  };
+
+  const handleCloseDataEntry = () => {
+    setIsDataEntryModalOpen(false);
+  };
+
+  const handleSaveDataEntry = (data) => {
+    console.log('Saving data entry:', data);
+    // TODO: Implement data saving logic
+  };
+
   const renderPage = () => {
     switch (currentPage) {
       case 'home':
-        return <HomePage onLogout={handleLogout} onNavigate={handleNavigation} />;
+        return <HomePage onLogout={handleLogout} onNavigate={handleNavigation} onOpenDataEntry={handleOpenDataEntry} />;
       case 'task-queue':
         return <TaskQueue onLogout={handleLogout} onNavigate={handleNavigation} />;
       case 'accounts':
@@ -51,7 +66,15 @@ function App() {
   return (
     <div className="App">
       {isLoggedIn ? (
-        renderPage()
+        <>
+          {renderPage()}
+          <DataEntryModal
+            isOpen={isDataEntryModalOpen}
+            onClose={handleCloseDataEntry}
+            onSave={handleSaveDataEntry}
+            onNavigate={handleNavigation}
+          />
+        </>
       ) : (
         <LoginPage onLogin={handleLogin} />
       )}
