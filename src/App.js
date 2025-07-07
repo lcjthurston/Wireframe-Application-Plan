@@ -5,6 +5,7 @@ import TaskQueue from './components/TaskQueue';
 import AccountDashboard from './components/AccountDashboard';
 import ManagerDashboard from './components/ManagerDashboard';
 import EmailDraftDashboard from './components/EmailDraftDashboard';
+import CommissionDashboard from './components/CommissionDashboard';
 import './App.css';
 
 function App() {
@@ -37,6 +38,8 @@ function App() {
         return <ManagerDashboard onLogout={handleLogout} onNavigate={handleNavigation} />;
       case 'email-drafts':
         return <EmailDraftDashboard onLogout={handleLogout} onNavigate={handleNavigation} />;
+      case 'commissions':
+        return <CommissionDashboard onLogout={handleLogout} onNavigate={handleNavigation} />;
       default:
         return <HomePage onLogout={handleLogout} onNavigate={handleNavigation} />;
     }
