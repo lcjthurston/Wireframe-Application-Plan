@@ -8,6 +8,7 @@ import EmailDraftDashboard from './components/EmailDraftDashboard';
 import CommissionDashboard from './components/CommissionDashboard';
 import ProviderDashboard from './components/ProviderDashboard';
 import DataEntryModal from './components/DataEntryModal';
+import SystemHealthDashboard from './components/SystemHealthDashboard';
 import './App.css';
 
 function App() {
@@ -58,6 +59,8 @@ function App() {
         return <CommissionDashboard onLogout={handleLogout} onNavigate={handleNavigation} />;
       case 'providers':
         return <ProviderDashboard onLogout={handleLogout} onNavigate={handleNavigation} />;
+      case 'system-health':
+        return <SystemHealthDashboard onLogout={handleLogout} onNavigate={handleNavigation} />;
       default:
         return <HomePage onLogout={handleLogout} onNavigate={handleNavigation} />;
     }
