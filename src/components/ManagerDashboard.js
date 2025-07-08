@@ -427,8 +427,8 @@ const NavigationBar = styled.nav`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 32px;
-  height: 72px;
+  padding: 0 40px;
+  height: 100px;
   background: ${colors.primary};
   border-bottom: 1px solid ${colors.border};
   position: sticky;
@@ -437,10 +437,9 @@ const NavigationBar = styled.nav`
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   width: 100vw;
   max-width: 100vw;
-  overflow-x: auto;
   @media (max-width: 768px) {
-    padding: 0 8px;
-    height: 64px;
+    padding: 0 12px;
+    height: 80px;
   }
 `;
 
@@ -461,13 +460,14 @@ const NavCenter = styled.div`
 
 const NavLinks = styled.div`
   display: flex;
-  gap: 32px;
+  flex-wrap: wrap;
+  gap: 24px 32px;
   justify-content: center;
   align-items: center;
-  flex-wrap: wrap;
   width: auto;
   max-width: 100vw;
-  overflow-x: auto;
+  overflow-x: visible;
+  row-gap: 16px;
 `;
 
 const NavRight = styled.div`
@@ -974,7 +974,7 @@ const NavLink = styled.button`
   font-weight: 500;
   color: ${props => props.active ? colors.background : 'rgba(255,255,255,0.8)'};
   cursor: pointer;
-  padding: 12px 24px;
+  padding: 18px 28px;
   border-radius: 8px;
   transition: all 0.3s ease;
   position: relative;
