@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import kilowattImage from '../assets/image.png';
 import colors from '../assets/colors';
@@ -6,6 +6,8 @@ import colors from '../assets/colors';
 const AccountDashboard = ({ onLogout, onNavigate }) => {
   const [activeTab, setActiveTab] = useState('overview');
   const [showManagerModal, setShowManagerModal] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef();
 
   // Mock account data
   const account = {
@@ -127,6 +129,22 @@ const AccountDashboard = ({ onLogout, onNavigate }) => {
     { id: 'activity', label: 'Activity History' }
   ];
 
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownOpen(false);
+      }
+    }
+    if (dropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [dropdownOpen]);
+
   return (
     <PageContainer>
       {/* Dynamic Background Layers */}
@@ -154,21 +172,20 @@ const AccountDashboard = ({ onLogout, onNavigate }) => {
             <NavLink active onClick={() => handleNavigation('accounts')}>
               Accounts
             </NavLink>
-            <NavLink onClick={() => handleNavigation('managers')}>
-              Managers
-            </NavLink>
-            <NavLink onClick={() => handleNavigation('email-drafts')}>
-              Email Drafts
-            </NavLink>
-            <NavLink onClick={() => handleNavigation('commissions')}>
-              Commissions
-            </NavLink>
-            <NavLink onClick={() => handleNavigation('providers')}>
-              Providers
-            </NavLink>
-            <NavLink onClick={() => handleNavigation('system-health')}>
-              System Health
-            </NavLink>
+            <DropdownContainer ref={dropdownRef}>
+              <MoreOptionsButton onClick={() => setDropdownOpen(v => !v)}>
+                More Options ▼
+              </MoreOptionsButton>
+              {dropdownOpen && (
+                <NavDropdownMenu>
+                  <NavDropdownItem onClick={() => { setDropdownOpen(false); handleNavigation('managers'); }}>Managers</NavDropdownItem>
+                  <NavDropdownItem onClick={() => { setDropdownOpen(false); handleNavigation('email-drafts'); }}>Email Drafts</NavDropdownItem>
+                  <NavDropdownItem onClick={() => { setDropdownOpen(false); handleNavigation('commissions'); }}>Commissions</NavDropdownItem>
+                  <NavDropdownItem onClick={() => { setDropdownOpen(false); handleNavigation('providers'); }}>Providers</NavDropdownItem>
+                  <NavDropdownItem onClick={() => { setDropdownOpen(false); handleNavigation('system-health'); }}>System Health</NavDropdownItem>
+                </NavDropdownMenu>
+              )}
+            </DropdownContainer>
           </NavLinks>
         </NavCenter>
 
@@ -1266,6 +1283,49 @@ const NavLink = styled.button`
     color: ${colors.background};
     box-shadow: 0 2px 8px rgba(0,0,0,0.08);
   `}
+`;
+
+const DropdownContainer = styled.div`
+  position: relative;
+  display: inline-block;
+`;
+
+const MoreOptionsButton = styled(NavLink)`
+  padding-right: 36px;
+  &::after {
+    content: '';
+    display: inline-block;
+    margin-left: 8px;
+  }
+`;
+
+const NavDropdownMenu = styled.div`
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: ${colors.primary};
+  border: 1px solid ${colors.border};
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+  min-width: 180px;
+  z-index: 1000;
+  padding: 8px 0;
+`;
+
+const NavDropdownItem = styled.button`
+  width: 100%;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.1rem;
+  text-align: left;
+  padding: 12px 24px;
+  cursor: pointer;
+  transition: background 0.2s;
+  &:hover {
+    background: ${colors.accent1};
+    color: ${colors.background};
+  }
 `;
 
 export default AccountDashboard; 
