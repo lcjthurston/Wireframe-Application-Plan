@@ -1,13 +1,15 @@
 # Kilowatt Business Intelligence Application
 
-A React-based business intelligence application for managing accounts, tasks, commissions, and system automation.
+A React-based business intelligence application for managing accounts, tasks, commissions, and system automation. Built with Material-UI (MUI) for a modern, professional interface.
 
 ## Features
 
-- **Login Page**: Secure authentication with form validation
-- **Responsive Design**: Mobile-first approach with styled-components
-- **Modern UI**: Clean, professional interface following design system
-- **Accessibility**: WCAG compliant with proper focus management
+- **Modern UI**: Material-UI components with professional styling
+- **Responsive Design**: Mobile-first approach with MUI's responsive system
+- **Dashboard Components**: Multiple specialized dashboards for different business functions
+- **Authentication**: Secure login system with form validation
+- **Data Management**: Comprehensive data entry and management capabilities
+- **System Monitoring**: Real-time system health and automation monitoring
 
 ## Getting Started
 
@@ -41,41 +43,131 @@ npm start
 ```
 src/
 ├── components/
-│   └── LoginPage.js          # Login page component
-├── App.js                    # Main app component
-├── App.css                   # Global styles
-└── index.js                  # Application entry point
+│   ├── LoginPage.js              # MUI-styled login component
+│   ├── HomePage.js               # MUI-styled main dashboard
+│   ├── SystemHealthDashboard.js  # MUI-styled system monitoring
+│   ├── CommissionDashboard.js    # MUI-styled commission tracking
+│   ├── EmailDraftDashboard.js    # MUI-styled email management
+│   ├── AccountDashboard.js       # Account management (styled-components)
+│   ├── ManagerDashboard.js       # Manager management (styled-components)
+│   ├── TaskQueue.js              # Task queue management (styled-components)
+│   ├── ProviderDashboard.js      # Provider management (styled-components)
+│   └── DataEntryModal.js         # Data entry modal (styled-components)
+├── assets/
+│   ├── colors.js                 # Color definitions
+│   └── image.png                 # Application logo
+├── theme.js                      # MUI theme configuration
+├── App.js                        # Main app component with MUI ThemeProvider
+├── App.css                       # Global styles
+└── index.js                      # Application entry point
 ```
+
+## Technology Stack
+
+### Frontend
+- **React 18**: Modern React with hooks
+- **Material-UI (MUI)**: Professional UI component library
+- **Styled-Components**: CSS-in-JS styling (legacy components)
+- **React Router**: Navigation (planned)
+
+### Styling
+- **MUI Theme**: Custom theme with professional color palette
+- **Responsive Design**: Mobile-first approach
+- **Typography**: Inter font family with consistent hierarchy
+- **Animations**: Smooth transitions and hover effects
 
 ## Design System
 
-### Colors
-- **Primary Blue**: `#3b82f6`
-- **Background**: `#f8fafc`
-- **Text Primary**: `#1f2937`
-- **Text Secondary**: `#374151`
-- **Border**: `#d1d5db`
-- **Error**: `#ef4444`
+### MUI Theme Configuration
+- **Primary**: Blue (`#1976d2`) - Main brand color
+- **Secondary**: Red (`#dc004e`) - Accent color
+- **Success**: Green (`#4caf50`) - Positive states
+- **Warning**: Orange (`#ff9800`) - Warning states
+- **Error**: Red (`#f44336`) - Error states
+- **Info**: Blue (`#2196f3`) - Information states
 
 ### Typography
-- **Font Family**: Inter, system fonts
+- **Font Family**: Inter, Roboto, system fonts
 - **Font Weights**: 400, 500, 600, 700
-- **Responsive**: Scales appropriately on mobile devices
+- **Responsive**: Scales appropriately on all devices
 
-### Spacing
-- **Container Padding**: 48px (desktop), 32px (mobile)
-- **Form Spacing**: 24px between form groups
-- **Input Height**: 48px (desktop), 44px (mobile)
+### Components
+- **Cards**: Elevated with hover effects
+- **Buttons**: Consistent styling with proper states
+- **Forms**: Professional input fields with validation
+- **Tables**: Sortable data tables with actions
+- **Navigation**: Modern AppBar with responsive design
 
-## Components
+## Dashboard Components
 
-### LoginPage
-The main login component featuring:
-- Form validation with error handling
-- Loading states
-- Responsive design
-- Accessibility features
-- Smooth animations
+### ✅ MUI-Converted Components
+
+#### LoginPage
+- Modern authentication form
+- Gradient background
+- Form validation with error states
+- Loading spinner
+- Professional styling
+
+#### HomePage
+- Dashboard overview with widgets
+- System health summary
+- Recent activity feed
+- Task statistics
+- Responsive navigation
+
+#### SystemHealthDashboard
+- Automation system monitoring
+- Performance metrics
+- System logs table
+- Status indicators
+- Tabbed interface
+
+#### CommissionDashboard
+- Commission tracking
+- Payment history
+- Financial reports
+- Sortable data tables
+- Status chips
+
+#### EmailDraftDashboard
+- Email queue management
+- Draft previews
+- Bulk actions
+- Filter and sort options
+- Modal dialogs
+
+### 🔄 Legacy Components (Styled-Components)
+
+#### AccountDashboard
+- Account management
+- Account details
+- Usage tracking
+- Contract management
+
+#### ManagerDashboard
+- Manager profiles
+- Account assignments
+- Performance metrics
+- Contact information
+
+#### TaskQueue
+- Task management
+- Priority sorting
+- Status tracking
+- Assignment handling
+
+#### ProviderDashboard
+- Energy provider management
+- Pricing sheets
+- Contract management
+- Provider analytics
+
+#### DataEntryModal
+- Multi-step forms
+- Data validation
+- Account creation
+- Commission entry
 
 ## Available Scripts
 
@@ -84,14 +176,53 @@ The main login component featuring:
 - `npm test` - Launches the test runner
 - `npm eject` - Ejects from Create React App
 
-## Future Enhancements
+## Development Status
 
-- Dashboard implementation
-- Task queue management
-- Account management
-- Commission tracking
-- System health monitoring
-- Email draft management
+### ✅ Completed
+- MUI theme integration
+- Login page with MUI
+- Home dashboard with MUI
+- System health dashboard with MUI
+- Commission dashboard with MUI
+- Email draft dashboard with MUI
+
+### 🔄 In Progress
+- Converting remaining components to MUI
+- Enhancing responsive design
+- Adding more interactive features
+
+### 📋 Planned
+- Complete MUI conversion for all components
+- Advanced data visualization
+- Real-time updates
+- Enhanced accessibility
+- Performance optimizations
+
+## Key Features
+
+### Authentication
+- Secure login system
+- Form validation
+- Error handling
+- Loading states
+
+### Dashboard Management
+- Multiple specialized dashboards
+- Real-time data display
+- Interactive charts and tables
+- Status monitoring
+
+### Data Management
+- Comprehensive data entry
+- Bulk operations
+- Search and filtering
+- Export capabilities
+
+### System Monitoring
+- Automation health tracking
+- Performance metrics
+- Error logging
+- Status alerts
 
 ## Contributing
 
