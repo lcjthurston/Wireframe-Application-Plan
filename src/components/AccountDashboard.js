@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import kilowattImage from '../assets/image.png';
+import colors from '../assets/colors';
 
 const AccountDashboard = ({ onLogout, onNavigate }) => {
   const [activeTab, setActiveTab] = useState('overview');
@@ -140,7 +141,9 @@ const AccountDashboard = ({ onLogout, onNavigate }) => {
             <LogoImage src={kilowattImage} alt="Kilowatt" />
             <LogoText>Kilowatt</LogoText>
           </LogoSection>
-          
+        </NavLeft>
+
+        <NavCenter>
           <NavLinks>
             <NavLink onClick={() => handleNavigation('home')}>
               Home
@@ -167,7 +170,7 @@ const AccountDashboard = ({ onLogout, onNavigate }) => {
               System Health
             </NavLink>
           </NavLinks>
-        </NavLeft>
+        </NavCenter>
 
         <NavRight>
           <SearchForm onSubmit={(e) => e.preventDefault()}>
@@ -483,72 +486,19 @@ const PageContainer = styled.div`
   min-height: 100vh;
   position: relative;
   overflow: hidden;
+  background: ${colors.primary};
 `;
 
 const BackgroundGradient = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: 
-    radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
-    radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
-    radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.2) 0%, transparent 50%),
-    linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #f5576c 75%, #4facfe 100%);
-  z-index: 1;
+  display: none;
 `;
 
 const BackgroundPattern = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image: 
-    radial-gradient(circle at 25% 25%, rgba(255,255,255,0.1) 0%, transparent 50%),
-    radial-gradient(circle at 75% 75%, rgba(255,255,255,0.1) 0%, transparent 50%),
-    linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.05) 50%, transparent 70%);
-  z-index: 2;
+  display: none;
 `;
 
 const FloatingShapes = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 2;
-  pointer-events: none;
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 10%;
-    left: 10%;
-    width: 100px;
-    height: 100px;
-    background: linear-gradient(45deg, rgba(255, 119, 198, 0.1), rgba(120, 119, 198, 0.1));
-    border-radius: 50%;
-    animation: float 6s ease-in-out infinite;
-  }
-
-  &::after {
-    content: '';
-    position: absolute;
-    top: 60%;
-    right: 15%;
-    width: 150px;
-    height: 150px;
-    background: linear-gradient(45deg, rgba(120, 219, 255, 0.1), rgba(255, 119, 198, 0.1));
-    border-radius: 50%;
-    animation: float 8s ease-in-out infinite reverse;
-  }
-
-  @keyframes float {
-    0%, 100% { transform: translateY(0px) rotate(0deg); }
-    50% { transform: translateY(-20px) rotate(180deg); }
-  }
+  display: none;
 `;
 
 const NavigationBar = styled.nav`
@@ -557,16 +507,17 @@ const NavigationBar = styled.nav`
   align-items: center;
   padding: 0 32px;
   height: 72px;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  background: ${colors.primary};
+  border-bottom: 1px solid ${colors.border};
   position: sticky;
   top: 0;
   z-index: 100;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  width: 100vw;
+  max-width: 100vw;
+  overflow-x: auto;
   @media (max-width: 768px) {
-    padding: 0 16px;
+    padding: 0 8px;
     height: 64px;
   }
 `;
@@ -574,11 +525,34 @@ const NavigationBar = styled.nav`
 const NavLeft = styled.div`
   display: flex;
   align-items: center;
-  gap: 48px;
+  gap: 24px;
+`;
 
-  @media (max-width: 768px) {
-    gap: 24px;
-  }
+const NavCenter = styled.div`
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  min-width: 0;
+`;
+
+const NavLinks = styled.div`
+  display: flex;
+  gap: 32px;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  width: auto;
+  max-width: 100vw;
+  overflow-x: auto;
+`;
+
+const NavRight = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex-shrink: 0;
 `;
 
 const LogoSection = styled.div`
@@ -599,45 +573,6 @@ const LogoText = styled.span`
   font-weight: 700;
   color: white;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-`;
-
-const NavLinks = styled.div`
-  display: flex;
-  gap: 32px;
-
-  @media (max-width: 1024px) {
-    display: none;
-  }
-`;
-
-const NavLink = styled.button`
-  background: none;
-  border: none;
-  font-size: 14px;
-  font-weight: 500;
-  color: ${props => props.active ? 'white' : 'rgba(255, 255, 255, 0.8)'};
-  cursor: pointer;
-  padding: 8px 16px;
-  border-radius: 8px;
-  transition: all 0.3s ease;
-  position: relative;
-
-  &:hover {
-    color: white;
-    background: rgba(255, 255, 255, 0.1);
-  }
-
-  ${props => props.active && `
-    background: rgba(255, 255, 255, 0.2);
-    color: white;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  `}
-`;
-
-const NavRight = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 24px;
 `;
 
 const SearchForm = styled.form`

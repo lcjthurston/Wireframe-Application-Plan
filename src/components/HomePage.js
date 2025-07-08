@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import kilowattImage from '../assets/image.png';
+import colors from '../assets/colors';
 
 const HomePage = ({ onLogout, onNavigate, onOpenDataEntry }) => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -355,72 +356,19 @@ const PageContainer = styled.div`
   min-height: 100vh;
   position: relative;
   overflow: hidden;
+  background: ${colors.primary};
 `;
 
 const BackgroundGradient = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: 
-    radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
-    radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
-    radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.2) 0%, transparent 50%),
-    linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #f5576c 75%, #4facfe 100%);
-  z-index: 1;
+  display: none;
 `;
 
 const BackgroundPattern = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image: 
-    radial-gradient(circle at 25% 25%, rgba(255,255,255,0.1) 0%, transparent 50%),
-    radial-gradient(circle at 75% 75%, rgba(255,255,255,0.1) 0%, transparent 50%),
-    linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.05) 50%, transparent 70%);
-  z-index: 2;
+  display: none;
 `;
 
 const FloatingShapes = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 2;
-  pointer-events: none;
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 10%;
-    left: 10%;
-    width: 100px;
-    height: 100px;
-    background: linear-gradient(45deg, rgba(255, 119, 198, 0.1), rgba(120, 119, 198, 0.1));
-    border-radius: 50%;
-    animation: float 6s ease-in-out infinite;
-  }
-
-  &::after {
-    content: '';
-    position: absolute;
-    top: 60%;
-    right: 15%;
-    width: 150px;
-    height: 150px;
-    background: linear-gradient(45deg, rgba(120, 219, 255, 0.1), rgba(255, 119, 198, 0.1));
-    border-radius: 50%;
-    animation: float 8s ease-in-out infinite reverse;
-  }
-
-  @keyframes float {
-    0%, 100% { transform: translateY(0px) rotate(0deg); }
-    50% { transform: translateY(-20px) rotate(180deg); }
-  }
+  display: none;
 `;
 
 const NavigationBar = styled.nav`
@@ -429,14 +377,12 @@ const NavigationBar = styled.nav`
   align-items: center;
   padding: 0 32px;
   height: 72px;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  background: ${colors.primary};
+  border-bottom: 1px solid ${colors.border};
   position: sticky;
   top: 0;
   z-index: 100;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   @media (max-width: 768px) {
     padding: 0 16px;
     height: 64px;
@@ -467,10 +413,9 @@ const LogoImage = styled.img`
 `;
 
 const LogoText = styled.span`
-  font-size: 20px;
+  font-size: 2.5rem;
   font-weight: 700;
-  color: white;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  color: ${colors.background};
 `;
 
 const NavLinks = styled.div`
@@ -485,24 +430,22 @@ const NavLinks = styled.div`
 const NavLink = styled.button`
   background: none;
   border: none;
-  font-size: 14px;
+  font-size: 1.25rem;
   font-weight: 500;
-  color: ${props => props.active ? 'white' : 'rgba(255, 255, 255, 0.8)'};
+  color: ${props => props.active ? colors.background : 'rgba(255,255,255,0.8)'};
   cursor: pointer;
-  padding: 8px 16px;
+  padding: 12px 24px;
   border-radius: 8px;
   transition: all 0.3s ease;
   position: relative;
-
   &:hover {
-    color: white;
-    background: rgba(255, 255, 255, 0.1);
+    color: ${colors.background};
+    background: ${colors.accent1};
   }
-
   ${props => props.active && `
-    background: rgba(255, 255, 255, 0.2);
-    color: white;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    background: ${colors.accent1};
+    color: ${colors.background};
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
   `}
 `;
 
@@ -515,13 +458,11 @@ const NavRight = styled.div`
 const SearchForm = styled.form`
   display: flex;
   align-items: center;
-  background: rgba(255, 255, 255, 0.15);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: ${colors.background};
+  border: 1px solid ${colors.border};
   border-radius: 12px;
   padding: 8px 16px;
   min-width: 300px;
-  backdrop-filter: blur(10px);
-
   @media (max-width: 768px) {
     min-width: 200px;
   }
@@ -530,28 +471,27 @@ const SearchForm = styled.form`
 const SearchInput = styled.input`
   border: none;
   background: none;
-  font-size: 14px;
-  color: white;
+  font-size: 1.25rem;
+  color: ${colors.text};
   flex: 1;
   outline: none;
-
   &::placeholder {
-    color: rgba(255, 255, 255, 0.7);
+    color: #bdbdbd;
+    font-size: 1.25rem;
   }
 `;
 
 const SearchButton = styled.button`
   background: none;
   border: none;
-  font-size: 16px;
+  font-size: 1.5rem;
   cursor: pointer;
   padding: 4px;
   border-radius: 6px;
-  transition: background-color 0.2s ease;
-  color: white;
-
+  color: ${colors.primary};
   &:hover {
-    background: rgba(255, 255, 255, 0.1);
+    background: ${colors.accent1};
+    color: ${colors.background};
   }
 `;
 
@@ -567,16 +507,15 @@ const ProfileButton = styled.button`
   display: flex;
   align-items: center;
   gap: 8px;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: ${colors.background};
+  border: 1px solid ${colors.border};
   cursor: pointer;
-  padding: 8px 12px;
+  padding: 12px 20px;
   border-radius: 8px;
   transition: all 0.3s ease;
-  backdrop-filter: blur(10px);
-
+  font-size: 1.25rem;
   &:hover {
-    background: rgba(255, 255, 255, 0.2);
+    background: ${colors.accent5};
     transform: translateY(-1px);
   }
 `;
@@ -585,20 +524,19 @@ const ProfileAvatar = styled.div`
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background: ${colors.primary};
+  color: ${colors.background};
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 600;
   font-size: 14px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 `;
 
 const ProfileName = styled.span`
   font-size: 14px;
   font-weight: 500;
-  color: white;
+  color: ${colors.text};
 
   @media (max-width: 768px) {
     display: none;
@@ -607,7 +545,7 @@ const ProfileName = styled.span`
 
 const DropdownArrow = styled.span`
   font-size: 12px;
-  color: rgba(255, 255, 255, 0.8);
+  color: ${colors.accent1};
 `;
 
 const DropdownMenu = styled.div`
@@ -615,9 +553,9 @@ const DropdownMenu = styled.div`
   top: 100%;
   right: 0;
   margin-top: 8px;
-  background: rgba(255, 255, 255, 0.95);
+  background: ${colors.background};
   backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid ${colors.border};
   border-radius: 12px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
   min-width: 160px;
@@ -641,12 +579,12 @@ const DropdownItem = styled.button`
   border: none;
   text-align: left;
   font-size: 14px;
-  color: #1e293b;
+  color: ${colors.text};
   cursor: pointer;
   transition: background-color 0.2s ease;
 
   &:hover {
-    background: rgba(102, 126, 234, 0.1);
+    background: ${colors.accent1};
   }
 
   &:first-child {
@@ -692,40 +630,32 @@ const HeaderRight = styled.div`
 `;
 
 const NewAccountButton = styled.button`
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: ${colors.accent1};
   border: none;
-  color: white;
-  padding: 12px 24px;
+  color: ${colors.background};
+  padding: 16px 32px;
   border-radius: 12px;
-  font-size: 14px;
+  font-size: 1.5rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
-
   &:hover {
+    background: ${colors.accent2};
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
   }
 `;
 
 const WelcomeMessage = styled.h1`
-  font-size: 32px;
+  font-size: 2.5rem;
   font-weight: 700;
-  color: white;
+  color: ${colors.background};
   margin-bottom: 8px;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-
-  @media (max-width: 768px) {
-    font-size: 24px;
-  }
 `;
 
 const DashboardSubtitle = styled.p`
-  font-size: 16px;
-  color: rgba(255, 255, 255, 0.9);
+  font-size: 1.25rem;
+  color: ${colors.accent5};
   margin: 0;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 `;
 
 const WidgetGrid = styled.div`
@@ -740,21 +670,19 @@ const WidgetGrid = styled.div`
 `;
 
 const Widget = styled.div`
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(20px);
+  background: ${colors.background};
   border-radius: 16px;
   padding: 24px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+  border: 1px solid ${colors.border};
   grid-column: ${props => props.fullWidth ? '1 / -1' : 'auto'};
   transition: all 0.3s ease;
-
+  color: ${colors.text};
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
-    border-color: rgba(255, 255, 255, 0.3);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+    border-color: ${colors.accent5};
   }
-
   @media (max-width: 768px) {
     padding: 20px;
   }
@@ -768,24 +696,22 @@ const WidgetHeader = styled.div`
 `;
 
 const WidgetTitle = styled.h2`
-  font-size: 18px;
+  font-size: 2rem;
   font-weight: 600;
-  color: white;
+  color: ${colors.primary};
   margin: 0;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 `;
 
 const WidgetAction = styled.button`
   background: none;
   border: none;
-  font-size: 14px;
+  font-size: 1.25rem;
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.8);
+  color: ${colors.accent1};
   cursor: pointer;
   transition: all 0.3s ease;
-
   &:hover {
-    color: white;
+    color: ${colors.accent2};
     transform: translateX(2px);
   }
 `;
@@ -825,13 +751,13 @@ const TaskInfo = styled.div`
 const TaskName = styled.div`
   font-size: 14px;
   font-weight: 500;
-  color: white;
+  color: ${colors.text};
   margin-bottom: 2px;
 `;
 
 const TaskCount = styled.div`
   font-size: 12px;
-  color: rgba(255, 255, 255, 0.7);
+  color: ${colors.accent5};
 `;
 
 const SystemHealthList = styled.div`
@@ -861,7 +787,7 @@ const ProcessInfo = styled.div`
 const ProcessName = styled.div`
   font-size: 14px;
   font-weight: 500;
-  color: white;
+  color: ${colors.text};
   margin-bottom: 2px;
 `;
 
@@ -874,7 +800,7 @@ const ProcessStatus = styled.div`
 
 const ProcessTime = styled.div`
   font-size: 12px;
-  color: rgba(255, 255, 255, 0.7);
+  color: ${colors.accent5};
 `;
 
 const ActivityList = styled.div`
@@ -913,20 +839,20 @@ const ActivityInfo = styled.div`
 
 const ActivityText = styled.div`
   font-size: 14px;
-  color: white;
+  color: ${colors.text};
   margin-bottom: 4px;
   line-height: 1.4;
 `;
 
 const ActivityUser = styled.span`
   font-weight: 600;
-  color: #fbbf24;
+  color: ${colors.accent1};
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 `;
 
 const ActivityTime = styled.div`
   font-size: 12px;
-  color: rgba(255, 255, 255, 0.7);
+  color: ${colors.accent5};
 `;
 
 export default HomePage; 

@@ -1,95 +1,64 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import kilowattImage from '../assets/image.png';
+import colors from '../assets/colors';
 
 // Styled Components
 const PageContainer = styled.div`
   min-height: 100vh;
   position: relative;
   overflow: hidden;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background: ${colors.primary};
+  color: ${colors.textLight};
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
 `;
 
 const BackgroundGradient = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  z-index: -3;
-  pointer-events: none;
+  display: none;
 `;
 
 const BackgroundPattern = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image: 
-    radial-gradient(circle at 25% 25%, rgba(255,255,255,0.1) 0%, transparent 50%),
-    radial-gradient(circle at 75% 75%, rgba(255,255,255,0.1) 0%, transparent 50%);
-  z-index: -2;
+  display: none;
 `;
 
 const FloatingShapes = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: -1;
-  
-  &::before {
-    content: '';
-    position: absolute;
-    top: 20%;
-    left: 10%;
-    width: 100px;
-    height: 100px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 50%;
-    animation: float 6s ease-in-out infinite;
-  }
-  
-  &::after {
-    content: '';
-    position: absolute;
-    top: 60%;
-    right: 15%;
-    width: 150px;
-    height: 150px;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 50%;
-    animation: float 8s ease-in-out infinite reverse;
-  }
-  
-  @keyframes float {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-20px); }
-  }
+  display: none;
 `;
 
 const NavigationBar = styled.nav`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 2rem;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 0 32px;
+  height: 72px;
+  background: ${colors.primary};
+  border-bottom: 1px solid ${colors.border};
   position: sticky;
   top: 0;
   z-index: 100;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  width: 100vw;
+  max-width: 100vw;
+  overflow-x: auto;
+  @media (max-width: 768px) {
+    padding: 0 8px;
+    height: 64px;
+  }
 `;
 
 const NavLeft = styled.div`
   display: flex;
   align-items: center;
-  gap: 2rem;
+  gap: 24px;
+`;
+
+const NavCenter = styled.div`
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  min-width: 0;
 `;
 
 const LogoSection = styled.div`
@@ -107,34 +76,48 @@ const LogoImage = styled.img`
 const LogoText = styled.span`
   font-size: 1.5rem;
   font-weight: bold;
-  color: white;
+  color: ${colors.textLight};
 `;
 
 const NavLinks = styled.div`
   display: flex;
-  gap: 1rem;
+  gap: 32px;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  width: auto;
+  max-width: 100vw;
+  overflow-x: auto;
 `;
 
 const NavLink = styled.button`
   background: none;
   border: none;
-  color: ${props => props.active ? '#ffffff' : 'rgba(255, 255, 255, 0.7)'};
-  padding: 0.5rem 1rem;
-  border-radius: 0.5rem;
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: ${props => props.active ? colors.background : 'rgba(255,255,255,0.8)'};
   cursor: pointer;
+  padding: 12px 24px;
+  border-radius: 8px;
   transition: all 0.3s ease;
-  font-weight: ${props => props.active ? '600' : '400'};
-  
+  position: relative;
+  white-space: nowrap;
   &:hover {
-    background: rgba(255, 255, 255, 0.1);
-    color: white;
+    color: ${colors.background};
+    background: ${colors.accent1};
   }
+  ${props => props.active && `
+    background: ${colors.accent1};
+    color: ${colors.background};
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  `}
 `;
 
 const NavRight = styled.div`
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 24px;
+  flex-shrink: 0;
 `;
 
 const SearchForm = styled.form`
@@ -144,34 +127,34 @@ const SearchForm = styled.form`
 `;
 
 const SearchInput = styled.input`
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: ${colors.border};
+  border: 1px solid ${colors.border};
   border-radius: 0.5rem;
   padding: 0.5rem 1rem;
-  color: white;
+  color: ${colors.textLight};
   width: 300px;
   
   &::placeholder {
-    color: rgba(255, 255, 255, 0.5);
+    color: ${colors.textLight};
   }
   
   &:focus {
     outline: none;
-    border-color: rgba(255, 255, 255, 0.5);
+    border-color: ${colors.accent};
   }
 `;
 
 const SearchButton = styled.button`
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: ${colors.border};
+  border: 1px solid ${colors.border};
   border-radius: 0.5rem;
   padding: 0.5rem;
-  color: white;
+  color: ${colors.textLight};
   cursor: pointer;
   transition: all 0.3s ease;
   
   &:hover {
-    background: rgba(255, 255, 255, 0.2);
+    background: ${colors.accent};
   }
 `;
 
@@ -188,13 +171,13 @@ const PageHeader = styled.div`
 
 const PageTitle = styled.h1`
   font-size: 2.5rem;
-  color: white;
+  color: ${colors.textLight};
   margin-bottom: 0.5rem;
   font-weight: 700;
 `;
 
 const PageSubtitle = styled.p`
-  color: rgba(255, 255, 255, 0.8);
+  color: ${colors.textLight};
   font-size: 1.1rem;
 `;
 
@@ -206,9 +189,9 @@ const StatsGrid = styled.div`
 `;
 
 const StatCard = styled.div`
-  background: rgba(255, 255, 255, 0.1);
+  background: ${colors.border};
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid ${colors.border};
   border-radius: 1rem;
   padding: 1.5rem;
   display: flex;
@@ -231,12 +214,12 @@ const StatContent = styled.div``;
 const StatValue = styled.div`
   font-size: 1.5rem;
   font-weight: bold;
-  color: white;
+  color: ${colors.textLight};
   margin-bottom: 0.25rem;
 `;
 
 const StatLabel = styled.div`
-  color: rgba(255, 255, 255, 0.7);
+  color: ${colors.textLight};
   font-size: 0.9rem;
 `;
 
@@ -244,17 +227,17 @@ const TabContainer = styled.div`
   display: flex;
   gap: 0.5rem;
   margin-bottom: 2rem;
-  background: rgba(255, 255, 255, 0.1);
+  background: ${colors.border};
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid ${colors.border};
   border-radius: 1rem;
   padding: 0.5rem;
 `;
 
 const TabButton = styled.button`
-  background: ${props => props.active ? 'rgba(255, 255, 255, 0.2)' : 'transparent'};
+  background: ${props => props.active ? colors.accent : 'transparent'};
   border: none;
-  color: ${props => props.active ? 'white' : 'rgba(255, 255, 255, 0.7)'};
+  color: ${props => props.active ? colors.textLight : colors.textLight};
   padding: 0.75rem 1.5rem;
   border-radius: 0.5rem;
   cursor: pointer;
@@ -262,22 +245,22 @@ const TabButton = styled.button`
   font-weight: ${props => props.active ? '600' : '400'};
   
   &:hover {
-    background: rgba(255, 255, 255, 0.1);
-    color: white;
+    background: ${colors.border};
+    color: ${colors.accent};
   }
 `;
 
 const TabContent = styled.div`
-  background: rgba(255, 255, 255, 0.1);
+  background: ${colors.border};
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid ${colors.border};
   border-radius: 1rem;
   padding: 2rem;
   min-height: 500px;
 `;
 
 const SectionTitle = styled.h2`
-  color: white;
+  color: ${colors.textLight};
   font-size: 1.5rem;
   margin-bottom: 1.5rem;
   font-weight: 600;
@@ -292,8 +275,8 @@ const AutomationGrid = styled.div`
 `;
 
 const AutomationCard = styled.div`
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: ${colors.border};
+  border: 1px solid ${colors.border};
   border-radius: 1rem;
   padding: 1.5rem;
   transition: all 0.3s ease;
@@ -312,14 +295,14 @@ const AutomationHeader = styled.div`
 `;
 
 const AutomationName = styled.h3`
-  color: white;
+  color: ${colors.textLight};
   font-size: 1.2rem;
   font-weight: 600;
 `;
 
 const AutomationStatus = styled.span`
   background: ${props => props.color};
-  color: white;
+  color: ${colors.textLight};
   padding: 0.25rem 0.75rem;
   border-radius: 1rem;
   font-size: 0.8rem;
@@ -327,7 +310,7 @@ const AutomationStatus = styled.span`
 `;
 
 const AutomationDesc = styled.p`
-  color: rgba(255, 255, 255, 0.7);
+  color: ${colors.textLight};
   margin-bottom: 1rem;
   line-height: 1.5;
 `;
@@ -339,7 +322,7 @@ const AutomationStats = styled.div`
 `;
 
 const AutomationStat = styled.div`
-  color: rgba(255, 255, 255, 0.8);
+  color: ${colors.textLight};
   font-size: 0.9rem;
 `;
 
@@ -352,21 +335,21 @@ const AutomationTable = styled.table`
   th, td {
     padding: 1rem;
     text-align: left;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid ${colors.border};
   }
   
   th {
-    color: white;
+    color: ${colors.textLight};
     font-weight: 600;
-    background: rgba(255, 255, 255, 0.05);
+    background: ${colors.border};
   }
   
   td {
-    color: rgba(255, 255, 255, 0.8);
+    color: ${colors.textLight};
   }
   
   tr:hover {
-    background: rgba(255, 255, 255, 0.05);
+    background: ${colors.border};
   }
 `;
 
@@ -379,21 +362,21 @@ const LogsTable = styled.table`
   th, td {
     padding: 1rem;
     text-align: left;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid ${colors.border};
   }
   
   th {
-    color: white;
+    color: ${colors.textLight};
     font-weight: 600;
-    background: rgba(255, 255, 255, 0.05);
+    background: ${colors.border};
   }
   
   td {
-    color: rgba(255, 255, 255, 0.8);
+    color: ${colors.textLight};
   }
   
   tr:hover {
-    background: rgba(255, 255, 255, 0.05);
+    background: ${colors.border};
   }
 `;
 
@@ -406,7 +389,7 @@ const LogLevel = styled.span`
       default: return '#6b7280';
     }
   }};
-  color: white;
+  color: ${colors.textLight};
   padding: 0.25rem 0.5rem;
   border-radius: 0.25rem;
   font-size: 0.8rem;
@@ -422,8 +405,8 @@ const MetricsGrid = styled.div`
 `;
 
 const MetricCard = styled.div`
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: ${colors.border};
+  border: 1px solid ${colors.border};
   border-radius: 1rem;
   padding: 1.5rem;
   text-align: center;
@@ -436,13 +419,13 @@ const MetricCard = styled.div`
 `;
 
 const MetricName = styled.div`
-  color: rgba(255, 255, 255, 0.7);
+  color: ${colors.textLight};
   font-size: 0.9rem;
   margin-bottom: 0.5rem;
 `;
 
 const MetricValue = styled.div`
-  color: white;
+  color: ${colors.textLight};
   font-size: 2rem;
   font-weight: bold;
   margin-bottom: 0.5rem;
@@ -635,6 +618,8 @@ const SystemHealthDashboard = ({ onLogout, onNavigate }) => {
             <LogoImage src={kilowattImage} alt="Kilowatt" />
             <LogoText>Kilowatt</LogoText>
           </LogoSection>
+        </NavLeft>
+        <NavCenter>
           <NavLinks>
             <NavLink onClick={() => handleNavigation('home')}>Home</NavLink>
             <NavLink onClick={() => handleNavigation('task-queue')}>Task Queue</NavLink>
@@ -645,7 +630,7 @@ const SystemHealthDashboard = ({ onLogout, onNavigate }) => {
             <NavLink onClick={() => handleNavigation('providers')}>Providers</NavLink>
             <NavLink active onClick={() => handleNavigation('system-health')}>System Health</NavLink>
           </NavLinks>
-        </NavLeft>
+        </NavCenter>
         <NavRight>
           <SearchForm onSubmit={handleSearch}>
             <SearchInput

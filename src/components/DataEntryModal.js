@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import kilowattImage from '../assets/image.png';
+import colors from '../assets/colors';
 
 const DataEntryModal = ({ isOpen, onClose, onSave, onNavigate }) => {
   const [currentStep, setCurrentStep] = useState(1);
@@ -678,35 +679,31 @@ const ModalOverlay = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.8);
-  backdrop-filter: blur(10px);
+  background: rgba(200,40,40,0.7);
+  z-index: 1000;
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
-  padding: 20px;
 `;
 
 const ModalContainer = styled.div`
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(20px);
+  background: ${colors.background};
   border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.10);
+  padding: 40px;
+  max-width: 600px;
   width: 100%;
-  max-width: 900px;
-  max-height: 90vh;
-  overflow: hidden;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  color: ${colors.text};
   display: flex;
   flex-direction: column;
 `;
 
-const ModalHeader = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 24px 32px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-  background: rgba(255, 255, 255, 0.9);
+const ModalHeader = styled.h2`
+  font-size: 2rem;
+  font-weight: 700;
+  color: ${colors.primary};
+  text-align: center;
+  margin-bottom: 24px;
 `;
 
 const HeaderLeft = styled.div`
@@ -802,9 +799,14 @@ const StepConnector = styled.div`
 `;
 
 const ModalContent = styled.div`
-  flex: 1;
-  overflow-y: auto;
-  padding: 32px;
+  background: ${colors.background};
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.10);
+  padding: 40px;
+  max-width: 600px;
+  width: 100%;
+  color: ${colors.text};
+  font-size: 1.25rem;
 `;
 
 const StepContent = styled.div``;
