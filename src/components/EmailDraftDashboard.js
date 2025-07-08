@@ -1,13 +1,79 @@
 import React, { useState } from 'react';
-import styled from 'styled-components';
+import {
+  Box,
+  AppBar,
+  Toolbar,
+  Typography,
+  Button,
+  TextField,
+  Card,
+  CardContent,
+  Grid,
+  Avatar,
+  Menu,
+  MenuItem,
+  IconButton,
+  Chip,
+  Container,
+  Paper,
+  Divider,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemIcon,
+  Badge,
+  Tabs,
+  Tab,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Select,
+  FormControl,
+  InputLabel,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails
+} from '@mui/material';
+import {
+  Search as SearchIcon,
+  Dashboard as DashboardIcon,
+  Assignment as TaskIcon,
+  AccountCircle as AccountIcon,
+  Email as EmailIcon,
+  AttachMoney as MoneyIcon,
+  Business as BusinessIcon,
+  HealthAndSafety as HealthIcon,
+  Settings as SettingsIcon,
+  Logout as LogoutIcon,
+  TrendingUp as TrendingUpIcon,
+  Warning as WarningIcon,
+  CheckCircle as CheckCircleIcon,
+  Error as ErrorIcon,
+  FilterList as FilterIcon,
+  Sort as SortIcon,
+  Send as SendIcon,
+  Edit as EditIcon,
+  Delete as DeleteIcon,
+  Visibility as VisibilityIcon,
+  ExpandMore as ExpandMoreIcon,
+  AttachFile as AttachFileIcon
+} from '@mui/icons-material';
+import { styled } from '@mui/material/styles';
 import kilowattImage from '../assets/image.png';
-import colors from '../assets/colors';
 
 const EmailDraftDashboard = ({ onLogout, onNavigate }) => {
   const [selectedEmail, setSelectedEmail] = useState(null);
   const [filterType, setFilterType] = useState('all');
   const [sortBy, setSortBy] = useState('date');
   const [searchQuery, setSearchQuery] = useState('');
+  const [emailDialogOpen, setEmailDialogOpen] = useState(false);
 
   // Mock email data
   const emailDrafts = [
@@ -138,7 +204,6 @@ Kilowatt Team`,
   const handleSearch = (e) => {
     e.preventDefault();
     console.log('Searching for:', searchQuery);
-    // TODO: Implement search functionality
   };
 
   const handleNavigation = (page) => {
@@ -148,21 +213,17 @@ Kilowatt Team`,
     }
   };
 
-  const handleProfileAction = (action) => {
-    console.log('Profile action:', action);
-    if (action === 'logout') {
-      onLogout();
-    }
-  };
-
   const handleEmailAction = (action, emailId) => {
     console.log('Email action:', action, 'for email:', emailId);
-    // TODO: Implement email actions
+    if (action === 'view') {
+      const email = emailDrafts.find(e => e.id === emailId);
+      setSelectedEmail(email);
+      setEmailDialogOpen(true);
+    }
   };
 
   const handleBulkAction = (action) => {
     console.log('Bulk action:', action);
-    // TODO: Implement bulk actions
   };
 
   const getFilteredEmails = () => {
@@ -205,12 +266,11 @@ Kilowatt Team`,
           bValue = b.emailType;
           break;
         default:
-          aValue = a.dateDrafted;
-          bValue = b.dateDrafted;
+          return 0;
       }
 
-      if (aValue > bValue) return -1;
-      if (aValue < bValue) return 1;
+      if (aValue < bValue) return -1;
+      if (aValue > bValue) return 1;
       return 0;
     });
 
@@ -219,894 +279,303 @@ Kilowatt Team`,
 
   const filteredEmails = getFilteredEmails();
 
+  const getEmailTypeColor = (type) => {
+    switch (type) {
+      case 'Pricing Sheet':
+        return 'primary';
+      case 'Contract':
+        return 'success';
+      case 'Manager Change Notification':
+        return 'warning';
+      default:
+        return 'default';
+    }
+  };
+
+  const StyledAppBar = styled(AppBar)(({ theme }) => ({
+    background: 'linear-gradient(135deg, #1976d2 0%, #1565c0 100%)',
+    boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+  }));
+
+  const LogoImage = styled('img')({
+    width: 40,
+    height: 40,
+    marginRight: 12,
+    borderRadius: 8,
+  });
+
+  const DashboardCard = styled(Card)(({ theme }) => ({
+    height: '100%',
+    transition: 'transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out',
+    '&:hover': {
+      transform: 'translateY(-4px)',
+      boxShadow: '0 8px 25px rgba(0,0,0,0.15)',
+    },
+  }));
+
   return (
-    <PageContainer>
-      {/* Dynamic Background Layers */}
-      <BackgroundGradient />
-      <BackgroundPattern />
-      <FloatingShapes />
-      
-      {/* Top Navigation Bar */}
-      <NavigationBar>
-        <NavLeft>
-          <LogoSection>
+    <Box sx={{ minHeight: '100vh', bgcolor: 'background.default' }}>
+      <StyledAppBar position="static">
+        <Toolbar>
+          <Box sx={{ display: 'flex', alignItems: 'center', flexGrow: 1 }}>
             <LogoImage src={kilowattImage} alt="Kilowatt" />
-            <LogoText>Kilowatt</LogoText>
-          </LogoSection>
-        </NavLeft>
+            <Typography variant="h6" component="div" sx={{ fontWeight: 700 }}>
+              Kilowatt
+            </Typography>
+          </Box>
 
-        <NavCenter>
-          <NavLinks>
-            <NavLink onClick={() => handleNavigation('home')}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            <Button color="inherit" onClick={() => handleNavigation('home')}>
               Home
-            </NavLink>
-            <NavLink onClick={() => handleNavigation('task-queue')}>
+            </Button>
+            <Button color="inherit" onClick={() => handleNavigation('task-queue')}>
               Task Queue
-            </NavLink>
-            <NavLink onClick={() => handleNavigation('accounts')}>
+            </Button>
+            <Button color="inherit" onClick={() => handleNavigation('accounts')}>
               Accounts
-            </NavLink>
-            <NavLink onClick={() => handleNavigation('managers')}>
+            </Button>
+            <Button color="inherit" onClick={() => handleNavigation('managers')}>
               Managers
-            </NavLink>
-            <NavLink active onClick={() => handleNavigation('email-drafts')}>
+            </Button>
+            <Button color="inherit" variant="contained" sx={{ bgcolor: 'rgba(255,255,255,0.2)' }}>
               Email Drafts
-            </NavLink>
-            <NavLink onClick={() => handleNavigation('commissions')}>
+            </Button>
+            <Button color="inherit" onClick={() => handleNavigation('commissions')}>
               Commissions
-            </NavLink>
-            <NavLink onClick={() => handleNavigation('providers')}>
+            </Button>
+            <Button color="inherit" onClick={() => handleNavigation('providers')}>
               Providers
-            </NavLink>
-            <NavLink onClick={() => handleNavigation('system-health')}>
+            </Button>
+            <Button color="inherit" onClick={() => handleNavigation('system-health')}>
               System Health
-            </NavLink>
-          </NavLinks>
-        </NavCenter>
+            </Button>
+          </Box>
 
-        <NavRight>
-          <SearchForm onSubmit={handleSearch}>
-            <SearchInput
-              type="text"
-              placeholder="Search emails, accounts, etc..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-            <SearchButton type="submit">
-              🔍
-            </SearchButton>
-          </SearchForm>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, ml: 2 }}>
+            <Paper component="form" onSubmit={handleSearch} sx={{ display: 'flex', alignItems: 'center', px: 2 }}>
+              <TextField
+                size="small"
+                placeholder="Search emails..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                variant="standard"
+                sx={{ minWidth: 200 }}
+                InputProps={{ disableUnderline: true }}
+              />
+              <IconButton type="submit" size="small">
+                <SearchIcon />
+              </IconButton>
+            </Paper>
 
-          <UserProfile>
-            <ProfileDropdown>
-              <ProfileButton>
-                <ProfileAvatar>J</ProfileAvatar>
-                <ProfileName>John Doe</ProfileName>
-                <DropdownArrow>▼</DropdownArrow>
-              </ProfileButton>
-              <DropdownMenu>
-                <DropdownItem onClick={() => handleProfileAction('settings')}>
-                  ⚙️ Settings
-                </DropdownItem>
-                <DropdownItem onClick={() => handleProfileAction('logout')}>
-                  🚪 Logout
-                </DropdownItem>
-              </DropdownMenu>
-            </ProfileDropdown>
-          </UserProfile>
-        </NavRight>
-      </NavigationBar>
+            <IconButton onClick={onLogout} sx={{ color: 'inherit' }}>
+              <LogoutIcon />
+            </IconButton>
+          </Box>
+        </Toolbar>
+      </StyledAppBar>
 
-      {/* Main Content */}
-      <MainContainer>
-        <PageHeader>
-          <PageTitle>Email Draft Dashboard</PageTitle>
-          <PageSubtitle>Review, edit, and send bot-drafted communications</PageSubtitle>
-        </PageHeader>
+      <Container maxWidth="xl" sx={{ py: 4 }}>
+        <Box sx={{ mb: 4 }}>
+          <Typography variant="h4" component="h1" sx={{ fontWeight: 700, mb: 1 }}>
+            Email Draft Dashboard
+          </Typography>
+          <Typography variant="body1" color="text.secondary">
+            Manage and send email drafts to clients and partners
+          </Typography>
+        </Box>
 
-        {/* Filter and Sort Controls */}
-        <ControlsSection>
-          <FilterControls>
-            <FilterGroup>
-              <FilterLabel>Email Type:</FilterLabel>
-              <FilterSelect
-                value={filterType}
-                onChange={(e) => setFilterType(e.target.value)}
-              >
-                {emailTypes.map(type => (
-                  <option key={type.id} value={type.id}>
-                    {type.label} ({type.count})
-                  </option>
-                ))}
-              </FilterSelect>
-            </FilterGroup>
-
-            <FilterGroup>
-              <FilterLabel>Sort By:</FilterLabel>
-              <FilterSelect
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
-              >
-                {sortOptions.map(option => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </FilterSelect>
-            </FilterGroup>
-          </FilterControls>
-
-          <BulkActions>
-            <BulkButton onClick={() => handleBulkAction('approve-all')}>
-              Approve and Send All Selected Standard Emails
-            </BulkButton>
-          </BulkActions>
-        </ControlsSection>
-
-        {/* Email Queue and Preview */}
-        <EmailContainer>
-          {/* Email Queue */}
-          <EmailQueue>
-            <QueueHeader>
-              <QueueTitle>Email Queue ({filteredEmails.length})</QueueTitle>
-            </QueueHeader>
-            <QueueList>
-              {filteredEmails.map(email => (
-                <QueueItem
-                  key={email.id}
-                  selected={selectedEmail?.id === email.id}
-                  onClick={() => setSelectedEmail(email)}
+        {/* Filters and Controls */}
+        <Box sx={{ mb: 4 }}>
+          <Grid container spacing={3} alignItems="center">
+            <Grid item xs={12} md={4}>
+              <FormControl fullWidth>
+                <InputLabel>Filter by Type</InputLabel>
+                <Select
+                  value={filterType}
+                  onChange={(e) => setFilterType(e.target.value)}
+                  label="Filter by Type"
                 >
-                  <EmailInfo>
-                    <EmailRecipient>{email.recipient}</EmailRecipient>
-                    <EmailAccount>{email.account}</EmailAccount>
-                    <EmailType>{email.emailType}</EmailType>
-                    <EmailDate>{email.dateDrafted}</EmailDate>
-                  </EmailInfo>
-                  <EmailActions>
-                    <ActionButton onClick={(e) => {
-                      e.stopPropagation();
-                      handleEmailAction('edit', email.id);
-                    }}>
-                      ✏️ Edit
-                    </ActionButton>
-                    <ActionButton onClick={(e) => {
-                      e.stopPropagation();
-                      handleEmailAction('send', email.id);
-                    }}>
-                      📤 Send
-                    </ActionButton>
-                    <ActionButton onClick={(e) => {
-                      e.stopPropagation();
-                      handleEmailAction('delete', email.id);
-                    }}>
-                      🗑️ Delete
-                    </ActionButton>
-                  </EmailActions>
-                </QueueItem>
-              ))}
-            </QueueList>
-          </EmailQueue>
+                  {emailTypes.map((type) => (
+                    <MenuItem key={type.id} value={type.id}>
+                      {type.label} ({type.count})
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} md={4}>
+              <FormControl fullWidth>
+                <InputLabel>Sort By</InputLabel>
+                <Select
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value)}
+                  label="Sort By"
+                >
+                  {sortOptions.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} md={4}>
+              <Box sx={{ display: 'flex', gap: 2 }}>
+                <Button variant="outlined" onClick={() => handleBulkAction('send')} startIcon={<SendIcon />}>
+                  Send Selected
+                </Button>
+                <Button variant="outlined" onClick={() => handleBulkAction('delete')} startIcon={<DeleteIcon />}>
+                  Delete Selected
+                </Button>
+              </Box>
+            </Grid>
+          </Grid>
+        </Box>
 
-          {/* Preview Pane */}
-          <PreviewPane>
-            {selectedEmail ? (
-              <>
-                <PreviewHeader>
-                  <PreviewTitle>Email Preview</PreviewTitle>
-                  <PreviewActions>
-                    <PreviewButton onClick={() => handleEmailAction('edit', selectedEmail.id)}>
-                      ✏️ Edit & Send
-                    </PreviewButton>
-                    <PreviewButton onClick={() => handleEmailAction('send', selectedEmail.id)}>
-                      📤 Send Now
-                    </PreviewButton>
-                    <PreviewButton danger onClick={() => handleEmailAction('delete', selectedEmail.id)}>
-                      🗑️ Delete Draft
-                    </PreviewButton>
-                  </PreviewActions>
-                </PreviewHeader>
-                <PreviewContent>
-                  <EmailDetails>
-                    <DetailRow>
-                      <DetailLabel>To:</DetailLabel>
-                      <DetailValue>{selectedEmail.recipient}</DetailValue>
-                    </DetailRow>
-                    <DetailRow>
-                      <DetailLabel>Subject:</DetailLabel>
-                      <DetailValue>{selectedEmail.subject}</DetailValue>
-                    </DetailRow>
-                    <DetailRow>
-                      <DetailLabel>Account:</DetailLabel>
-                      <DetailValue>{selectedEmail.account}</DetailValue>
-                    </DetailRow>
-                    <DetailRow>
-                      <DetailLabel>Type:</DetailLabel>
-                      <DetailValue>
-                        <TypeBadge>{selectedEmail.emailType}</TypeBadge>
-                      </DetailValue>
-                    </DetailRow>
-                    <DetailRow>
-                      <DetailLabel>Drafted:</DetailLabel>
-                      <DetailValue>{selectedEmail.dateDrafted}</DetailValue>
-                    </DetailRow>
-                    {selectedEmail.attachments.length > 0 && (
-                      <DetailRow>
-                        <DetailLabel>Attachments:</DetailLabel>
-                        <DetailValue>
-                          {selectedEmail.attachments.map((attachment, index) => (
-                            <AttachmentLink key={index} href="#">
-                              📎 {attachment}
-                            </AttachmentLink>
-                          ))}
-                        </DetailValue>
-                      </DetailRow>
-                    )}
-                  </EmailDetails>
-                  <EmailBody>
-                    <BodyLabel>Message:</BodyLabel>
-                    <BodyContent>{selectedEmail.body}</BodyContent>
-                  </EmailBody>
-                </PreviewContent>
-              </>
-            ) : (
-              <EmptyPreview>
-                <EmptyIcon>📧</EmptyIcon>
-                <EmptyTitle>No Email Selected</EmptyTitle>
-                <EmptyMessage>
-                  Select an email from the queue to preview its content.
-                </EmptyMessage>
-              </EmptyPreview>
-            )}
-          </PreviewPane>
-        </EmailContainer>
-      </MainContainer>
-    </PageContainer>
+        {/* Email Queue */}
+        <Grid container spacing={3}>
+          {filteredEmails.map((email) => (
+            <Grid item xs={12} key={email.id}>
+              <DashboardCard>
+                <CardContent>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
+                    <Box>
+                      <Typography variant="h6" component="h3" sx={{ mb: 1 }}>
+                        {email.subject}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                        To: {email.recipient}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Account: {email.account}
+                      </Typography>
+                    </Box>
+                    <Box sx={{ display: 'flex', gap: 1 }}>
+                      <Chip
+                        label={email.emailType}
+                        color={getEmailTypeColor(email.emailType)}
+                        size="small"
+                      />
+                      <Typography variant="body2" color="text.secondary">
+                        {email.dateDrafted}
+                      </Typography>
+                    </Box>
+                  </Box>
+
+                  <Typography variant="body2" sx={{ mb: 2 }}>
+                    {email.body.substring(0, 150)}...
+                  </Typography>
+
+                  {email.attachments.length > 0 && (
+                    <Box sx={{ mb: 2 }}>
+                      <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                        Attachments:
+                      </Typography>
+                      <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+                        {email.attachments.map((attachment, index) => (
+                          <Chip
+                            key={index}
+                            icon={<AttachFileIcon />}
+                            label={attachment}
+                            size="small"
+                            variant="outlined"
+                          />
+                        ))}
+                      </Box>
+                    </Box>
+                  )}
+
+                  <Box sx={{ display: 'flex', gap: 1 }}>
+                    <Button
+                      size="small"
+                      variant="outlined"
+                      onClick={() => handleEmailAction('view', email.id)}
+                      startIcon={<VisibilityIcon />}
+                    >
+                      View
+                    </Button>
+                    <Button
+                      size="small"
+                      variant="outlined"
+                      onClick={() => handleEmailAction('edit', email.id)}
+                      startIcon={<EditIcon />}
+                    >
+                      Edit
+                    </Button>
+                    <Button
+                      size="small"
+                      variant="contained"
+                      onClick={() => handleEmailAction('send', email.id)}
+                      startIcon={<SendIcon />}
+                    >
+                      Send
+                    </Button>
+                  </Box>
+                </CardContent>
+              </DashboardCard>
+            </Grid>
+          ))}
+        </Grid>
+
+        {/* Email Preview Dialog */}
+        <Dialog
+          open={emailDialogOpen}
+          onClose={() => setEmailDialogOpen(false)}
+          maxWidth="md"
+          fullWidth
+        >
+          {selectedEmail && (
+            <>
+              <DialogTitle>
+                <Typography variant="h6">{selectedEmail.subject}</Typography>
+                <Typography variant="body2" color="text.secondary">
+                  To: {selectedEmail.recipient}
+                </Typography>
+              </DialogTitle>
+              <DialogContent>
+                <Box sx={{ mb: 2 }}>
+                  <Chip
+                    label={selectedEmail.emailType}
+                    color={getEmailTypeColor(selectedEmail.emailType)}
+                    sx={{ mr: 1 }}
+                  />
+                  <Typography variant="body2" color="text.secondary" component="span">
+                    Drafted: {selectedEmail.dateDrafted}
+                  </Typography>
+                </Box>
+                <Typography variant="body1" sx={{ whiteSpace: 'pre-line' }}>
+                  {selectedEmail.body}
+                </Typography>
+                {selectedEmail.attachments.length > 0 && (
+                  <Box sx={{ mt: 2 }}>
+                    <Typography variant="subtitle2" sx={{ mb: 1 }}>
+                      Attachments:
+                    </Typography>
+                    <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+                      {selectedEmail.attachments.map((attachment, index) => (
+                        <Chip
+                          key={index}
+                          icon={<AttachFileIcon />}
+                          label={attachment}
+                          variant="outlined"
+                        />
+                      ))}
+                    </Box>
+                  </Box>
+                )}
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={() => setEmailDialogOpen(false)}>Close</Button>
+                <Button variant="contained" startIcon={<SendIcon />}>
+                  Send Email
+                </Button>
+              </DialogActions>
+            </>
+          )}
+        </Dialog>
+      </Container>
+    </Box>
   );
 };
-
-// Styled Components
-const PageContainer = styled.div`
-  min-height: 100vh;
-  position: relative;
-  overflow: hidden;
-  background: ${colors.primary};
-`;
-
-const BackgroundGradient = styled.div`
-  display: none;
-`;
-
-const BackgroundPattern = styled.div`
-  display: none;
-`;
-
-const FloatingShapes = styled.div`
-  display: none;
-`;
-
-const NavigationBar = styled.nav`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 40px;
-  height: 100px;
-  background: ${colors.primary};
-  border-bottom: 1px solid ${colors.border};
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  width: 100vw;
-  max-width: 100vw;
-  @media (max-width: 768px) {
-    padding: 0 12px;
-    height: 80px;
-  }
-`;
-
-const NavLeft = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 24px;
-`;
-
-const NavCenter = styled.div`
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  min-width: 0;
-`;
-
-const NavLinks = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 24px 32px;
-  justify-content: center;
-  align-items: center;
-  width: auto;
-  max-width: 100vw;
-  overflow-x: visible;
-  row-gap: 16px;
-`;
-
-const NavRight = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 24px;
-  flex-shrink: 0;
-`;
-
-const LogoSection = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 12px;
-`;
-
-const LogoImage = styled.img`
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-`;
-
-const LogoText = styled.span`
-  font-size: 20px;
-  font-weight: 700;
-  color: white;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-`;
-
-const SearchForm = styled.form`
-  display: flex;
-  align-items: center;
-  background: rgba(255, 255, 255, 0.15);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 12px;
-  padding: 8px 16px;
-  min-width: 300px;
-  backdrop-filter: blur(10px);
-
-  @media (max-width: 768px) {
-    min-width: 200px;
-  }
-`;
-
-const SearchInput = styled.input`
-  border: none;
-  background: none;
-  font-size: 14px;
-  color: white;
-  flex: 1;
-  outline: none;
-
-  &::placeholder {
-    color: rgba(255, 255, 255, 0.7);
-  }
-`;
-
-const SearchButton = styled.button`
-  background: none;
-  border: none;
-  font-size: 16px;
-  cursor: pointer;
-  padding: 4px;
-  border-radius: 6px;
-  transition: background-color 0.2s ease;
-  color: white;
-
-  &:hover {
-    background: rgba(255, 255, 255, 0.1);
-  }
-`;
-
-const UserProfile = styled.div`
-  position: relative;
-`;
-
-const ProfileDropdown = styled.div`
-  position: relative;
-`;
-
-const ProfileButton = styled.button`
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  cursor: pointer;
-  padding: 8px 12px;
-  border-radius: 8px;
-  transition: all 0.3s ease;
-  backdrop-filter: blur(10px);
-
-  &:hover {
-    background: rgba(255, 255, 255, 0.2);
-    transform: translateY(-1px);
-  }
-`;
-
-const ProfileAvatar = styled.div`
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 600;
-  font-size: 14px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-`;
-
-const ProfileName = styled.span`
-  font-size: 14px;
-  font-weight: 500;
-  color: white;
-
-  @media (max-width: 768px) {
-    display: none;
-  }
-`;
-
-const DropdownArrow = styled.span`
-  font-size: 12px;
-  color: rgba(255, 255, 255, 0.8);
-`;
-
-const DropdownMenu = styled.div`
-  position: absolute;
-  top: 100%;
-  right: 0;
-  margin-top: 8px;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 12px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-  min-width: 160px;
-  z-index: 1000;
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(-10px);
-  transition: all 0.3s ease;
-
-  ${ProfileDropdown}:hover & {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
-  }
-`;
-
-const DropdownItem = styled.button`
-  width: 100%;
-  padding: 12px 16px;
-  background: none;
-  border: none;
-  text-align: left;
-  font-size: 14px;
-  color: #1e293b;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-
-  &:hover {
-    background: rgba(102, 126, 234, 0.1);
-  }
-
-  &:first-child {
-    border-radius: 12px 12px 0 0;
-  }
-
-  &:last-child {
-    border-radius: 0 0 12px 12px;
-  }
-`;
-
-const MainContainer = styled.div`
-  padding: 32px;
-  max-width: 1400px;
-  margin: 0 auto;
-  position: relative;
-  z-index: 3;
-
-  @media (max-width: 768px) {
-    padding: 16px;
-  }
-`;
-
-const PageHeader = styled.div`
-  margin-bottom: 32px;
-  text-align: center;
-`;
-
-const PageTitle = styled.h1`
-  font-size: 32px;
-  font-weight: 700;
-  color: white;
-  margin-bottom: 8px;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-
-  @media (max-width: 768px) {
-    font-size: 24px;
-  }
-`;
-
-const PageSubtitle = styled.p`
-  font-size: 16px;
-  color: rgba(255, 255, 255, 0.9);
-  margin: 0;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-`;
-
-const ControlsSection = styled.div`
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(20px);
-  border-radius: 16px;
-  padding: 24px;
-  margin-bottom: 24px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 16px;
-
-  @media (max-width: 768px) {
-    flex-direction: column;
-    align-items: stretch;
-  }
-`;
-
-const FilterControls = styled.div`
-  display: flex;
-  gap: 24px;
-  flex-wrap: wrap;
-
-  @media (max-width: 768px) {
-    flex-direction: column;
-    gap: 16px;
-  }
-`;
-
-const FilterGroup = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 8px;
-`;
-
-const FilterLabel = styled.label`
-  font-size: 14px;
-  font-weight: 500;
-  color: white;
-`;
-
-const FilterSelect = styled.select`
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 8px;
-  padding: 8px 12px;
-  font-size: 14px;
-  color: white;
-  outline: none;
-  transition: all 0.2s ease;
-
-  &:focus {
-    border-color: rgba(255, 255, 255, 0.4);
-    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
-  }
-
-  option {
-    background: #1e293b;
-    color: white;
-  }
-`;
-
-const BulkActions = styled.div`
-  display: flex;
-  gap: 12px;
-`;
-
-const BulkButton = styled.button`
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border: none;
-  color: white;
-  padding: 10px 20px;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
-  }
-`;
-
-const EmailContainer = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 24px;
-  height: 600px;
-
-  @media (max-width: 1024px) {
-    grid-template-columns: 1fr;
-    height: auto;
-  }
-`;
-
-const EmailQueue = styled.div`
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(20px);
-  border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  overflow: hidden;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-  display: flex;
-  flex-direction: column;
-`;
-
-const QueueHeader = styled.div`
-  padding: 20px 24px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-`;
-
-const QueueTitle = styled.h2`
-  font-size: 18px;
-  font-weight: 600;
-  color: white;
-  margin: 0;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-`;
-
-const QueueList = styled.div`
-  flex: 1;
-  overflow-y: auto;
-  padding: 0;
-`;
-
-const QueueItem = styled.div`
-  padding: 16px 24px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  cursor: pointer;
-  transition: all 0.3s ease;
-  background: ${props => props.selected ? 'rgba(255, 255, 255, 0.15)' : 'transparent'};
-
-  &:hover {
-    background: rgba(255, 255, 255, 0.1);
-  }
-
-  &:last-child {
-    border-bottom: none;
-  }
-`;
-
-const EmailInfo = styled.div`
-  margin-bottom: 12px;
-`;
-
-const EmailRecipient = styled.div`
-  font-size: 14px;
-  font-weight: 600;
-  color: white;
-  margin-bottom: 4px;
-`;
-
-const EmailAccount = styled.div`
-  font-size: 12px;
-  color: rgba(255, 255, 255, 0.8);
-  margin-bottom: 4px;
-`;
-
-const EmailType = styled.div`
-  font-size: 12px;
-  color: #fbbf24;
-  font-weight: 500;
-  margin-bottom: 4px;
-`;
-
-const EmailDate = styled.div`
-  font-size: 11px;
-  color: rgba(255, 255, 255, 0.6);
-`;
-
-const EmailActions = styled.div`
-  display: flex;
-  gap: 8px;
-`;
-
-const ActionButton = styled.button`
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: white;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 12px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-
-  &:hover {
-    background: rgba(255, 255, 255, 0.2);
-    transform: translateY(-1px);
-  }
-`;
-
-const PreviewPane = styled.div`
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(20px);
-  border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  overflow: hidden;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-  display: flex;
-  flex-direction: column;
-`;
-
-const PreviewHeader = styled.div`
-  padding: 20px 24px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const PreviewTitle = styled.h2`
-  font-size: 18px;
-  font-weight: 600;
-  color: white;
-  margin: 0;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-`;
-
-const PreviewActions = styled.div`
-  display: flex;
-  gap: 8px;
-`;
-
-const PreviewButton = styled.button`
-  background: ${props => props.danger ? 'rgba(239, 68, 68, 0.2)' : 'rgba(255, 255, 255, 0.1)'};
-  border: 1px solid ${props => props.danger ? 'rgba(239, 68, 68, 0.3)' : 'rgba(255, 255, 255, 0.2)'};
-  color: ${props => props.danger ? '#fca5a5' : 'white'};
-  padding: 6px 12px;
-  border-radius: 6px;
-  font-size: 12px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-
-  &:hover {
-    background: ${props => props.danger ? 'rgba(239, 68, 68, 0.3)' : 'rgba(255, 255, 255, 0.2)'};
-    transform: translateY(-1px);
-  }
-`;
-
-const PreviewContent = styled.div`
-  flex: 1;
-  padding: 24px;
-  overflow-y: auto;
-`;
-
-const EmailDetails = styled.div`
-  margin-bottom: 24px;
-`;
-
-const DetailRow = styled.div`
-  display: flex;
-  margin-bottom: 12px;
-  align-items: flex-start;
-`;
-
-const DetailLabel = styled.div`
-  font-size: 14px;
-  font-weight: 600;
-  color: rgba(255, 255, 255, 0.8);
-  min-width: 100px;
-  margin-right: 16px;
-`;
-
-const DetailValue = styled.div`
-  font-size: 14px;
-  color: white;
-  flex: 1;
-`;
-
-const TypeBadge = styled.span`
-  padding: 4px 8px;
-  border-radius: 6px;
-  font-size: 12px;
-  font-weight: 600;
-  background: rgba(251, 191, 36, 0.2);
-  color: #fbbf24;
-  border: 1px solid rgba(251, 191, 36, 0.3);
-`;
-
-const AttachmentLink = styled.a`
-  display: block;
-  color: #fbbf24;
-  text-decoration: none;
-  font-size: 12px;
-  margin-bottom: 4px;
-  transition: color 0.2s ease;
-
-  &:hover {
-    color: #f59e0b;
-    text-decoration: underline;
-  }
-`;
-
-const EmailBody = styled.div`
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  padding-top: 20px;
-`;
-
-const BodyLabel = styled.div`
-  font-size: 14px;
-  font-weight: 600;
-  color: rgba(255, 255, 255, 0.8);
-  margin-bottom: 12px;
-`;
-
-const BodyContent = styled.div`
-  font-size: 14px;
-  color: white;
-  line-height: 1.6;
-  white-space: pre-wrap;
-`;
-
-const EmptyPreview = styled.div`
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 40px;
-  text-align: center;
-`;
-
-const EmptyIcon = styled.div`
-  font-size: 48px;
-  margin-bottom: 16px;
-`;
-
-const EmptyTitle = styled.h3`
-  font-size: 18px;
-  font-weight: 600;
-  color: white;
-  margin-bottom: 8px;
-`;
-
-const EmptyMessage = styled.p`
-  font-size: 14px;
-  color: rgba(255, 255, 255, 0.7);
-  margin: 0;
-`;
-
-const NavLink = styled.button`
-  background: none;
-  border: none;
-  font-size: 1.25rem;
-  font-weight: 500;
-  color: ${props => props.active ? colors.background : 'rgba(255,255,255,0.8)'};
-  cursor: pointer;
-  padding: 18px 28px;
-  border-radius: 8px;
-  transition: all 0.3s ease;
-  position: relative;
-  white-space: nowrap;
-  &:hover {
-    color: ${colors.background};
-    background: ${colors.accent1};
-  }
-  ${props => props.active && `
-    background: ${colors.accent1};
-    color: ${colors.background};
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-  `}
-`;
 
 export default EmailDraftDashboard; 
