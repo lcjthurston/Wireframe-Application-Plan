@@ -1184,6 +1184,25 @@ const OverviewTab = styled.div``;
 const PaymentsTab = styled.div``;
 const ReportsTab = styled.div``;
 
+const LogoSection = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+`;
+
+const LogoImage = styled.img`
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+`;
+
+const LogoText = styled.span`
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: white;
+`;
+
 const NavLink = styled.button`
   background: none;
   border: none;
