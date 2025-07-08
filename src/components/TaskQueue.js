@@ -389,7 +389,7 @@ const NavCenter = styled.div`
 
 const NavLinks = styled.div`
   display: flex;
-  gap: 32px;
+  gap: 24px;
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
@@ -827,23 +827,25 @@ const LogoText = styled.span`
 const NavLink = styled.button`
   background: none;
   border: none;
-  font-size: 1.25rem;
-  font-weight: 500;
-  color: ${props => props.active ? colors.background : 'rgba(255,255,255,0.8)'};
-  cursor: pointer;
-  padding: 12px 24px;
+  color: ${props => props.active ? 'white' : 'rgba(255, 255, 255, 0.8)'};
+  padding: 10px 16px;
   border-radius: 8px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 500;
   transition: all 0.3s ease;
-  position: relative;
-  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
   &:hover {
-    color: ${colors.background};
-    background: ${colors.accent1};
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
   }
+
   ${props => props.active && `
-    background: ${colors.accent1};
-    color: ${colors.background};
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    background: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   `}
 `;
 
