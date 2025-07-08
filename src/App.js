@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import { ThemeProvider } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+import theme from './theme';
 import LoginPage from './components/LoginPage';
 import HomePage from './components/HomePage';
 import TaskQueue from './components/TaskQueue';
@@ -67,21 +70,24 @@ function App() {
   };
 
   return (
-    <div className="App">
-      {isLoggedIn ? (
-        <>
-          {renderPage()}
-          <DataEntryModal
-            isOpen={isDataEntryModalOpen}
-            onClose={handleCloseDataEntry}
-            onSave={handleSaveDataEntry}
-            onNavigate={handleNavigation}
-          />
-        </>
-      ) : (
-        <LoginPage onLogin={handleLogin} />
-      )}
-    </div>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <div className="App">
+        {isLoggedIn ? (
+          <>
+            {renderPage()}
+            <DataEntryModal
+              isOpen={isDataEntryModalOpen}
+              onClose={handleCloseDataEntry}
+              onSave={handleSaveDataEntry}
+              onNavigate={handleNavigation}
+            />
+          </>
+        ) : (
+          <LoginPage onLogin={handleLogin} />
+        )}
+      </div>
+    </ThemeProvider>
   );
 }
 

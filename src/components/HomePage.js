@@ -1,10 +1,50 @@
 import React, { useState } from 'react';
-import styled from 'styled-components';
+import {
+  Box,
+  AppBar,
+  Toolbar,
+  Typography,
+  Button,
+  TextField,
+  Card,
+  CardContent,
+  Grid,
+  Avatar,
+  Menu,
+  MenuItem,
+  IconButton,
+  Chip,
+  Container,
+  Paper,
+  Divider,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemIcon,
+  Badge
+} from '@mui/material';
+import {
+  Search as SearchIcon,
+  Dashboard as DashboardIcon,
+  Assignment as TaskIcon,
+  AccountCircle as AccountIcon,
+  Email as EmailIcon,
+  AttachMoney as MoneyIcon,
+  Business as BusinessIcon,
+  HealthAndSafety as HealthIcon,
+  Settings as SettingsIcon,
+  Logout as LogoutIcon,
+  TrendingUp as TrendingUpIcon,
+  Warning as WarningIcon,
+  CheckCircle as CheckCircleIcon,
+  Error as ErrorIcon
+} from '@mui/icons-material';
+import { styled } from '@mui/material/styles';
 import kilowattImage from '../assets/image.png';
-import colors from '../assets/colors';
 
 const HomePage = ({ onLogout, onNavigate, onOpenDataEntry }) => {
   const [searchQuery, setSearchQuery] = useState('');
+  const [anchorEl, setAnchorEl] = useState(null);
   const [userProfile, setUserProfile] = useState({
     name: 'John Doe',
     email: 'john.doe@kilowatt.com',
@@ -101,758 +141,330 @@ const HomePage = ({ onLogout, onNavigate, onOpenDataEntry }) => {
     }
   };
 
+  const handleProfileMenuOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleProfileMenuClose = () => {
+    setAnchorEl(null);
+  };
+
   const handleProfileAction = (action) => {
     console.log('Profile action:', action);
     if (action === 'logout') {
       onLogout();
     }
+    handleProfileMenuClose();
     // TODO: Implement other profile actions
   };
 
+  const getStatusColor = (status) => {
+    switch (status) {
+      case 'OK':
+        return 'success';
+      case 'ERROR':
+        return 'error';
+      case 'WARNING':
+        return 'warning';
+      default:
+        return 'default';
+    }
+  };
+
+  const StyledAppBar = styled(AppBar)(({ theme }) => ({
+    background: 'linear-gradient(135deg, #1976d2 0%, #1565c0 100%)',
+    boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+  }));
+
+  const LogoImage = styled('img')({
+    width: 40,
+    height: 40,
+    marginRight: 12,
+    borderRadius: 8,
+  });
+
+  const DashboardCard = styled(Card)(({ theme }) => ({
+    height: '100%',
+    transition: 'transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out',
+    '&:hover': {
+      transform: 'translateY(-4px)',
+      boxShadow: '0 8px 25px rgba(0,0,0,0.15)',
+    },
+  }));
+
   return (
-    <PageContainer>
-      {/* Dynamic Background Layers */}
-      <BackgroundGradient />
-      <BackgroundPattern />
-      <FloatingShapes />
-      
-      {/* Top Navigation Bar */}
-      <NavigationBar>
-        <NavLeft>
-          <LogoSection>
+    <Box sx={{ minHeight: '100vh', bgcolor: 'background.default' }}>
+      <StyledAppBar position="static">
+        <Toolbar>
+          <Box sx={{ display: 'flex', alignItems: 'center', flexGrow: 1 }}>
             <LogoImage src={kilowattImage} alt="Kilowatt" />
-            <LogoText>Kilowatt</LogoText>
-          </LogoSection>
-          
-          <NavLinks>
-            <NavLink active onClick={() => handleNavigation('home')}>
+            <Typography variant="h6" component="div" sx={{ fontWeight: 700 }}>
+              Kilowatt
+            </Typography>
+          </Box>
+
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            <Button color="inherit" onClick={() => handleNavigation('home')}>
               Home
-            </NavLink>
-            <NavLink onClick={() => handleNavigation('task-queue')}>
+            </Button>
+            <Button color="inherit" onClick={() => handleNavigation('task-queue')}>
               Task Queue
-            </NavLink>
-            <NavLink onClick={() => handleNavigation('accounts')}>
+            </Button>
+            <Button color="inherit" onClick={() => handleNavigation('accounts')}>
               Accounts
-            </NavLink>
-            <NavLink onClick={() => handleNavigation('managers')}>
+            </Button>
+            <Button color="inherit" onClick={() => handleNavigation('managers')}>
               Managers
-            </NavLink>
-            <NavLink onClick={() => handleNavigation('email-drafts')}>
+            </Button>
+            <Button color="inherit" onClick={() => handleNavigation('email-drafts')}>
               Email Drafts
-            </NavLink>
-            <NavLink onClick={() => handleNavigation('commissions')}>
+            </Button>
+            <Button color="inherit" onClick={() => handleNavigation('commissions')}>
               Commissions
-            </NavLink>
-            <NavLink onClick={() => handleNavigation('providers')}>
+            </Button>
+            <Button color="inherit" onClick={() => handleNavigation('providers')}>
               Providers
-            </NavLink>
-            <NavLink onClick={() => handleNavigation('system-health')}>
+            </Button>
+            <Button color="inherit" onClick={() => handleNavigation('system-health')}>
               System Health
-            </NavLink>
-          </NavLinks>
-        </NavLeft>
+            </Button>
+          </Box>
 
-        <NavRight>
-          <SearchForm onSubmit={handleSearch}>
-            <SearchInput
-              type="text"
-              placeholder="Search accounts, managers, etc..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-            <SearchButton type="submit">
-              🔍
-            </SearchButton>
-          </SearchForm>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, ml: 2 }}>
+            <Paper component="form" onSubmit={handleSearch} sx={{ display: 'flex', alignItems: 'center', px: 2 }}>
+              <TextField
+                size="small"
+                placeholder="Search accounts, managers, etc..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                variant="standard"
+                sx={{ minWidth: 200 }}
+                InputProps={{ disableUnderline: true }}
+              />
+              <IconButton type="submit" size="small">
+                <SearchIcon />
+              </IconButton>
+            </Paper>
 
-          <UserProfile>
-            <ProfileDropdown>
-              <ProfileButton>
-                <ProfileAvatar>
-                  {userProfile.avatar ? (
-                    <img src={userProfile.avatar} alt={userProfile.name} />
-                  ) : (
-                    userProfile.name.charAt(0)
-                  )}
-                </ProfileAvatar>
-                <ProfileName>{userProfile.name}</ProfileName>
-                <DropdownArrow>▼</DropdownArrow>
-              </ProfileButton>
-              <DropdownMenu>
-                <DropdownItem onClick={() => handleProfileAction('settings')}>
-                  ⚙️ Settings
-                </DropdownItem>
-                <DropdownItem onClick={() => handleProfileAction('logout')}>
-                  🚪 Logout
-                </DropdownItem>
-              </DropdownMenu>
-            </ProfileDropdown>
-          </UserProfile>
-        </NavRight>
-      </NavigationBar>
+            <IconButton
+              onClick={handleProfileMenuOpen}
+              sx={{ color: 'inherit' }}
+            >
+              <Avatar sx={{ width: 32, height: 32 }}>
+                {userProfile.avatar ? (
+                  <img src={userProfile.avatar} alt={userProfile.name} />
+                ) : (
+                  userProfile.name.charAt(0)
+                )}
+              </Avatar>
+            </IconButton>
+            <Menu
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={handleProfileMenuClose}
+            >
+              <MenuItem onClick={() => handleProfileAction('settings')}>
+                <ListItemIcon>
+                  <SettingsIcon fontSize="small" />
+                </ListItemIcon>
+                Settings
+              </MenuItem>
+              <MenuItem onClick={() => handleProfileAction('logout')}>
+                <ListItemIcon>
+                  <LogoutIcon fontSize="small" />
+                </ListItemIcon>
+                Logout
+              </MenuItem>
+            </Menu>
+          </Box>
+        </Toolbar>
+      </StyledAppBar>
 
-      {/* Main Dashboard Content */}
-      <DashboardContainer>
-        <DashboardHeader>
-          <HeaderContent>
-            <HeaderLeft>
-              <WelcomeMessage>
-                Welcome back, {userProfile.name}! 👋
-              </WelcomeMessage>
-              <DashboardSubtitle>
-                Here's what's happening with your business today
-              </DashboardSubtitle>
-            </HeaderLeft>
-            <HeaderRight>
-              <NewAccountButton onClick={onOpenDataEntry}>
-                ➕ New Account
-              </NewAccountButton>
-            </HeaderRight>
-          </HeaderContent>
-        </DashboardHeader>
+      <Container maxWidth="xl" sx={{ py: 4 }}>
+        <Box sx={{ mb: 4 }}>
+          <Typography variant="h4" component="h1" sx={{ fontWeight: 700, mb: 1 }}>
+            Welcome back, {userProfile.name}! 👋
+          </Typography>
+          <Typography variant="body1" color="text.secondary">
+            Here's what's happening with your business intelligence platform today.
+          </Typography>
+        </Box>
 
-        <WidgetGrid>
+        <Grid container spacing={3}>
           {/* My Tasks Widget */}
-          <Widget>
-            <WidgetHeader>
-              <WidgetTitle>My Tasks</WidgetTitle>
-              <WidgetAction onClick={() => handleNavigation('task-queue')}>
-                View All →
-              </WidgetAction>
-            </WidgetHeader>
-            <TaskList>
-              <TaskItem onClick={() => handleNavigation('task-queue')}>
-                <TaskIcon>🏢</TaskIcon>
-                <TaskInfo>
-                  <TaskName>Accounts Needing Provider Selection</TaskName>
-                  <TaskCount>{myTasks.providerSelection} tasks</TaskCount>
-                </TaskInfo>
-              </TaskItem>
-              <TaskItem onClick={() => handleNavigation('task-queue')}>
-                <TaskIcon>🚨</TaskIcon>
-                <TaskInfo>
-                  <TaskName>Super Flagged Contracts</TaskName>
-                  <TaskCount>{myTasks.superFlagged} tasks</TaskCount>
-                </TaskInfo>
-              </TaskItem>
-              <TaskItem onClick={() => handleNavigation('email-drafts')}>
-                <TaskIcon>📧</TaskIcon>
-                <TaskInfo>
-                  <TaskName>Drafted Emails to Review</TaskName>
-                  <TaskCount>{myTasks.draftedEmails} emails</TaskCount>
-                </TaskInfo>
-              </TaskItem>
-              <TaskItem onClick={() => handleNavigation('task-queue')}>
-                <TaskIcon>✅</TaskIcon>
-                <TaskInfo>
-                  <TaskName>New Accounts for Verification</TaskName>
-                  <TaskCount>{myTasks.newAccounts} accounts</TaskCount>
-                </TaskInfo>
-              </TaskItem>
-            </TaskList>
-          </Widget>
+          <Grid item xs={12} md={6}>
+            <DashboardCard>
+              <CardContent>
+                <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                  <TaskIcon sx={{ mr: 1, color: 'primary.main' }} />
+                  <Typography variant="h6" component="h2">
+                    My Tasks
+                  </Typography>
+                </Box>
+                <Grid container spacing={2}>
+                  <Grid item xs={6}>
+                    <Box sx={{ textAlign: 'center', p: 2, bgcolor: 'primary.light', borderRadius: 2 }}>
+                      <Typography variant="h4" color="white" sx={{ fontWeight: 700 }}>
+                        {myTasks.providerSelection}
+                      </Typography>
+                      <Typography variant="body2" color="white">
+                        Provider Selection
+                      </Typography>
+                    </Box>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Box sx={{ textAlign: 'center', p: 2, bgcolor: 'warning.light', borderRadius: 2 }}>
+                      <Typography variant="h4" color="white" sx={{ fontWeight: 700 }}>
+                        {myTasks.superFlagged}
+                      </Typography>
+                      <Typography variant="body2" color="white">
+                        Super Flagged
+                      </Typography>
+                    </Box>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Box sx={{ textAlign: 'center', p: 2, bgcolor: 'info.light', borderRadius: 2 }}>
+                      <Typography variant="h4" color="white" sx={{ fontWeight: 700 }}>
+                        {myTasks.draftedEmails}
+                      </Typography>
+                      <Typography variant="body2" color="white">
+                        Drafted Emails
+                      </Typography>
+                    </Box>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Box sx={{ textAlign: 'center', p: 2, bgcolor: 'success.light', borderRadius: 2 }}>
+                      <Typography variant="h4" color="white" sx={{ fontWeight: 700 }}>
+                        {myTasks.newAccounts}
+                      </Typography>
+                      <Typography variant="body2" color="white">
+                        New Accounts
+                      </Typography>
+                    </Box>
+                  </Grid>
+                </Grid>
+              </CardContent>
+            </DashboardCard>
+          </Grid>
 
           {/* Team Tasks Widget */}
-          <Widget>
-            <WidgetHeader>
-              <WidgetTitle>Team Tasks</WidgetTitle>
-              <WidgetAction onClick={() => handleNavigation('task-queue')}>
-                View All →
-              </WidgetAction>
-            </WidgetHeader>
-            <TaskList>
-              <TaskItem onClick={() => handleNavigation('task-queue')}>
-                <TaskIcon>🏢</TaskIcon>
-                <TaskInfo>
-                  <TaskName>Accounts Needing Provider Selection</TaskName>
-                  <TaskCount>{teamTasks.providerSelection} tasks</TaskCount>
-                </TaskInfo>
-              </TaskItem>
-              <TaskItem onClick={() => handleNavigation('task-queue')}>
-                <TaskIcon>🚨</TaskIcon>
-                <TaskInfo>
-                  <TaskName>Super Flagged Contracts</TaskName>
-                  <TaskCount>{teamTasks.superFlagged} tasks</TaskCount>
-                </TaskInfo>
-              </TaskItem>
-              <TaskItem onClick={() => handleNavigation('email-drafts')}>
-                <TaskIcon>📧</TaskIcon>
-                <TaskInfo>
-                  <TaskName>Drafted Emails to Review</TaskName>
-                  <TaskCount>{teamTasks.draftedEmails} emails</TaskCount>
-                </TaskInfo>
-              </TaskItem>
-              <TaskItem onClick={() => handleNavigation('task-queue')}>
-                <TaskIcon>✅</TaskIcon>
-                <TaskInfo>
-                  <TaskName>New Accounts for Verification</TaskName>
-                  <TaskCount>{teamTasks.newAccounts} accounts</TaskCount>
-                </TaskInfo>
-              </TaskItem>
-            </TaskList>
-          </Widget>
+          <Grid item xs={12} md={6}>
+            <DashboardCard>
+              <CardContent>
+                <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                  <TrendingUpIcon sx={{ mr: 1, color: 'secondary.main' }} />
+                  <Typography variant="h6" component="h2">
+                    Team Tasks
+                  </Typography>
+                </Box>
+                <Grid container spacing={2}>
+                  <Grid item xs={6}>
+                    <Box sx={{ textAlign: 'center', p: 2, bgcolor: 'primary.light', borderRadius: 2 }}>
+                      <Typography variant="h4" color="white" sx={{ fontWeight: 700 }}>
+                        {teamTasks.providerSelection}
+                      </Typography>
+                      <Typography variant="body2" color="white">
+                        Provider Selection
+                      </Typography>
+                    </Box>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Box sx={{ textAlign: 'center', p: 2, bgcolor: 'warning.light', borderRadius: 2 }}>
+                      <Typography variant="h4" color="white" sx={{ fontWeight: 700 }}>
+                        {teamTasks.superFlagged}
+                      </Typography>
+                      <Typography variant="body2" color="white">
+                        Super Flagged
+                      </Typography>
+                    </Box>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Box sx={{ textAlign: 'center', p: 2, bgcolor: 'info.light', borderRadius: 2 }}>
+                      <Typography variant="h4" color="white" sx={{ fontWeight: 700 }}>
+                        {teamTasks.draftedEmails}
+                      </Typography>
+                      <Typography variant="body2" color="white">
+                        Drafted Emails
+                      </Typography>
+                    </Box>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Box sx={{ textAlign: 'center', p: 2, bgcolor: 'success.light', borderRadius: 2 }}>
+                      <Typography variant="h4" color="white" sx={{ fontWeight: 700 }}>
+                        {teamTasks.newAccounts}
+                      </Typography>
+                      <Typography variant="body2" color="white">
+                        New Accounts
+                      </Typography>
+                    </Box>
+                  </Grid>
+                </Grid>
+              </CardContent>
+            </DashboardCard>
+          </Grid>
 
           {/* System Health Widget */}
-          <Widget>
-            <WidgetHeader>
-              <WidgetTitle>System Automation Health</WidgetTitle>
-              <WidgetAction onClick={() => handleNavigation('system-health')}>
-                View Details →
-              </WidgetAction>
-            </WidgetHeader>
-            <SystemHealthList>
-              {systemHealth.map((process, index) => (
-                <SystemHealthItem key={index}>
-                  <ProcessIcon>{process.icon}</ProcessIcon>
-                  <ProcessInfo>
-                    <ProcessName>{process.name}</ProcessName>
-                    <ProcessStatus status={process.status}>
-                      {process.status}
-                    </ProcessStatus>
-                  </ProcessInfo>
-                  <ProcessTime>{process.lastRun}</ProcessTime>
-                </SystemHealthItem>
-              ))}
-            </SystemHealthList>
-          </Widget>
+          <Grid item xs={12} md={6}>
+            <DashboardCard>
+              <CardContent>
+                <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                  <HealthIcon sx={{ mr: 1, color: 'success.main' }} />
+                  <Typography variant="h6" component="h2">
+                    System Health
+                  </Typography>
+                </Box>
+                <List>
+                  {systemHealth.map((system, index) => (
+                    <ListItem key={index} sx={{ px: 0 }}>
+                      <ListItemIcon>
+                        <span style={{ fontSize: '1.2rem' }}>{system.icon}</span>
+                      </ListItemIcon>
+                      <ListItemText
+                        primary={system.name}
+                        secondary={system.lastRun}
+                      />
+                      <Chip
+                        label={system.status}
+                        color={getStatusColor(system.status)}
+                        size="small"
+                      />
+                    </ListItem>
+                  ))}
+                </List>
+              </CardContent>
+            </DashboardCard>
+          </Grid>
 
           {/* Recent Activity Widget */}
-          <Widget fullWidth>
-            <WidgetHeader>
-              <WidgetTitle>Recent Activity</WidgetTitle>
-              <WidgetAction onClick={() => handleNavigation('activity')}>
-                View All →
-              </WidgetAction>
-            </WidgetHeader>
-            <ActivityList>
-              {recentActivity.map((activity, index) => (
-                <ActivityItem key={index}>
-                  <ActivityIcon>{activity.icon}</ActivityIcon>
-                  <ActivityInfo>
-                    <ActivityText>
-                      {activity.type === 'bot' ? (
-                        activity.action
-                      ) : (
-                        <>
-                          <ActivityUser>{activity.user}</ActivityUser>
-                          {activity.action}
-                        </>
-                      )}
-                    </ActivityText>
-                    <ActivityTime>{activity.timestamp}</ActivityTime>
-                  </ActivityInfo>
-                </ActivityItem>
-              ))}
-            </ActivityList>
-          </Widget>
-        </WidgetGrid>
-      </DashboardContainer>
-    </PageContainer>
+          <Grid item xs={12} md={6}>
+            <DashboardCard>
+              <CardContent>
+                <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                  <DashboardIcon sx={{ mr: 1, color: 'info.main' }} />
+                  <Typography variant="h6" component="h2">
+                    Recent Activity
+                  </Typography>
+                </Box>
+                <List>
+                  {recentActivity.map((activity, index) => (
+                    <ListItem key={index} sx={{ px: 0 }}>
+                      <ListItemIcon>
+                        <span style={{ fontSize: '1.2rem' }}>{activity.icon}</span>
+                      </ListItemIcon>
+                      <ListItemText
+                        primary={activity.action}
+                        secondary={activity.timestamp}
+                      />
+                    </ListItem>
+                  ))}
+                </List>
+              </CardContent>
+            </DashboardCard>
+          </Grid>
+        </Grid>
+      </Container>
+    </Box>
   );
 };
-
-// Styled Components
-const PageContainer = styled.div`
-  min-height: 100vh;
-  position: relative;
-  overflow: hidden;
-  background: ${colors.primary};
-`;
-
-const BackgroundGradient = styled.div`
-  display: none;
-`;
-
-const BackgroundPattern = styled.div`
-  display: none;
-`;
-
-const FloatingShapes = styled.div`
-  display: none;
-`;
-
-const NavigationBar = styled.nav`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 32px;
-  height: 72px;
-  background: ${colors.primary};
-  border-bottom: 1px solid ${colors.border};
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  @media (max-width: 768px) {
-    padding: 0 16px;
-    height: 64px;
-  }
-`;
-
-const NavLeft = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 48px;
-
-  @media (max-width: 768px) {
-    gap: 24px;
-  }
-`;
-
-const LogoSection = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 12px;
-`;
-
-const LogoImage = styled.img`
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-`;
-
-const LogoText = styled.span`
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: ${colors.background};
-`;
-
-const NavLinks = styled.div`
-  display: flex;
-  gap: 32px;
-
-  @media (max-width: 1024px) {
-    display: none;
-  }
-`;
-
-const NavLink = styled.button`
-  background: none;
-  border: none;
-  font-size: 1.25rem;
-  font-weight: 500;
-  color: ${props => props.active ? colors.background : 'rgba(255,255,255,0.8)'};
-  cursor: pointer;
-  padding: 12px 24px;
-  border-radius: 8px;
-  transition: all 0.3s ease;
-  position: relative;
-  &:hover {
-    color: ${colors.background};
-    background: ${colors.accent1};
-  }
-  ${props => props.active && `
-    background: ${colors.accent1};
-    color: ${colors.background};
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-  `}
-`;
-
-const NavRight = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 24px;
-`;
-
-const SearchForm = styled.form`
-  display: flex;
-  align-items: center;
-  background: ${colors.background};
-  border: 1px solid ${colors.border};
-  border-radius: 12px;
-  padding: 8px 16px;
-  min-width: 300px;
-  @media (max-width: 768px) {
-    min-width: 200px;
-  }
-`;
-
-const SearchInput = styled.input`
-  border: none;
-  background: none;
-  font-size: 1.25rem;
-  color: ${colors.text};
-  flex: 1;
-  outline: none;
-  &::placeholder {
-    color: #bdbdbd;
-    font-size: 1.25rem;
-  }
-`;
-
-const SearchButton = styled.button`
-  background: none;
-  border: none;
-  font-size: 1.5rem;
-  cursor: pointer;
-  padding: 4px;
-  border-radius: 6px;
-  color: ${colors.primary};
-  &:hover {
-    background: ${colors.accent1};
-    color: ${colors.background};
-  }
-`;
-
-const UserProfile = styled.div`
-  position: relative;
-`;
-
-const ProfileDropdown = styled.div`
-  position: relative;
-`;
-
-const ProfileButton = styled.button`
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: ${colors.background};
-  border: 1px solid ${colors.border};
-  cursor: pointer;
-  padding: 12px 20px;
-  border-radius: 8px;
-  transition: all 0.3s ease;
-  font-size: 1.25rem;
-  &:hover {
-    background: ${colors.accent5};
-    transform: translateY(-1px);
-  }
-`;
-
-const ProfileAvatar = styled.div`
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: ${colors.primary};
-  color: ${colors.background};
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 600;
-  font-size: 14px;
-`;
-
-const ProfileName = styled.span`
-  font-size: 14px;
-  font-weight: 500;
-  color: ${colors.text};
-
-  @media (max-width: 768px) {
-    display: none;
-  }
-`;
-
-const DropdownArrow = styled.span`
-  font-size: 12px;
-  color: ${colors.accent1};
-`;
-
-const DropdownMenu = styled.div`
-  position: absolute;
-  top: 100%;
-  right: 0;
-  margin-top: 8px;
-  background: ${colors.background};
-  backdrop-filter: blur(20px);
-  border: 1px solid ${colors.border};
-  border-radius: 12px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-  min-width: 160px;
-  z-index: 1000;
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(-10px);
-  transition: all 0.3s ease;
-
-  ${ProfileDropdown}:hover & {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
-  }
-`;
-
-const DropdownItem = styled.button`
-  width: 100%;
-  padding: 12px 16px;
-  background: none;
-  border: none;
-  text-align: left;
-  font-size: 14px;
-  color: ${colors.text};
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-
-  &:hover {
-    background: ${colors.accent1};
-  }
-
-  &:first-child {
-    border-radius: 12px 12px 0 0;
-  }
-
-  &:last-child {
-    border-radius: 0 0 12px 12px;
-  }
-`;
-
-const DashboardContainer = styled.div`
-  padding: 32px;
-  max-width: 1400px;
-  margin: 0 auto;
-  position: relative;
-  z-index: 3;
-
-  @media (max-width: 768px) {
-    padding: 16px;
-  }
-`;
-
-const DashboardHeader = styled.div`
-  margin-bottom: 32px;
-`;
-
-const HeaderContent = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 16px;
-`;
-
-const HeaderLeft = styled.div`
-  text-align: left;
-`;
-
-const HeaderRight = styled.div`
-  display: flex;
-  gap: 12px;
-`;
-
-const NewAccountButton = styled.button`
-  background: ${colors.accent1};
-  border: none;
-  color: ${colors.background};
-  padding: 16px 32px;
-  border-radius: 12px;
-  font-size: 1.5rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  &:hover {
-    background: ${colors.accent2};
-    transform: translateY(-2px);
-  }
-`;
-
-const WelcomeMessage = styled.h1`
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: ${colors.background};
-  margin-bottom: 8px;
-`;
-
-const DashboardSubtitle = styled.p`
-  font-size: 1.25rem;
-  color: ${colors.accent5};
-  margin: 0;
-`;
-
-const WidgetGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  gap: 24px;
-
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
-    gap: 16px;
-  }
-`;
-
-const Widget = styled.div`
-  background: ${colors.background};
-  border-radius: 16px;
-  padding: 24px;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.08);
-  border: 1px solid ${colors.border};
-  grid-column: ${props => props.fullWidth ? '1 / -1' : 'auto'};
-  transition: all 0.3s ease;
-  color: ${colors.text};
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 12px 40px rgba(0,0,0,0.12);
-    border-color: ${colors.accent5};
-  }
-  @media (max-width: 768px) {
-    padding: 20px;
-  }
-`;
-
-const WidgetHeader = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-`;
-
-const WidgetTitle = styled.h2`
-  font-size: 2rem;
-  font-weight: 600;
-  color: ${colors.primary};
-  margin: 0;
-`;
-
-const WidgetAction = styled.button`
-  background: none;
-  border: none;
-  font-size: 1.25rem;
-  font-weight: 500;
-  color: ${colors.accent1};
-  cursor: pointer;
-  transition: all 0.3s ease;
-  &:hover {
-    color: ${colors.accent2};
-    transform: translateX(2px);
-  }
-`;
-
-const TaskList = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-`;
-
-const TaskItem = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-
-  &:hover {
-    background: rgba(255, 255, 255, 0.1);
-    transform: translateX(4px);
-    border-color: rgba(255, 255, 255, 0.2);
-  }
-`;
-
-const TaskIcon = styled.span`
-  font-size: 20px;
-`;
-
-const TaskInfo = styled.div`
-  flex: 1;
-`;
-
-const TaskName = styled.div`
-  font-size: 14px;
-  font-weight: 500;
-  color: ${colors.text};
-  margin-bottom: 2px;
-`;
-
-const TaskCount = styled.div`
-  font-size: 12px;
-  color: ${colors.accent5};
-`;
-
-const SystemHealthList = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-`;
-
-const SystemHealthItem = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px;
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-`;
-
-const ProcessIcon = styled.span`
-  font-size: 20px;
-`;
-
-const ProcessInfo = styled.div`
-  flex: 1;
-`;
-
-const ProcessName = styled.div`
-  font-size: 14px;
-  font-weight: 500;
-  color: ${colors.text};
-  margin-bottom: 2px;
-`;
-
-const ProcessStatus = styled.div`
-  font-size: 12px;
-  font-weight: 600;
-  color: ${props => props.status === 'OK' ? '#10b981' : '#ef4444'};
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-`;
-
-const ProcessTime = styled.div`
-  font-size: 12px;
-  color: ${colors.accent5};
-`;
-
-const ActivityList = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  max-height: 400px;
-  overflow-y: auto;
-`;
-
-const ActivityItem = styled.div`
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  padding: 12px;
-  border-radius: 8px;
-  transition: all 0.3s ease;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-
-  &:hover {
-    background: rgba(255, 255, 255, 0.1);
-    transform: translateX(4px);
-    border-color: rgba(255, 255, 255, 0.2);
-  }
-`;
-
-const ActivityIcon = styled.span`
-  font-size: 16px;
-  margin-top: 2px;
-`;
-
-const ActivityInfo = styled.div`
-  flex: 1;
-`;
-
-const ActivityText = styled.div`
-  font-size: 14px;
-  color: ${colors.text};
-  margin-bottom: 4px;
-  line-height: 1.4;
-`;
-
-const ActivityUser = styled.span`
-  font-weight: 600;
-  color: ${colors.accent1};
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-`;
-
-const ActivityTime = styled.div`
-  font-size: 12px;
-  color: ${colors.accent5};
-`;
 
 export default HomePage; 
