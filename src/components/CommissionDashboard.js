@@ -1184,4 +1184,27 @@ const OverviewTab = styled.div``;
 const PaymentsTab = styled.div``;
 const ReportsTab = styled.div``;
 
+const NavLink = styled.button`
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: ${props => props.active ? colors.background : 'rgba(255,255,255,0.8)'};
+  cursor: pointer;
+  padding: 12px 24px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  position: relative;
+  white-space: nowrap;
+  &:hover {
+    color: ${colors.background};
+    background: ${colors.accent1};
+  }
+  ${props => props.active && `
+    background: ${colors.accent1};
+    color: ${colors.background};
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  `}
+`;
+
 export default CommissionDashboard; 
