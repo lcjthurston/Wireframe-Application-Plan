@@ -46,46 +46,55 @@ const theme = createTheme({
   typography: {
     fontFamily: '"Inter", "Roboto", "Helvetica", "Arial", sans-serif',
     h1: {
-      fontSize: '2.5rem',
+      fontSize: '2.75rem',
       fontWeight: 700,
       lineHeight: 1.2,
     },
     h2: {
-      fontSize: '2rem',
+      fontSize: '2.25rem',
       fontWeight: 600,
       lineHeight: 1.3,
     },
     h3: {
-      fontSize: '1.75rem',
+      fontSize: '2rem',
       fontWeight: 600,
       lineHeight: 1.4,
     },
     h4: {
-      fontSize: '1.5rem',
+      fontSize: '1.75rem',
       fontWeight: 600,
       lineHeight: 1.4,
     },
     h5: {
-      fontSize: '1.25rem',
+      fontSize: '1.5rem',
       fontWeight: 600,
       lineHeight: 1.4,
     },
     h6: {
-      fontSize: '1.125rem',
+      fontSize: '1.25rem',
       fontWeight: 600,
       lineHeight: 1.4,
     },
     body1: {
-      fontSize: '1rem',
+      fontSize: '1.0625rem',
       lineHeight: 1.5,
     },
     body2: {
-      fontSize: '0.875rem',
+      fontSize: '0.9375rem',
       lineHeight: 1.5,
     },
     button: {
       textTransform: 'none',
       fontWeight: 600,
+      fontSize: '1.0625rem',
+    },
+    subtitle1: {
+      fontSize: '1.125rem',
+      lineHeight: 1.5,
+    },
+    subtitle2: {
+      fontSize: '1rem',
+      lineHeight: 1.5,
     },
   },
   shape: {
@@ -96,9 +105,10 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           borderRadius: 8,
-          padding: '8px 16px',
+          padding: '10px 18px',
           textTransform: 'none',
           fontWeight: 600,
+          fontSize: '1.0625rem',
         },
         contained: {
           boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
@@ -138,6 +148,10 @@ const theme = createTheme({
         root: {
           '& .MuiOutlinedInput-root': {
             borderRadius: 8,
+            fontSize: '1.0625rem',
+          },
+          '& .MuiInputLabel-root': {
+            fontSize: '1.0625rem',
           },
         },
       },
@@ -146,6 +160,58 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           borderRadius: 16,
+          fontSize: '0.9375rem',
+        },
+      },
+    },
+    MuiTableCell: {
+      styleOverrides: {
+        root: {
+          fontSize: '1.0625rem',
+          padding: '14px',
+        },
+        head: {
+          fontSize: '1.125rem',
+          fontWeight: 600,
+        },
+      },
+    },
+    MuiTableHead: {
+      styleOverrides: {
+        root: {
+          '& .MuiTableCell-head': {
+            fontSize: '1.125rem',
+            fontWeight: 600,
+          },
+        },
+      },
+    },
+    MuiTab: {
+      styleOverrides: {
+        root: {
+          fontSize: '1.0625rem',
+          fontWeight: 600,
+        },
+      },
+    },
+    MuiMenuItem: {
+      styleOverrides: {
+        root: {
+          fontSize: '1.0625rem',
+        },
+      },
+    },
+    MuiSelect: {
+      styleOverrides: {
+        root: {
+          fontSize: '1.0625rem',
+        },
+      },
+    },
+    MuiInputLabel: {
+      styleOverrides: {
+        root: {
+          fontSize: '1.0625rem',
         },
       },
     },

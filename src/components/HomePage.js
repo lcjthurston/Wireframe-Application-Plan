@@ -51,7 +51,6 @@ const HomePage = ({ onLogout, onNavigate, onOpenDataEntry }) => {
     avatar: null
   });
 
-  // Mock data for widgets
   const myTasks = {
     providerSelection: 12,
     superFlagged: 3,
@@ -131,7 +130,6 @@ const HomePage = ({ onLogout, onNavigate, onOpenDataEntry }) => {
   const handleSearch = (e) => {
     e.preventDefault();
     console.log('Searching for:', searchQuery);
-    // TODO: Implement search functionality
   };
 
   const handleNavigation = (page) => {
@@ -155,7 +153,6 @@ const HomePage = ({ onLogout, onNavigate, onOpenDataEntry }) => {
       onLogout();
     }
     handleProfileMenuClose();
-    // TODO: Implement other profile actions
   };
 
   const getStatusColor = (status) => {
@@ -177,10 +174,10 @@ const HomePage = ({ onLogout, onNavigate, onOpenDataEntry }) => {
   }));
 
   const LogoImage = styled('img')({
-    width: 40,
-    height: 40,
-    marginRight: 12,
-    borderRadius: 8,
+    width: 44,
+    height: 44,
+    marginRight: 14,
+    borderRadius: 9,
   });
 
   const DashboardCard = styled(Card)(({ theme }) => ({
@@ -195,7 +192,7 @@ const HomePage = ({ onLogout, onNavigate, onOpenDataEntry }) => {
   return (
     <Box sx={{ minHeight: '100vh', bgcolor: 'background.default' }}>
       <StyledAppBar position="static">
-        <Toolbar>
+        <Toolbar sx={{ minHeight: 72 }}>
           <Box sx={{ display: 'flex', alignItems: 'center', flexGrow: 1 }}>
             <LogoImage src={kilowattImage} alt="Kilowatt" />
             <Typography variant="h6" component="div" sx={{ fontWeight: 700 }}>
@@ -203,54 +200,58 @@ const HomePage = ({ onLogout, onNavigate, onOpenDataEntry }) => {
             </Typography>
           </Box>
 
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            <Button color="inherit" onClick={() => handleNavigation('home')}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2.5 }}>
+            <Button color="inherit" onClick={() => handleNavigation('home')} sx={{ fontSize: '1.0625rem' }}>
               Home
             </Button>
-            <Button color="inherit" onClick={() => handleNavigation('task-queue')}>
+            <Button color="inherit" onClick={() => handleNavigation('task-queue')} sx={{ fontSize: '1.0625rem' }}>
               Task Queue
             </Button>
-            <Button color="inherit" onClick={() => handleNavigation('accounts')}>
+            <Button color="inherit" onClick={() => handleNavigation('accounts')} sx={{ fontSize: '1.0625rem' }}>
               Accounts
             </Button>
-            <Button color="inherit" onClick={() => handleNavigation('managers')}>
+            <Button color="inherit" onClick={() => handleNavigation('managers')} sx={{ fontSize: '1.0625rem' }}>
               Managers
             </Button>
-            <Button color="inherit" onClick={() => handleNavigation('email-drafts')}>
+            <Button color="inherit" onClick={() => handleNavigation('email-drafts')} sx={{ fontSize: '1.0625rem' }}>
               Email Drafts
             </Button>
-            <Button color="inherit" onClick={() => handleNavigation('commissions')}>
+            <Button color="inherit" onClick={() => handleNavigation('commissions')} sx={{ fontSize: '1.0625rem' }}>
               Commissions
             </Button>
-            <Button color="inherit" onClick={() => handleNavigation('providers')}>
+            <Button color="inherit" onClick={() => handleNavigation('providers')} sx={{ fontSize: '1.0625rem' }}>
               Providers
             </Button>
-            <Button color="inherit" onClick={() => handleNavigation('system-health')}>
+            <Button color="inherit" onClick={() => handleNavigation('system-health')} sx={{ fontSize: '1.0625rem' }}>
               System Health
             </Button>
           </Box>
 
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, ml: 2 }}>
-            <Paper component="form" onSubmit={handleSearch} sx={{ display: 'flex', alignItems: 'center', px: 2 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2.5, ml: 2.5 }}>
+            <Paper component="form" onSubmit={handleSearch} sx={{ display: 'flex', alignItems: 'center', px: 2.5 }}>
               <TextField
                 size="small"
                 placeholder="Search accounts, managers, etc..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 variant="standard"
-                sx={{ minWidth: 200 }}
-                InputProps={{ disableUnderline: true }}
+                sx={{ minWidth: 220 }}
+                InputProps={{ 
+                  disableUnderline: true,
+                  style: { fontSize: '1.0625rem' }
+                }}
               />
-              <IconButton type="submit" size="small">
-                <SearchIcon />
+              <IconButton type="submit" size="medium">
+                <SearchIcon sx={{ fontSize: '1.375rem' }} />
               </IconButton>
             </Paper>
 
             <IconButton
               onClick={handleProfileMenuOpen}
               sx={{ color: 'inherit' }}
+              size="medium"
             >
-              <Avatar sx={{ width: 32, height: 32 }}>
+              <Avatar sx={{ width: 36, height: 36 }}>
                 {userProfile.avatar ? (
                   <img src={userProfile.avatar} alt={userProfile.name} />
                 ) : (
@@ -263,15 +264,15 @@ const HomePage = ({ onLogout, onNavigate, onOpenDataEntry }) => {
               open={Boolean(anchorEl)}
               onClose={handleProfileMenuClose}
             >
-              <MenuItem onClick={() => handleProfileAction('settings')}>
+              <MenuItem onClick={() => handleProfileAction('settings')} sx={{ fontSize: '1.0625rem' }}>
                 <ListItemIcon>
-                  <SettingsIcon fontSize="small" />
+                  <SettingsIcon fontSize="medium" />
                 </ListItemIcon>
                 Settings
               </MenuItem>
-              <MenuItem onClick={() => handleProfileAction('logout')}>
+              <MenuItem onClick={() => handleProfileAction('logout')} sx={{ fontSize: '1.0625rem' }}>
                 <ListItemIcon>
-                  <LogoutIcon fontSize="small" />
+                  <LogoutIcon fontSize="medium" />
                 </ListItemIcon>
                 Logout
               </MenuItem>
@@ -291,19 +292,18 @@ const HomePage = ({ onLogout, onNavigate, onOpenDataEntry }) => {
         </Box>
 
         <Grid container spacing={3}>
-          {/* My Tasks Widget */}
           <Grid item xs={12} md={6}>
             <DashboardCard>
               <CardContent>
                 <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                  <TaskIcon sx={{ mr: 1, color: 'primary.main' }} />
-                  <Typography variant="h6" component="h2">
+                  <TaskIcon sx={{ mr: 1.5, color: 'primary.main', fontSize: '1.75rem' }} />
+                  <Typography variant="h5" component="h2">
                     My Tasks
                   </Typography>
                 </Box>
                 <Grid container spacing={2}>
                   <Grid item xs={6}>
-                    <Box sx={{ textAlign: 'center', p: 2, bgcolor: 'primary.light', borderRadius: 2 }}>
+                    <Box sx={{ textAlign: 'center', p: 2.5, bgcolor: 'primary.light', borderRadius: 2.5 }}>
                       <Typography variant="h4" color="white" sx={{ fontWeight: 700 }}>
                         {myTasks.providerSelection}
                       </Typography>
@@ -313,7 +313,7 @@ const HomePage = ({ onLogout, onNavigate, onOpenDataEntry }) => {
                     </Box>
                   </Grid>
                   <Grid item xs={6}>
-                    <Box sx={{ textAlign: 'center', p: 2, bgcolor: 'warning.light', borderRadius: 2 }}>
+                    <Box sx={{ textAlign: 'center', p: 2.5, bgcolor: 'warning.light', borderRadius: 2.5 }}>
                       <Typography variant="h4" color="white" sx={{ fontWeight: 700 }}>
                         {myTasks.superFlagged}
                       </Typography>
@@ -323,7 +323,7 @@ const HomePage = ({ onLogout, onNavigate, onOpenDataEntry }) => {
                     </Box>
                   </Grid>
                   <Grid item xs={6}>
-                    <Box sx={{ textAlign: 'center', p: 2, bgcolor: 'info.light', borderRadius: 2 }}>
+                    <Box sx={{ textAlign: 'center', p: 2.5, bgcolor: 'info.light', borderRadius: 2.5 }}>
                       <Typography variant="h4" color="white" sx={{ fontWeight: 700 }}>
                         {myTasks.draftedEmails}
                       </Typography>
@@ -333,7 +333,7 @@ const HomePage = ({ onLogout, onNavigate, onOpenDataEntry }) => {
                     </Box>
                   </Grid>
                   <Grid item xs={6}>
-                    <Box sx={{ textAlign: 'center', p: 2, bgcolor: 'success.light', borderRadius: 2 }}>
+                    <Box sx={{ textAlign: 'center', p: 2.5, bgcolor: 'success.light', borderRadius: 2.5 }}>
                       <Typography variant="h4" color="white" sx={{ fontWeight: 700 }}>
                         {myTasks.newAccounts}
                       </Typography>
@@ -347,19 +347,18 @@ const HomePage = ({ onLogout, onNavigate, onOpenDataEntry }) => {
             </DashboardCard>
           </Grid>
 
-          {/* Team Tasks Widget */}
           <Grid item xs={12} md={6}>
             <DashboardCard>
               <CardContent>
                 <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                  <TrendingUpIcon sx={{ mr: 1, color: 'secondary.main' }} />
-                  <Typography variant="h6" component="h2">
+                  <TrendingUpIcon sx={{ mr: 1.5, color: 'secondary.main', fontSize: '1.75rem' }} />
+                  <Typography variant="h5" component="h2">
                     Team Tasks
                   </Typography>
                 </Box>
                 <Grid container spacing={2}>
                   <Grid item xs={6}>
-                    <Box sx={{ textAlign: 'center', p: 2, bgcolor: 'primary.light', borderRadius: 2 }}>
+                    <Box sx={{ textAlign: 'center', p: 2.5, bgcolor: 'primary.light', borderRadius: 2.5 }}>
                       <Typography variant="h4" color="white" sx={{ fontWeight: 700 }}>
                         {teamTasks.providerSelection}
                       </Typography>
@@ -369,7 +368,7 @@ const HomePage = ({ onLogout, onNavigate, onOpenDataEntry }) => {
                     </Box>
                   </Grid>
                   <Grid item xs={6}>
-                    <Box sx={{ textAlign: 'center', p: 2, bgcolor: 'warning.light', borderRadius: 2 }}>
+                    <Box sx={{ textAlign: 'center', p: 2.5, bgcolor: 'warning.light', borderRadius: 2.5 }}>
                       <Typography variant="h4" color="white" sx={{ fontWeight: 700 }}>
                         {teamTasks.superFlagged}
                       </Typography>
@@ -379,7 +378,7 @@ const HomePage = ({ onLogout, onNavigate, onOpenDataEntry }) => {
                     </Box>
                   </Grid>
                   <Grid item xs={6}>
-                    <Box sx={{ textAlign: 'center', p: 2, bgcolor: 'info.light', borderRadius: 2 }}>
+                    <Box sx={{ textAlign: 'center', p: 2.5, bgcolor: 'info.light', borderRadius: 2.5 }}>
                       <Typography variant="h4" color="white" sx={{ fontWeight: 700 }}>
                         {teamTasks.draftedEmails}
                       </Typography>
@@ -389,7 +388,7 @@ const HomePage = ({ onLogout, onNavigate, onOpenDataEntry }) => {
                     </Box>
                   </Grid>
                   <Grid item xs={6}>
-                    <Box sx={{ textAlign: 'center', p: 2, bgcolor: 'success.light', borderRadius: 2 }}>
+                    <Box sx={{ textAlign: 'center', p: 2.5, bgcolor: 'success.light', borderRadius: 2.5 }}>
                       <Typography variant="h4" color="white" sx={{ fontWeight: 700 }}>
                         {teamTasks.newAccounts}
                       </Typography>
@@ -403,25 +402,26 @@ const HomePage = ({ onLogout, onNavigate, onOpenDataEntry }) => {
             </DashboardCard>
           </Grid>
 
-          {/* System Health Widget */}
           <Grid item xs={12} md={6}>
             <DashboardCard>
               <CardContent>
                 <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                  <HealthIcon sx={{ mr: 1, color: 'success.main' }} />
-                  <Typography variant="h6" component="h2">
+                  <HealthIcon sx={{ mr: 1.5, color: 'success.main', fontSize: '1.75rem' }} />
+                  <Typography variant="h5" component="h2">
                     System Health
                   </Typography>
                 </Box>
                 <List>
                   {systemHealth.map((system, index) => (
-                    <ListItem key={index} sx={{ px: 0 }}>
+                    <ListItem key={index} sx={{ px: 0, py: 1.5 }}>
                       <ListItemIcon>
-                        <span style={{ fontSize: '1.2rem' }}>{system.icon}</span>
+                        <span style={{ fontSize: '1.375rem' }}>{system.icon}</span>
                       </ListItemIcon>
                       <ListItemText
                         primary={system.name}
                         secondary={system.lastRun}
+                        primaryTypographyProps={{ fontSize: '1.0625rem' }}
+                        secondaryTypographyProps={{ fontSize: '0.9375rem' }}
                       />
                       <Chip
                         label={system.status}
@@ -435,25 +435,26 @@ const HomePage = ({ onLogout, onNavigate, onOpenDataEntry }) => {
             </DashboardCard>
           </Grid>
 
-          {/* Recent Activity Widget */}
           <Grid item xs={12} md={6}>
             <DashboardCard>
               <CardContent>
                 <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                  <DashboardIcon sx={{ mr: 1, color: 'info.main' }} />
-                  <Typography variant="h6" component="h2">
+                  <DashboardIcon sx={{ mr: 1.5, color: 'info.main', fontSize: '1.75rem' }} />
+                  <Typography variant="h5" component="h2">
                     Recent Activity
                   </Typography>
                 </Box>
                 <List>
                   {recentActivity.map((activity, index) => (
-                    <ListItem key={index} sx={{ px: 0 }}>
+                    <ListItem key={index} sx={{ px: 0, py: 1.5 }}>
                       <ListItemIcon>
-                        <span style={{ fontSize: '1.2rem' }}>{activity.icon}</span>
+                        <span style={{ fontSize: '1.375rem' }}>{activity.icon}</span>
                       </ListItemIcon>
                       <ListItemText
                         primary={activity.action}
                         secondary={activity.timestamp}
+                        primaryTypographyProps={{ fontSize: '1.0625rem' }}
+                        secondaryTypographyProps={{ fontSize: '0.9375rem' }}
                       />
                     </ListItem>
                   ))}
