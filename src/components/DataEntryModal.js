@@ -1,7 +1,45 @@
 import React, { useState } from 'react';
-import styled from 'styled-components';
-import kilowattImage from '../assets/image.png';
-import colors from '../assets/colors';
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+  TextField,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  Stepper,
+  Step,
+  StepLabel,
+  StepContent,
+  Typography,
+  Box,
+  Grid,
+  Card,
+  CardContent,
+  IconButton,
+  Chip,
+  Alert,
+  CircularProgress,
+  Divider
+} from '@mui/material';
+import {
+  Close as CloseIcon,
+  Business,
+  Person,
+  Bolt,
+  AttachMoney,
+  Factory,
+  CheckCircle,
+  Add as AddIcon,
+  Remove as RemoveIcon,
+  NavigateNext,
+  NavigateBefore,
+  Save
+} from '@mui/icons-material';
+import './DataEntryModal.scss';
 
 const DataEntryModal = ({ isOpen, onClose, onSave, onNavigate }) => {
   const [currentStep, setCurrentStep] = useState(1);
@@ -43,12 +81,12 @@ const DataEntryModal = ({ isOpen, onClose, onSave, onNavigate }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const steps = [
-    { id: 1, title: 'Account Information', icon: '🏢' },
-    { id: 2, title: 'Manager Details', icon: '👤' },
-    { id: 3, title: 'ESIID & Usage', icon: '⚡' },
-    { id: 4, title: 'Commission Setup', icon: '💰' },
-    { id: 5, title: 'Provider Details', icon: '🏭' },
-    { id: 6, title: 'Review & Submit', icon: '✅' }
+    { id: 1, title: 'Account Information', icon: <Business /> },
+    { id: 2, title: 'Manager Details', icon: <Person /> },
+    { id: 3, title: 'ESIID & Usage', icon: <Bolt /> },
+    { id: 4, title: 'Commission Setup', icon: <AttachMoney /> },
+    { id: 5, title: 'Provider Details', icon: <Factory /> },
+    { id: 6, title: 'Review & Submit', icon: <CheckCircle /> }
   ];
 
   const accountTypes = [
@@ -201,410 +239,381 @@ const DataEntryModal = ({ isOpen, onClose, onSave, onNavigate }) => {
     switch (currentStep) {
       case 1:
         return (
-          <StepContent>
-            <StepTitle>Account Information</StepTitle>
-            <FormGrid>
-              <FormGroup>
-                <Label>Account Name *</Label>
-                <Input
-                  type="text"
+          <Box className="data-entry-modal-form-section">
+            <Typography variant="h6" className="data-entry-modal-section-title">
+              <Business /> Account Information
+            </Typography>
+            <Grid container spacing={3} className="data-entry-modal-form-grid">
+              <Grid item xs={12} md={6}>
+                <TextField
+                  fullWidth
+                  label="Account Name *"
                   value={formData.accountName}
                   onChange={(e) => handleInputChange('accountName', e.target.value)}
-                  placeholder="Enter account name"
-                  error={errors.accountName}
+                  error={!!errors.accountName}
+                  helperText={errors.accountName}
+                  className="data-entry-modal-input"
                 />
-                {errors.accountName && <ErrorMessage>{errors.accountName}</ErrorMessage>}
-              </FormGroup>
-
-              <FormGroup>
-                <Label>Account Type *</Label>
-                <Select
-                  value={formData.accountType}
-                  onChange={(e) => handleInputChange('accountType', e.target.value)}
-                  error={errors.accountType}
-                >
-                  <option value="">Select account type</option>
-                  {accountTypes.map(type => (
-                    <option key={type} value={type}>{type}</option>
-                  ))}
-                </Select>
-                {errors.accountType && <ErrorMessage>{errors.accountType}</ErrorMessage>}
-              </FormGroup>
-
-              <FormGroup fullWidth>
-                <Label>Address *</Label>
-                <Input
-                  type="text"
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <FormControl fullWidth error={!!errors.accountType}>
+                  <InputLabel>Account Type *</InputLabel>
+                  <Select
+                    value={formData.accountType}
+                    onChange={(e) => handleInputChange('accountType', e.target.value)}
+                    label="Account Type *"
+                  >
+                    {accountTypes.map(type => (
+                      <MenuItem key={type} value={type}>{type}</MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="Address *"
                   value={formData.address}
                   onChange={(e) => handleInputChange('address', e.target.value)}
-                  placeholder="Enter street address"
-                  error={errors.address}
+                  error={!!errors.address}
+                  helperText={errors.address}
                 />
-                {errors.address && <ErrorMessage>{errors.address}</ErrorMessage>}
-              </FormGroup>
-
-              <FormGroup>
-                <Label>City *</Label>
-                <Input
-                  type="text"
+              </Grid>
+              <Grid item xs={12} md={4}>
+                <TextField
+                  fullWidth
+                  label="City *"
                   value={formData.city}
                   onChange={(e) => handleInputChange('city', e.target.value)}
-                  placeholder="Enter city"
-                  error={errors.city}
+                  error={!!errors.city}
+                  helperText={errors.city}
                 />
-                {errors.city && <ErrorMessage>{errors.city}</ErrorMessage>}
-              </FormGroup>
-
-              <FormGroup>
-                <Label>State *</Label>
-                <Input
-                  type="text"
+              </Grid>
+              <Grid item xs={12} md={4}>
+                <TextField
+                  fullWidth
+                  label="State *"
                   value={formData.state}
                   onChange={(e) => handleInputChange('state', e.target.value)}
-                  placeholder="Enter state"
-                  error={errors.state}
+                  error={!!errors.state}
+                  helperText={errors.state}
                 />
-                {errors.state && <ErrorMessage>{errors.state}</ErrorMessage>}
-              </FormGroup>
-
-              <FormGroup>
-                <Label>ZIP Code *</Label>
-                <Input
-                  type="text"
+              </Grid>
+              <Grid item xs={12} md={4}>
+                <TextField
+                  fullWidth
+                  label="ZIP Code *"
                   value={formData.zipCode}
                   onChange={(e) => handleInputChange('zipCode', e.target.value)}
-                  placeholder="Enter ZIP code"
-                  error={errors.zipCode}
+                  error={!!errors.zipCode}
+                  helperText={errors.zipCode}
                 />
-                {errors.zipCode && <ErrorMessage>{errors.zipCode}</ErrorMessage>}
-              </FormGroup>
-
-              <FormGroup>
-                <Label>Phone</Label>
-                <Input
-                  type="tel"
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <TextField
+                  fullWidth
+                  label="Phone"
                   value={formData.phone}
                   onChange={(e) => handleInputChange('phone', e.target.value)}
-                  placeholder="Enter phone number"
                 />
-              </FormGroup>
-
-              <FormGroup>
-                <Label>Email</Label>
-                <Input
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <TextField
+                  fullWidth
+                  label="Email"
                   type="email"
                   value={formData.email}
                   onChange={(e) => handleInputChange('email', e.target.value)}
-                  placeholder="Enter email address"
                 />
-              </FormGroup>
-            </FormGrid>
-          </StepContent>
+              </Grid>
+            </Grid>
+          </Box>
         );
 
       case 2:
         return (
-          <StepContent>
-            <StepTitle>Manager Details</StepTitle>
-            <FormGrid>
-              <FormGroup>
-                <Label>Manager Name *</Label>
-                <Input
-                  type="text"
+          <Box className="data-entry-modal-form-section">
+            <Typography variant="h6" className="data-entry-modal-section-title">
+              <Person /> Manager Details
+            </Typography>
+            <Grid container spacing={3} className="data-entry-modal-form-grid">
+              <Grid item xs={12} md={6}>
+                <TextField
+                  fullWidth
+                  label="Manager Name *"
                   value={formData.managerName}
                   onChange={(e) => handleInputChange('managerName', e.target.value)}
-                  placeholder="Enter manager name"
-                  error={errors.managerName}
+                  error={!!errors.managerName}
+                  helperText={errors.managerName}
                 />
-                {errors.managerName && <ErrorMessage>{errors.managerName}</ErrorMessage>}
-              </FormGroup>
-
-              <FormGroup>
-                <Label>Manager Email *</Label>
-                <Input
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <TextField
+                  fullWidth
+                  label="Manager Email *"
                   type="email"
                   value={formData.managerEmail}
                   onChange={(e) => handleInputChange('managerEmail', e.target.value)}
-                  placeholder="Enter manager email"
-                  error={errors.managerEmail}
+                  error={!!errors.managerEmail}
+                  helperText={errors.managerEmail}
                 />
-                {errors.managerEmail && <ErrorMessage>{errors.managerEmail}</ErrorMessage>}
-              </FormGroup>
-
-              <FormGroup>
-                <Label>Manager Phone</Label>
-                <Input
-                  type="tel"
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <TextField
+                  fullWidth
+                  label="Manager Phone"
                   value={formData.managerPhone}
                   onChange={(e) => handleInputChange('managerPhone', e.target.value)}
-                  placeholder="Enter manager phone"
                 />
-              </FormGroup>
-
-              <FormGroup>
-                <Label>Manager Company</Label>
-                <Input
-                  type="text"
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <TextField
+                  fullWidth
+                  label="Management Company"
                   value={formData.managerCompany}
                   onChange={(e) => handleInputChange('managerCompany', e.target.value)}
-                  placeholder="Enter manager company"
                 />
-              </FormGroup>
-            </FormGrid>
-          </StepContent>
+              </Grid>
+            </Grid>
+          </Box>
         );
 
       case 3:
         return (
-          <StepContent>
-            <StepTitle>ESIID & Usage Information</StepTitle>
-            <EsiidSection>
+          <Box className="data-entry-modal-form-section">
+            <Typography variant="h6" className="data-entry-modal-section-title">
+              <Bolt /> ESIID & Usage Information
+            </Typography>
+            <Box className="data-entry-modal-esiid-section">
               {formData.esiids.map((esiid, index) => (
-                <EsiidCard key={index}>
-                  <EsiidHeader>
-                    <EsiidTitle>ESIID #{index + 1}</EsiidTitle>
+                <Card key={index} className="data-entry-modal-esiid-item">
+                  <Box className="data-entry-modal-esiid-header">
+                    <Typography variant="h6" className="data-entry-modal-esiid-title">
+                      ESIID #{index + 1}
+                    </Typography>
                     {formData.esiids.length > 1 && (
-                      <RemoveButton onClick={() => removeEsiid(index)}>
-                        🗑️ Remove
-                      </RemoveButton>
+                      <Button
+                        variant="outlined"
+                        color="error"
+                        size="small"
+                        onClick={() => removeEsiid(index)}
+                        className="data-entry-modal-remove-button"
+                        startIcon={<RemoveIcon />}
+                      >
+                        Remove
+                      </Button>
                     )}
-                  </EsiidHeader>
-                  
-                  <FormGrid>
-                    <FormGroup>
-                      <Label>ESIID *</Label>
-                      <Input
-                        type="text"
+                  </Box>
+                  <Grid container spacing={2} className="data-entry-modal-esiid-grid">
+                    <Grid item xs={12} md={4}>
+                      <TextField
+                        fullWidth
+                        label="ESIID *"
                         value={esiid.esiid}
                         onChange={(e) => handleEsiidChange(index, 'esiid', e.target.value)}
-                        placeholder="Enter ESIID"
-                        error={errors[`esiid_${index}`]}
+                        error={!!errors[`esiid_${index}`]}
+                        helperText={errors[`esiid_${index}`]}
                       />
-                      {errors[`esiid_${index}`] && <ErrorMessage>{errors[`esiid_${index}`]}</ErrorMessage>}
-                    </FormGroup>
-
-                    <FormGroup>
-                      <Label>Usage (kWh) *</Label>
-                      <Input
-                        type="number"
+                    </Grid>
+                    <Grid item xs={12} md={4}>
+                      <TextField
+                        fullWidth
+                        label="Usage (kWh) *"
                         value={esiid.usage}
                         onChange={(e) => handleEsiidChange(index, 'usage', e.target.value)}
-                        placeholder="Enter usage"
-                        error={errors[`usage_${index}`]}
+                        error={!!errors[`usage_${index}`]}
+                        helperText={errors[`usage_${index}`]}
                       />
-                      {errors[`usage_${index}`] && <ErrorMessage>{errors[`usage_${index}`]}</ErrorMessage>}
-                    </FormGroup>
-
-                    <FormGroup>
-                      <Label>Rate ($/kWh)</Label>
-                      <Input
-                        type="number"
-                        step="0.001"
+                    </Grid>
+                    <Grid item xs={12} md={4}>
+                      <TextField
+                        fullWidth
+                        label="Rate"
                         value={esiid.rate}
                         onChange={(e) => handleEsiidChange(index, 'rate', e.target.value)}
-                        placeholder="Enter rate"
                       />
-                    </FormGroup>
-                  </FormGrid>
-                </EsiidCard>
+                    </Grid>
+                  </Grid>
+                </Card>
               ))}
-              
-              <AddButton onClick={addEsiid}>
-                ➕ Add Another ESIID
-              </AddButton>
-            </EsiidSection>
-          </StepContent>
+              <Button
+                variant="outlined"
+                onClick={addEsiid}
+                className="data-entry-modal-add-button"
+                startIcon={<AddIcon />}
+              >
+                Add ESIID
+              </Button>
+            </Box>
+          </Box>
         );
 
       case 4:
         return (
-          <StepContent>
-            <StepTitle>Commission Setup</StepTitle>
-            <FormGrid>
-              <FormGroup>
-                <Label>Commission Rate (%) *</Label>
-                <Input
-                  type="number"
-                  step="0.1"
+          <Box className="data-entry-modal-form-section">
+            <Typography variant="h6" className="data-entry-modal-section-title">
+              <AttachMoney /> Commission Setup
+            </Typography>
+            <Grid container spacing={3} className="data-entry-modal-form-grid">
+              <Grid item xs={12} md={6}>
+                <TextField
+                  fullWidth
+                  label="Commission Rate *"
                   value={formData.commissionRate}
                   onChange={(e) => handleInputChange('commissionRate', e.target.value)}
-                  placeholder="Enter commission rate"
-                  error={errors.commissionRate}
+                  error={!!errors.commissionRate}
+                  helperText={errors.commissionRate}
                 />
-                {errors.commissionRate && <ErrorMessage>{errors.commissionRate}</ErrorMessage>}
-              </FormGroup>
-
-              <FormGroup>
-                <Label>Contract Type *</Label>
-                <Select
-                  value={formData.contractType}
-                  onChange={(e) => handleInputChange('contractType', e.target.value)}
-                  error={errors.contractType}
-                >
-                  <option value="">Select contract type</option>
-                  {contractTypes.map(type => (
-                    <option key={type} value={type}>{type}</option>
-                  ))}
-                </Select>
-                {errors.contractType && <ErrorMessage>{errors.contractType}</ErrorMessage>}
-              </FormGroup>
-
-              <FormGroup>
-                <Label>Contract Start Date *</Label>
-                <Input
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <FormControl fullWidth error={!!errors.contractType}>
+                  <InputLabel>Contract Type *</InputLabel>
+                  <Select
+                    value={formData.contractType}
+                    onChange={(e) => handleInputChange('contractType', e.target.value)}
+                    label="Contract Type *"
+                  >
+                    {contractTypes.map(type => (
+                      <MenuItem key={type} value={type}>{type}</MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <TextField
+                  fullWidth
+                  label="Contract Start Date *"
                   type="date"
                   value={formData.contractStartDate}
                   onChange={(e) => handleInputChange('contractStartDate', e.target.value)}
-                  error={errors.contractStartDate}
+                  error={!!errors.contractStartDate}
+                  helperText={errors.contractStartDate}
+                  InputLabelProps={{ shrink: true }}
                 />
-                {errors.contractStartDate && <ErrorMessage>{errors.contractStartDate}</ErrorMessage>}
-              </FormGroup>
-
-              <FormGroup>
-                <Label>Contract End Date *</Label>
-                <Input
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <TextField
+                  fullWidth
+                  label="Contract End Date *"
                   type="date"
                   value={formData.contractEndDate}
                   onChange={(e) => handleInputChange('contractEndDate', e.target.value)}
-                  error={errors.contractEndDate}
+                  error={!!errors.contractEndDate}
+                  helperText={errors.contractEndDate}
+                  InputLabelProps={{ shrink: true }}
                 />
-                {errors.contractEndDate && <ErrorMessage>{errors.contractEndDate}</ErrorMessage>}
-              </FormGroup>
-
-              <FormGroup>
-                <Label>Monthly Commission ($)</Label>
-                <Input
-                  type="number"
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <TextField
+                  fullWidth
+                  label="Monthly Commission"
                   value={formData.monthlyCommission}
                   onChange={(e) => handleInputChange('monthlyCommission', e.target.value)}
-                  placeholder="Enter monthly commission"
                 />
-              </FormGroup>
-            </FormGrid>
-          </StepContent>
+              </Grid>
+            </Grid>
+          </Box>
         );
 
       case 5:
         return (
-          <StepContent>
-            <StepTitle>Provider Details</StepTitle>
-            <FormGrid>
-              <FormGroup>
-                <Label>Provider Name *</Label>
-                <Select
-                  value={formData.providerName}
-                  onChange={(e) => handleInputChange('providerName', e.target.value)}
-                  error={errors.providerName}
-                >
-                  <option value="">Select provider</option>
-                  {providers.map(provider => (
-                    <option key={provider} value={provider}>{provider}</option>
-                  ))}
-                </Select>
-                {errors.providerName && <ErrorMessage>{errors.providerName}</ErrorMessage>}
-              </FormGroup>
-
-              <FormGroup>
-                <Label>Provider Contact</Label>
-                <Input
-                  type="text"
+          <Box className="data-entry-modal-form-section">
+            <Typography variant="h6" className="data-entry-modal-section-title">
+              <Factory /> Provider Details
+            </Typography>
+            <Grid container spacing={3} className="data-entry-modal-form-grid">
+              <Grid item xs={12} md={6}>
+                <FormControl fullWidth error={!!errors.providerName}>
+                  <InputLabel>Provider Name *</InputLabel>
+                  <Select
+                    value={formData.providerName}
+                    onChange={(e) => handleInputChange('providerName', e.target.value)}
+                    label="Provider Name *"
+                  >
+                    {providers.map(provider => (
+                      <MenuItem key={provider} value={provider}>{provider}</MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <TextField
+                  fullWidth
+                  label="Provider Contact"
                   value={formData.providerContact}
                   onChange={(e) => handleInputChange('providerContact', e.target.value)}
-                  placeholder="Enter provider contact name"
                 />
-              </FormGroup>
-
-              <FormGroup>
-                <Label>Provider Email</Label>
-                <Input
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <TextField
+                  fullWidth
+                  label="Provider Email"
                   type="email"
                   value={formData.providerEmail}
                   onChange={(e) => handleInputChange('providerEmail', e.target.value)}
-                  placeholder="Enter provider email"
                 />
-              </FormGroup>
-
-              <FormGroup>
-                <Label>Provider Phone</Label>
-                <Input
-                  type="tel"
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <TextField
+                  fullWidth
+                  label="Provider Phone"
                   value={formData.providerPhone}
                   onChange={(e) => handleInputChange('providerPhone', e.target.value)}
-                  placeholder="Enter provider phone"
                 />
-              </FormGroup>
-            </FormGrid>
-          </StepContent>
+              </Grid>
+            </Grid>
+          </Box>
         );
 
       case 6:
         return (
-          <StepContent>
-            <StepTitle>Review & Submit</StepTitle>
-            <ReviewSection>
-              <ReviewCard>
-                <ReviewTitle>Account Information</ReviewTitle>
-                <ReviewItem>
-                  <ReviewLabel>Account Name:</ReviewLabel>
-                  <ReviewValue>{formData.accountName}</ReviewValue>
-                </ReviewItem>
-                <ReviewItem>
-                  <ReviewLabel>Account Type:</ReviewLabel>
-                  <ReviewValue>{formData.accountType}</ReviewValue>
-                </ReviewItem>
-                <ReviewItem>
-                  <ReviewLabel>Address:</ReviewLabel>
-                  <ReviewValue>{formData.address}, {formData.city}, {formData.state} {formData.zipCode}</ReviewValue>
-                </ReviewItem>
-              </ReviewCard>
-
-              <ReviewCard>
-                <ReviewTitle>Manager Details</ReviewTitle>
-                <ReviewItem>
-                  <ReviewLabel>Manager Name:</ReviewLabel>
-                  <ReviewValue>{formData.managerName}</ReviewValue>
-                </ReviewItem>
-                <ReviewItem>
-                  <ReviewLabel>Manager Email:</ReviewLabel>
-                  <ReviewValue>{formData.managerEmail}</ReviewValue>
-                </ReviewItem>
-              </ReviewCard>
-
-              <ReviewCard>
-                <ReviewTitle>ESIID Information</ReviewTitle>
-                {formData.esiids.map((esiid, index) => (
-                  <ReviewItem key={index}>
-                    <ReviewLabel>ESIID #{index + 1}:</ReviewLabel>
-                    <ReviewValue>{esiid.esiid} - {esiid.usage} kWh</ReviewValue>
-                  </ReviewItem>
-                ))}
-              </ReviewCard>
-
-              <ReviewCard>
-                <ReviewTitle>Commission Setup</ReviewTitle>
-                <ReviewItem>
-                  <ReviewLabel>Commission Rate:</ReviewLabel>
-                  <ReviewValue>{formData.commissionRate}%</ReviewValue>
-                </ReviewItem>
-                <ReviewItem>
-                  <ReviewLabel>Contract Type:</ReviewLabel>
-                  <ReviewValue>{formData.contractType}</ReviewValue>
-                </ReviewItem>
-                <ReviewItem>
-                  <ReviewLabel>Contract Period:</ReviewLabel>
-                  <ReviewValue>{formData.contractStartDate} to {formData.contractEndDate}</ReviewValue>
-                </ReviewItem>
-              </ReviewCard>
-
-              <ReviewCard>
-                <ReviewTitle>Provider Details</ReviewTitle>
-                <ReviewItem>
-                  <ReviewLabel>Provider:</ReviewLabel>
-                  <ReviewValue>{formData.providerName}</ReviewValue>
-                </ReviewItem>
-              </ReviewCard>
-            </ReviewSection>
-          </StepContent>
+          <Box className="data-entry-modal-review-section">
+            <Typography variant="h6" className="data-entry-modal-review-title">
+              Review & Submit
+            </Typography>
+            <Grid container spacing={2} className="data-entry-modal-review-grid">
+              <Grid item xs={12} md={6}>
+                <Card className="data-entry-modal-review-item">
+                  <Typography variant="subtitle2" className="data-entry-modal-review-label">
+                    Account Name
+                  </Typography>
+                  <Typography variant="body1" className="data-entry-modal-review-value">
+                    {formData.accountName}
+                  </Typography>
+                </Card>
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <Card className="data-entry-modal-review-item">
+                  <Typography variant="subtitle2" className="data-entry-modal-review-label">
+                    Account Type
+                  </Typography>
+                  <Typography variant="body1" className="data-entry-modal-review-value">
+                    {formData.accountType}
+                  </Typography>
+                </Card>
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <Card className="data-entry-modal-review-item">
+                  <Typography variant="subtitle2" className="data-entry-modal-review-label">
+                    Manager Name
+                  </Typography>
+                  <Typography variant="body1" className="data-entry-modal-review-value">
+                    {formData.managerName}
+                  </Typography>
+                </Card>
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <Card className="data-entry-modal-review-item">
+                  <Typography variant="subtitle2" className="data-entry-modal-review-label">
+                    Provider Name
+                  </Typography>
+                  <Typography variant="body1" className="data-entry-modal-review-value">
+                    {formData.providerName}
+                  </Typography>
+                </Card>
+              </Grid>
+            </Grid>
+          </Box>
         );
 
       default:
@@ -612,430 +621,91 @@ const DataEntryModal = ({ isOpen, onClose, onSave, onNavigate }) => {
     }
   };
 
-  if (!isOpen) return null;
-
   return (
-    <ModalOverlay>
-      <ModalContainer>
-        <ModalHeader>
-          <HeaderLeft>
-            <LogoSection>
-              <LogoImage src={kilowattImage} alt="Kilowatt" />
-              <LogoText>Kilowatt</LogoText>
-            </LogoSection>
-            <ModalTitle>New Account & Commission Entry</ModalTitle>
-          </HeaderLeft>
-          <CloseButton onClick={handleClose}>✕</CloseButton>
-        </ModalHeader>
+    <Dialog
+      open={isOpen}
+      onClose={handleClose}
+      maxWidth="md"
+      fullWidth
+      className="data-entry-modal-overlay"
+    >
+      <Box className="data-entry-modal-container">
+        <Box className="data-entry-modal-header">
+          <Typography variant="h5" className="data-entry-modal-title">
+            Data Entry Form
+          </Typography>
+          <IconButton
+            onClick={handleClose}
+            className="data-entry-modal-close-button"
+            color="inherit"
+          >
+            <CloseIcon />
+          </IconButton>
+        </Box>
 
-        <StepIndicator>
-          {steps.map((step, index) => (
-            <StepItem key={step.id} active={currentStep >= step.id} completed={currentStep > step.id}>
-              <StepIcon>{step.icon}</StepIcon>
-              <StepLabel>{step.title}</StepLabel>
-              {index < steps.length - 1 && <StepConnector />}
-            </StepItem>
-          ))}
-        </StepIndicator>
+        <DialogContent className="data-entry-modal-content">
+          <Stepper activeStep={currentStep - 1} className="data-entry-modal-steps">
+            {steps.map((step, index) => (
+              <Step key={step.id}>
+                <StepLabel
+                  icon={step.icon}
+                  className={`data-entry-modal-step-title ${
+                    currentStep > index + 1 ? 'completed' : 
+                    currentStep === index + 1 ? 'active' : ''
+                  }`}
+                >
+                  {step.title}
+                </StepLabel>
+              </Step>
+            ))}
+          </Stepper>
 
-        <ModalContent>
-          {renderStepContent()}
-        </ModalContent>
+          {isSubmitting ? (
+            <Box className="data-entry-modal-loading">
+              <CircularProgress className="data-entry-modal-spinner" />
+              <Typography variant="h6" style={{ marginLeft: 16 }}>
+                Submitting data...
+              </Typography>
+            </Box>
+          ) : (
+            renderStepContent()
+          )}
+        </DialogContent>
 
-        <ModalFooter>
-          <FooterLeft>
-            <StepInfo>
-              Step {currentStep} of {steps.length}
-            </StepInfo>
-          </FooterLeft>
+        <DialogActions className="data-entry-modal-navigation">
+          <Button
+            onClick={handlePrevious}
+            disabled={currentStep === 1}
+            className="data-entry-modal-button secondary"
+            startIcon={<NavigateBefore />}
+          >
+            Previous
+          </Button>
           
-          <FooterRight>
-            {currentStep > 1 && (
-              <Button secondary onClick={handlePrevious}>
-                ← Previous
-              </Button>
-            )}
-            
-            {currentStep < steps.length ? (
-              <Button primary onClick={handleNext}>
-                Next →
-              </Button>
-            ) : (
-              <Button primary onClick={handleSubmit} disabled={isSubmitting}>
-                {isSubmitting ? 'Submitting...' : 'Submit Account'}
-              </Button>
-            )}
-          </FooterRight>
-        </ModalFooter>
-      </ModalContainer>
-    </ModalOverlay>
+          {currentStep < steps.length ? (
+            <Button
+              onClick={handleNext}
+              variant="contained"
+              className="data-entry-modal-button primary"
+              endIcon={<NavigateNext />}
+            >
+              Next
+            </Button>
+          ) : (
+            <Button
+              onClick={handleSubmit}
+              variant="contained"
+              disabled={isSubmitting}
+              className="data-entry-modal-button primary"
+              startIcon={<Save />}
+            >
+              Submit
+            </Button>
+          )}
+        </DialogActions>
+      </Box>
+    </Dialog>
   );
 };
-
-// Styled Components
-const ModalOverlay = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(200,40,40,0.7);
-  z-index: 1000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const ModalContainer = styled.div`
-  background: ${colors.background};
-  border-radius: 20px;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.10);
-  padding: 40px;
-  max-width: 600px;
-  width: 100%;
-  color: ${colors.text};
-  display: flex;
-  flex-direction: column;
-`;
-
-const ModalHeader = styled.h2`
-  font-size: 2rem;
-  font-weight: 700;
-  color: ${colors.primary};
-  text-align: center;
-  margin-bottom: 24px;
-`;
-
-const HeaderLeft = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 16px;
-`;
-
-const LogoSection = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 8px;
-`;
-
-const LogoImage = styled.img`
-  width: 24px;
-  height: 24px;
-  border-radius: 6px;
-`;
-
-const LogoText = styled.span`
-  font-size: 16px;
-  font-weight: 700;
-  color: #1e293b;
-`;
-
-const ModalTitle = styled.h2`
-  font-size: 20px;
-  font-weight: 600;
-  color: #1e293b;
-  margin: 0;
-`;
-
-const CloseButton = styled.button`
-  background: none;
-  border: none;
-  font-size: 20px;
-  color: #64748b;
-  cursor: pointer;
-  padding: 8px;
-  border-radius: 8px;
-  transition: all 0.2s ease;
-
-  &:hover {
-    background: rgba(0, 0, 0, 0.1);
-    color: #1e293b;
-  }
-`;
-
-const StepIndicator = styled.div`
-  display: flex;
-  align-items: center;
-  padding: 20px 32px;
-  background: rgba(248, 250, 252, 0.8);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-  overflow-x: auto;
-`;
-
-const StepItem = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  position: relative;
-  flex-shrink: 0;
-`;
-
-const StepIcon = styled.div`
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: ${props => props.active || props.completed ? '#3b82f6' : '#e2e8f0'};
-  color: ${props => props.active || props.completed ? 'white' : '#64748b'};
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  font-weight: 600;
-  transition: all 0.3s ease;
-`;
-
-const StepLabel = styled.span`
-  font-size: 12px;
-  font-weight: 500;
-  color: ${props => props.active || props.completed ? '#1e293b' : '#64748b'};
-  white-space: nowrap;
-`;
-
-const StepConnector = styled.div`
-  width: 40px;
-  height: 2px;
-  background: #e2e8f0;
-  margin: 0 8px;
-`;
-
-const ModalContent = styled.div`
-  background: ${colors.background};
-  border-radius: 20px;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.10);
-  padding: 40px;
-  max-width: 600px;
-  width: 100%;
-  color: ${colors.text};
-  font-size: 1.25rem;
-`;
-
-const StepContent = styled.div``;
-
-const StepTitle = styled.h3`
-  font-size: 18px;
-  font-weight: 600;
-  color: #1e293b;
-  margin: 0 0 24px 0;
-`;
-
-const FormGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 20px;
-`;
-
-const FormGroup = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  grid-column: ${props => props.fullWidth ? '1 / -1' : 'auto'};
-`;
-
-const Label = styled.label`
-  font-size: 14px;
-  font-weight: 500;
-  color: #374151;
-`;
-
-const Input = styled.input`
-  padding: 12px 16px;
-  border: 1px solid ${props => props.error ? '#ef4444' : '#d1d5db'};
-  border-radius: 8px;
-  font-size: 14px;
-  background: white;
-  transition: all 0.2s ease;
-
-  &:focus {
-    outline: none;
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-  }
-
-  &::placeholder {
-    color: #9ca3af;
-  }
-`;
-
-const Select = styled.select`
-  padding: 12px 16px;
-  border: 1px solid ${props => props.error ? '#ef4444' : '#d1d5db'};
-  border-radius: 8px;
-  font-size: 14px;
-  background: white;
-  transition: all 0.2s ease;
-
-  &:focus {
-    outline: none;
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-  }
-`;
-
-const ErrorMessage = styled.span`
-  font-size: 12px;
-  color: #ef4444;
-  margin-top: 4px;
-`;
-
-const EsiidSection = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-`;
-
-const EsiidCard = styled.div`
-  background: rgba(248, 250, 252, 0.8);
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
-  padding: 20px;
-`;
-
-const EsiidHeader = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
-`;
-
-const EsiidTitle = styled.h4`
-  font-size: 16px;
-  font-weight: 600;
-  color: #1e293b;
-  margin: 0;
-`;
-
-const RemoveButton = styled.button`
-  background: rgba(239, 68, 68, 0.1);
-  border: 1px solid rgba(239, 68, 68, 0.2);
-  color: #ef4444;
-  padding: 6px 12px;
-  border-radius: 6px;
-  font-size: 12px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-
-  &:hover {
-    background: rgba(239, 68, 68, 0.2);
-  }
-`;
-
-const AddButton = styled.button`
-  background: rgba(59, 130, 246, 0.1);
-  border: 1px solid rgba(59, 130, 246, 0.2);
-  color: #3b82f6;
-  padding: 12px 20px;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  width: fit-content;
-
-  &:hover {
-    background: rgba(59, 130, 246, 0.2);
-  }
-`;
-
-const ReviewSection = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-`;
-
-const ReviewCard = styled.div`
-  background: rgba(248, 250, 252, 0.8);
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
-  padding: 20px;
-`;
-
-const ReviewTitle = styled.h4`
-  font-size: 16px;
-  font-weight: 600;
-  color: #1e293b;
-  margin: 0 0 16px 0;
-`;
-
-const ReviewItem = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 8px 0;
-  border-bottom: 1px solid #f1f5f9;
-
-  &:last-child {
-    border-bottom: none;
-  }
-`;
-
-const ReviewLabel = styled.span`
-  font-size: 14px;
-  font-weight: 500;
-  color: #64748b;
-`;
-
-const ReviewValue = styled.span`
-  font-size: 14px;
-  font-weight: 600;
-  color: #1e293b;
-`;
-
-const ModalFooter = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 24px 32px;
-  border-top: 1px solid rgba(0, 0, 0, 0.1);
-  background: rgba(255, 255, 255, 0.9);
-`;
-
-const FooterLeft = styled.div``;
-
-const FooterRight = styled.div`
-  display: flex;
-  gap: 12px;
-`;
-
-const StepInfo = styled.span`
-  font-size: 14px;
-  color: #64748b;
-  font-weight: 500;
-`;
-
-const Button = styled.button`
-  padding: 12px 24px;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  border: none;
-
-  ${props => props.primary && `
-    background: #3b82f6;
-    color: white;
-
-    &:hover:not(:disabled) {
-      background: #2563eb;
-      transform: translateY(-1px);
-    }
-
-    &:disabled {
-      background: #9ca3af;
-      cursor: not-allowed;
-    }
-  `}
-
-  ${props => props.secondary && `
-    background: rgba(59, 130, 246, 0.1);
-    color: #3b82f6;
-    border: 1px solid rgba(59, 130, 246, 0.2);
-
-    &:hover {
-      background: rgba(59, 130, 246, 0.2);
-    }
-  `}
-`;
 
 export default DataEntryModal; 

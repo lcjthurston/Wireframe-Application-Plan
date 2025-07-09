@@ -1,7 +1,53 @@
 import React, { useState, useRef, useEffect } from 'react';
-import styled from 'styled-components';
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  TextField,
+  Button,
+  Tabs,
+  Tab,
+  Card,
+  CardContent,
+  CardHeader,
+  Chip,
+  Avatar,
+  Menu,
+  MenuItem,
+  IconButton,
+  Badge,
+  Box,
+  Grid,
+  Alert,
+  Divider,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemIcon,
+  InputAdornment
+} from '@mui/material';
+import {
+  Search as SearchIcon,
+  AccountCircle,
+  Business,
+  Phone,
+  Email,
+  LocationOn,
+  Person,
+  AttachMoney,
+  Description,
+  History,
+  Refresh,
+  GetApp,
+  Edit,
+  MoreVert,
+  CheckCircle,
+  Warning,
+  Error,
+  Info
+} from '@mui/icons-material';
 import kilowattImage from '../assets/image.png';
-import colors from '../assets/colors';
+import './AccountDashboard.scss';
 
 const AccountDashboard = ({ onLogout, onNavigate }) => {
   const [activeTab, setActiveTab] = useState('overview');

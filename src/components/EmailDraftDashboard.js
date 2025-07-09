@@ -65,8 +65,8 @@ import {
   ExpandMore as ExpandMoreIcon,
   AttachFile as AttachFileIcon
 } from '@mui/icons-material';
-import { styled } from '@mui/material/styles';
 import kilowattImage from '../assets/image.png';
+import './EmailDraftDashboard.scss';
 
 const EmailDraftDashboard = ({ onLogout, onNavigate }) => {
   const [selectedEmail, setSelectedEmail] = useState(null);
@@ -197,7 +197,8 @@ Kilowatt Team`,
 
   const sortOptions = [
     { value: 'date', label: 'Date Drafted' },
-    { value: 'account', label: 'Account Name' },
+    { value: 'recipient', label: 'Recipient' },
+    { value: 'account', label: 'Account' },
     { value: 'type', label: 'Email Type' }
   ];
 
@@ -214,7 +215,7 @@ Kilowatt Team`,
   };
 
   const handleEmailAction = (action, emailId) => {
-    console.log('Email action:', action, 'for email:', emailId);
+    console.log(`${action} email:`, emailId);
     if (action === 'view') {
       const email = emailDrafts.find(e => e.id === emailId);
       setSelectedEmail(email);
@@ -223,7 +224,7 @@ Kilowatt Team`,
   };
 
   const handleBulkAction = (action) => {
-    console.log('Bulk action:', action);
+    console.log(`Bulk ${action} emails`);
   };
 
   const getFilteredEmails = () => {
@@ -239,7 +240,7 @@ Kilowatt Team`,
       filtered = filtered.filter(email => email.emailType === typeMap[filterType]);
     }
 
-    // Filter by search
+    // Filter by search query
     if (searchQuery) {
       filtered = filtered.filter(email =>
         email.recipient.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -248,36 +249,24 @@ Kilowatt Team`,
       );
     }
 
-    // Sort emails
+    // Sort
     filtered.sort((a, b) => {
-      let aValue, bValue;
-
       switch (sortBy) {
         case 'date':
-          aValue = new Date(a.dateDrafted);
-          bValue = new Date(b.dateDrafted);
-          break;
+          return new Date(b.dateDrafted) - new Date(a.dateDrafted);
+        case 'recipient':
+          return a.recipient.localeCompare(b.recipient);
         case 'account':
-          aValue = a.account;
-          bValue = b.account;
-          break;
+          return a.account.localeCompare(b.account);
         case 'type':
-          aValue = a.emailType;
-          bValue = b.emailType;
-          break;
+          return a.emailType.localeCompare(b.emailType);
         default:
           return 0;
       }
-
-      if (aValue < bValue) return -1;
-      if (aValue > bValue) return 1;
-      return 0;
     });
 
     return filtered;
   };
-
-  const filteredEmails = getFilteredEmails();
 
   const getEmailTypeColor = (type) => {
     switch (type) {
@@ -292,288 +281,343 @@ Kilowatt Team`,
     }
   };
 
-  const StyledAppBar = styled(AppBar)(({ theme }) => ({
-    background: 'linear-gradient(135deg, #1976d2 0%, #1565c0 100%)',
-    boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-  }));
+  const getEmailTypeClass = (type) => {
+    switch (type) {
+      case 'Pricing Sheet':
+        return 'email-draft-type-pricing';
+      case 'Contract':
+        return 'email-draft-type-contract';
+      case 'Manager Change Notification':
+        return 'email-draft-type-manager';
+      default:
+        return '';
+    }
+  };
 
-  const LogoImage = styled('img')({
-    width: 40,
-    height: 40,
-    marginRight: 12,
-    borderRadius: 8,
-  });
-
-  const DashboardCard = styled(Card)(({ theme }) => ({
-    height: '100%',
-    transition: 'transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out',
-    '&:hover': {
-      transform: 'translateY(-4px)',
-      boxShadow: '0 8px 25px rgba(0,0,0,0.15)',
-    },
-  }));
+  const filteredEmails = getFilteredEmails();
 
   return (
-    <Box sx={{ minHeight: '100vh', bgcolor: 'background.default' }}>
-      <StyledAppBar position="static">
-        <Toolbar>
+    <Box className="email-draft-dashboard">
+      <AppBar position="static" className="email-draft-app-bar">
+        <Toolbar className="email-draft-toolbar">
           <Box sx={{ display: 'flex', alignItems: 'center', flexGrow: 1 }}>
-            <LogoImage src={kilowattImage} alt="Kilowatt" />
-            <Typography variant="h6" component="div" sx={{ fontWeight: 700 }}>
+            <img src={kilowattImage} alt="Kilowatt" className="email-draft-logo" />
+            <Typography variant="h6" component="div" className="email-draft-brand">
               Kilowatt
             </Typography>
           </Box>
 
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            <Button color="inherit" onClick={() => handleNavigation('home')}>
-              Home
-            </Button>
-            <Button color="inherit" onClick={() => handleNavigation('task-queue')}>
-              Task Queue
-            </Button>
-            <Button color="inherit" onClick={() => handleNavigation('accounts')}>
-              Accounts
-            </Button>
-            <Button color="inherit" onClick={() => handleNavigation('managers')}>
-              Managers
-            </Button>
-            <Button color="inherit" variant="contained" sx={{ bgcolor: 'rgba(255,255,255,0.2)' }}>
-              Email Drafts
-            </Button>
-            <Button color="inherit" onClick={() => handleNavigation('commissions')}>
-              Commissions
-            </Button>
-            <Button color="inherit" onClick={() => handleNavigation('providers')}>
-              Providers
-            </Button>
-            <Button color="inherit" onClick={() => handleNavigation('system-health')}>
-              System Health
-            </Button>
+          <Box className="email-draft-search-container">
+            <TextField
+              placeholder="Search emails..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              variant="outlined"
+              size="small"
+              className="email-draft-search-field"
+              InputProps={{
+                startAdornment: (
+                  <SearchIcon sx={{ color: 'text.secondary', mr: 1 }} />
+                ),
+              }}
+            />
           </Box>
 
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, ml: 2 }}>
-            <Paper component="form" onSubmit={handleSearch} sx={{ display: 'flex', alignItems: 'center', px: 2 }}>
-              <TextField
-                size="small"
-                placeholder="Search emails..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                variant="standard"
-                sx={{ minWidth: 200 }}
-                InputProps={{ disableUnderline: true }}
-              />
-              <IconButton type="submit" size="small">
-                <SearchIcon />
-              </IconButton>
-            </Paper>
-
-            <IconButton onClick={onLogout} sx={{ color: 'inherit' }}>
-              <LogoutIcon />
-            </IconButton>
-          </Box>
+          <Button
+            color="inherit"
+            onClick={() => handleNavigation('home')}
+            className="email-draft-profile-button"
+            startIcon={<AccountIcon />}
+          >
+            Profile
+          </Button>
         </Toolbar>
-      </StyledAppBar>
+      </AppBar>
 
-      <Container maxWidth="xl" sx={{ py: 4 }}>
-        <Box sx={{ mb: 4 }}>
-          <Typography variant="h4" component="h1" sx={{ fontWeight: 700, mb: 1 }}>
+      <Container maxWidth="xl" className="email-draft-content">
+        <Box className="email-draft-header">
+          <Typography variant="h4" className="email-draft-title">
             Email Draft Dashboard
           </Typography>
-          <Typography variant="body1" color="text.secondary">
-            Manage and send email drafts to clients and partners
+          <Typography variant="body1" className="email-draft-subtitle">
+            Manage and review email drafts before sending
           </Typography>
         </Box>
 
-        {/* Filters and Controls */}
-        <Box sx={{ mb: 4 }}>
-          <Grid container spacing={3} alignItems="center">
-            <Grid item xs={12} md={4}>
-              <FormControl fullWidth>
-                <InputLabel>Filter by Type</InputLabel>
-                <Select
-                  value={filterType}
-                  onChange={(e) => setFilterType(e.target.value)}
-                  label="Filter by Type"
-                >
-                  {emailTypes.map((type) => (
-                    <MenuItem key={type.id} value={type.id}>
-                      {type.label} ({type.count})
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid item xs={12} md={4}>
-              <FormControl fullWidth>
-                <InputLabel>Sort By</InputLabel>
-                <Select
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value)}
-                  label="Sort By"
-                >
-                  {sortOptions.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid item xs={12} md={4}>
-              <Box sx={{ display: 'flex', gap: 2 }}>
-                <Button variant="outlined" onClick={() => handleBulkAction('send')} startIcon={<SendIcon />}>
-                  Send Selected
-                </Button>
-                <Button variant="outlined" onClick={() => handleBulkAction('delete')} startIcon={<DeleteIcon />}>
-                  Delete Selected
-                </Button>
-              </Box>
-            </Grid>
+        <Grid container spacing={3} className="email-draft-stats">
+          <Grid item xs={12} sm={6} md={3}>
+            <Card className="email-draft-stat-card">
+              <CardContent sx={{ textAlign: 'center', py: 3 }}>
+                <Typography variant="h3" className="email-draft-stat-value">
+                  {emailDrafts.length}
+                </Typography>
+                <Typography variant="body2" className="email-draft-stat-label">
+                  Total Drafts
+                </Typography>
+                <Typography variant="h2" className="email-draft-stat-icon">
+                  📧
+                </Typography>
+              </CardContent>
+            </Card>
           </Grid>
+
+          <Grid item xs={12} sm={6} md={3}>
+            <Card className="email-draft-stat-card">
+              <CardContent sx={{ textAlign: 'center', py: 3 }}>
+                <Typography variant="h3" className="email-draft-stat-value">
+                  {emailDrafts.filter(e => e.emailType === 'Pricing Sheet').length}
+                </Typography>
+                <Typography variant="body2" className="email-draft-stat-label">
+                  Pricing Sheets
+                </Typography>
+                <Typography variant="h2" className="email-draft-stat-icon">
+                  💰
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+
+          <Grid item xs={12} sm={6} md={3}>
+            <Card className="email-draft-stat-card">
+              <CardContent sx={{ textAlign: 'center', py: 3 }}>
+                <Typography variant="h3" className="email-draft-stat-value">
+                  {emailDrafts.filter(e => e.emailType === 'Contract').length}
+                </Typography>
+                <Typography variant="body2" className="email-draft-stat-label">
+                  Contracts
+                </Typography>
+                <Typography variant="h2" className="email-draft-stat-icon">
+                  📋
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+
+          <Grid item xs={12} sm={6} md={3}>
+            <Card className="email-draft-stat-card">
+              <CardContent sx={{ textAlign: 'center', py: 3 }}>
+                <Typography variant="h3" className="email-draft-stat-value">
+                  {emailDrafts.filter(e => e.emailType === 'Manager Change Notification').length}
+                </Typography>
+                <Typography variant="body2" className="email-draft-stat-label">
+                  Manager Changes
+                </Typography>
+                <Typography variant="h2" className="email-draft-stat-icon">
+                  👤
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+        </Grid>
+
+        <Paper className="email-draft-filters">
+          <Box className="email-draft-filter-row">
+            <FormControl className="email-draft-filter-item">
+              <InputLabel>Filter by Type</InputLabel>
+              <Select
+                value={filterType}
+                onChange={(e) => setFilterType(e.target.value)}
+                label="Filter by Type"
+              >
+                {emailTypes.map((type) => (
+                  <MenuItem key={type.id} value={type.id}>
+                    {type.label} ({type.count})
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+
+            <FormControl className="email-draft-filter-item">
+              <InputLabel>Sort by</InputLabel>
+              <Select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+                label="Sort by"
+              >
+                {sortOptions.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Box>
+        </Paper>
+
+        <Box className="email-draft-bulk-actions">
+          <Typography variant="h6" sx={{ mb: 2 }}>
+            Bulk Actions
+          </Typography>
+          <Button
+            variant="contained"
+            startIcon={<SendIcon />}
+            onClick={() => handleBulkAction('send')}
+            className="email-draft-bulk-button"
+          >
+            Send Selected
+          </Button>
+          <Button
+            variant="outlined"
+            startIcon={<EditIcon />}
+            onClick={() => handleBulkAction('edit')}
+            className="email-draft-bulk-button"
+          >
+            Edit Selected
+          </Button>
+          <Button
+            variant="outlined"
+            startIcon={<DeleteIcon />}
+            onClick={() => handleBulkAction('delete')}
+            className="email-draft-bulk-button"
+          >
+            Delete Selected
+          </Button>
         </Box>
 
-        {/* Email Queue */}
-        <Grid container spacing={3}>
-          {filteredEmails.map((email) => (
-            <Grid item xs={12} key={email.id}>
-              <DashboardCard>
-                <CardContent>
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
-                    <Box>
-                      <Typography variant="h6" component="h3" sx={{ mb: 1 }}>
-                        {email.subject}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
-                        To: {email.recipient}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        Account: {email.account}
-                      </Typography>
-                    </Box>
-                    <Box sx={{ display: 'flex', gap: 1 }}>
-                      <Chip
-                        label={email.emailType}
-                        color={getEmailTypeColor(email.emailType)}
-                        size="small"
-                      />
-                      <Typography variant="body2" color="text.secondary">
-                        {email.dateDrafted}
-                      </Typography>
-                    </Box>
-                  </Box>
-
-                  <Typography variant="body2" sx={{ mb: 2 }}>
-                    {email.body.substring(0, 150)}...
-                  </Typography>
-
-                  {email.attachments.length > 0 && (
-                    <Box sx={{ mb: 2 }}>
-                      <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
-                        Attachments:
-                      </Typography>
-                      <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-                        {email.attachments.map((attachment, index) => (
-                          <Chip
-                            key={index}
-                            icon={<AttachFileIcon />}
-                            label={attachment}
-                            size="small"
-                            variant="outlined"
-                          />
-                        ))}
-                      </Box>
-                    </Box>
-                  )}
-
-                  <Box sx={{ display: 'flex', gap: 1 }}>
+        <TableContainer className="email-draft-table-container">
+          <Table className="email-draft-table">
+            <TableHead>
+              <TableRow>
+                <TableCell>Recipient</TableCell>
+                <TableCell>Account</TableCell>
+                <TableCell>Email Type</TableCell>
+                <TableCell>Subject</TableCell>
+                <TableCell>Date Drafted</TableCell>
+                <TableCell>Actions</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {filteredEmails.map((email) => (
+                <TableRow key={email.id}>
+                  <TableCell>{email.recipient}</TableCell>
+                  <TableCell>{email.account}</TableCell>
+                  <TableCell>
+                    <Chip
+                      label={email.emailType}
+                      color={getEmailTypeColor(email.emailType)}
+                      size="small"
+                      className={`email-draft-email-type-chip ${getEmailTypeClass(email.emailType)}`}
+                    />
+                  </TableCell>
+                  <TableCell>{email.subject}</TableCell>
+                  <TableCell>{email.dateDrafted}</TableCell>
+                  <TableCell>
                     <Button
                       size="small"
-                      variant="outlined"
-                      onClick={() => handleEmailAction('view', email.id)}
                       startIcon={<VisibilityIcon />}
+                      onClick={() => handleEmailAction('view', email.id)}
+                      className="email-draft-action-button"
                     >
                       View
                     </Button>
                     <Button
                       size="small"
-                      variant="outlined"
-                      onClick={() => handleEmailAction('edit', email.id)}
                       startIcon={<EditIcon />}
+                      onClick={() => handleEmailAction('edit', email.id)}
+                      className="email-draft-action-button"
                     >
                       Edit
                     </Button>
                     <Button
                       size="small"
-                      variant="contained"
-                      onClick={() => handleEmailAction('send', email.id)}
                       startIcon={<SendIcon />}
+                      onClick={() => handleEmailAction('send', email.id)}
+                      className="email-draft-action-button"
                     >
                       Send
                     </Button>
-                  </Box>
-                </CardContent>
-              </DashboardCard>
-            </Grid>
-          ))}
-        </Grid>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
 
-        {/* Email Preview Dialog */}
-        <Dialog
-          open={emailDialogOpen}
-          onClose={() => setEmailDialogOpen(false)}
-          maxWidth="md"
-          fullWidth
-        >
+        {filteredEmails.length === 0 && (
+          <Box className="email-draft-empty-state">
+            <Typography className="email-draft-empty-icon">
+              📧
+            </Typography>
+            <Typography variant="h6" className="email-draft-empty-text">
+              No email drafts found
+            </Typography>
+            <Typography variant="body2" className="email-draft-empty-subtext">
+              Try adjusting your filters or search terms
+            </Typography>
+          </Box>
+        )}
+      </Container>
+
+      <Dialog
+        open={emailDialogOpen}
+        onClose={() => setEmailDialogOpen(false)}
+        maxWidth="md"
+        fullWidth
+        className="email-draft-dialog"
+      >
+        <DialogTitle className="email-draft-dialog-title">
+          Email Details
+        </DialogTitle>
+        <DialogContent className="email-draft-dialog-content">
           {selectedEmail && (
             <>
-              <DialogTitle>
-                <Typography variant="h6">{selectedEmail.subject}</Typography>
-                <Typography variant="body2" color="text.secondary">
-                  To: {selectedEmail.recipient}
-                </Typography>
-              </DialogTitle>
-              <DialogContent>
-                <Box sx={{ mb: 2 }}>
-                  <Chip
-                    label={selectedEmail.emailType}
-                    color={getEmailTypeColor(selectedEmail.emailType)}
-                    sx={{ mr: 1 }}
-                  />
-                  <Typography variant="body2" color="text.secondary" component="span">
-                    Drafted: {selectedEmail.dateDrafted}
-                  </Typography>
+              <Box className="email-draft-email-details">
+                <Box className="email-draft-detail-row">
+                  <Typography className="email-draft-detail-label">Recipient:</Typography>
+                  <Typography className="email-draft-detail-value">{selectedEmail.recipient}</Typography>
                 </Box>
-                <Typography variant="body1" sx={{ whiteSpace: 'pre-line' }}>
-                  {selectedEmail.body}
-                </Typography>
-                {selectedEmail.attachments.length > 0 && (
-                  <Box sx={{ mt: 2 }}>
-                    <Typography variant="subtitle2" sx={{ mb: 1 }}>
-                      Attachments:
-                    </Typography>
-                    <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-                      {selectedEmail.attachments.map((attachment, index) => (
-                        <Chip
-                          key={index}
-                          icon={<AttachFileIcon />}
-                          label={attachment}
-                          variant="outlined"
-                        />
-                      ))}
-                    </Box>
+                <Box className="email-draft-detail-row">
+                  <Typography className="email-draft-detail-label">Account:</Typography>
+                  <Typography className="email-draft-detail-value">{selectedEmail.account}</Typography>
+                </Box>
+                <Box className="email-draft-detail-row">
+                  <Typography className="email-draft-detail-label">Subject:</Typography>
+                  <Typography className="email-draft-detail-value">{selectedEmail.subject}</Typography>
+                </Box>
+                <Box className="email-draft-detail-row">
+                  <Typography className="email-draft-detail-label">Type:</Typography>
+                  <Typography className="email-draft-detail-value">{selectedEmail.emailType}</Typography>
+                </Box>
+                <Box className="email-draft-detail-row">
+                  <Typography className="email-draft-detail-label">Date:</Typography>
+                  <Typography className="email-draft-detail-value">{selectedEmail.dateDrafted}</Typography>
+                </Box>
+              </Box>
+
+              <Typography variant="h6" sx={{ mb: 2 }}>
+                Email Body
+              </Typography>
+              <Box className="email-draft-email-body">
+                {selectedEmail.body}
+              </Box>
+
+              {selectedEmail.attachments.length > 0 && (
+                <>
+                  <Typography variant="h6" sx={{ mb: 2 }}>
+                    Attachments
+                  </Typography>
+                  <Box className="email-draft-attachments">
+                    {selectedEmail.attachments.map((attachment, index) => (
+                      <Box key={index} className="email-draft-attachment-item">
+                        <AttachFileIcon className="email-draft-attachment-icon" />
+                        <Typography className="email-draft-attachment-name">
+                          {attachment}
+                        </Typography>
+                      </Box>
+                    ))}
                   </Box>
-                )}
-              </DialogContent>
-              <DialogActions>
-                <Button onClick={() => setEmailDialogOpen(false)}>Close</Button>
-                <Button variant="contained" startIcon={<SendIcon />}>
-                  Send Email
-                </Button>
-              </DialogActions>
+                </>
+              )}
             </>
           )}
-        </Dialog>
-      </Container>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setEmailDialogOpen(false)}>Close</Button>
+          <Button variant="contained" startIcon={<SendIcon />}>
+            Send Email
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };

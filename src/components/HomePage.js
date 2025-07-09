@@ -39,8 +39,8 @@ import {
   CheckCircle as CheckCircleIcon,
   Error as ErrorIcon
 } from '@mui/icons-material';
-import { styled } from '@mui/material/styles';
 import kilowattImage from '../assets/image.png';
+import './HomePage.scss';
 
 const HomePage = ({ onLogout, onNavigate, onOpenDataEntry }) => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -168,302 +168,257 @@ const HomePage = ({ onLogout, onNavigate, onOpenDataEntry }) => {
     }
   };
 
-  const StyledAppBar = styled(AppBar)(({ theme }) => ({
-    background: 'linear-gradient(135deg, #1976d2 0%, #1565c0 100%)',
-    boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-  }));
-
-  const LogoImage = styled('img')({
-    width: 44,
-    height: 44,
-    marginRight: 14,
-    borderRadius: 9,
-  });
-
-  const DashboardCard = styled(Card)(({ theme }) => ({
-    height: '100%',
-    transition: 'transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out',
-    '&:hover': {
-      transform: 'translateY(-4px)',
-      boxShadow: '0 8px 25px rgba(0,0,0,0.15)',
-    },
-  }));
-
   return (
-    <Box sx={{ minHeight: '100vh', bgcolor: 'background.default' }}>
-      <StyledAppBar position="static">
-        <Toolbar sx={{ minHeight: 72 }}>
+    <Box className="home-page">
+      <AppBar position="static" className="home-app-bar">
+        <Toolbar className="home-toolbar">
           <Box sx={{ display: 'flex', alignItems: 'center', flexGrow: 1 }}>
-            <LogoImage src={kilowattImage} alt="Kilowatt" />
-            <Typography variant="h6" component="div" sx={{ fontWeight: 700 }}>
+            <img src={kilowattImage} alt="Kilowatt" className="home-logo" />
+            <Typography variant="h6" component="div" className="home-brand">
               Kilowatt
             </Typography>
           </Box>
 
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2.5 }}>
-            <Button color="inherit" onClick={() => handleNavigation('home')} sx={{ fontSize: '1.0625rem' }}>
-              Home
-            </Button>
-            <Button color="inherit" onClick={() => handleNavigation('task-queue')} sx={{ fontSize: '1.0625rem' }}>
-              Task Queue
-            </Button>
-            <Button color="inherit" onClick={() => handleNavigation('accounts')} sx={{ fontSize: '1.0625rem' }}>
-              Accounts
-            </Button>
-            <Button color="inherit" onClick={() => handleNavigation('managers')} sx={{ fontSize: '1.0625rem' }}>
-              Managers
-            </Button>
-            <Button color="inherit" onClick={() => handleNavigation('email-drafts')} sx={{ fontSize: '1.0625rem' }}>
-              Email Drafts
-            </Button>
-            <Button color="inherit" onClick={() => handleNavigation('commissions')} sx={{ fontSize: '1.0625rem' }}>
-              Commissions
-            </Button>
-            <Button color="inherit" onClick={() => handleNavigation('providers')} sx={{ fontSize: '1.0625rem' }}>
-              Providers
-            </Button>
-            <Button color="inherit" onClick={() => handleNavigation('system-health')} sx={{ fontSize: '1.0625rem' }}>
-              System Health
-            </Button>
+          <Box className="home-search-container">
+            <TextField
+              placeholder="Search accounts, providers, or tasks..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              variant="outlined"
+              size="small"
+              className="home-search-field"
+              InputProps={{
+                startAdornment: (
+                  <SearchIcon sx={{ color: 'text.secondary', mr: 1 }} />
+                ),
+              }}
+            />
           </Box>
 
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2.5, ml: 2.5 }}>
-            <Paper component="form" onSubmit={handleSearch} sx={{ display: 'flex', alignItems: 'center', px: 2.5 }}>
-              <TextField
-                size="small"
-                placeholder="Search accounts, managers, etc..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                variant="standard"
-                sx={{ minWidth: 220 }}
-                InputProps={{ 
-                  disableUnderline: true,
-                  style: { fontSize: '1.0625rem' }
-                }}
-              />
-              <IconButton type="submit" size="medium">
-                <SearchIcon sx={{ fontSize: '1.375rem' }} />
-              </IconButton>
-            </Paper>
-
-            <IconButton
-              onClick={handleProfileMenuOpen}
-              sx={{ color: 'inherit' }}
-              size="medium"
-            >
-              <Avatar sx={{ width: 36, height: 36 }}>
-                {userProfile.avatar ? (
-                  <img src={userProfile.avatar} alt={userProfile.name} />
-                ) : (
-                  userProfile.name.charAt(0)
-                )}
-              </Avatar>
-            </IconButton>
-            <Menu
-              anchorEl={anchorEl}
-              open={Boolean(anchorEl)}
-              onClose={handleProfileMenuClose}
-            >
-              <MenuItem onClick={() => handleProfileAction('settings')} sx={{ fontSize: '1.0625rem' }}>
-                <ListItemIcon>
-                  <SettingsIcon fontSize="medium" />
-                </ListItemIcon>
-                Settings
-              </MenuItem>
-              <MenuItem onClick={() => handleProfileAction('logout')} sx={{ fontSize: '1.0625rem' }}>
-                <ListItemIcon>
-                  <LogoutIcon fontSize="medium" />
-                </ListItemIcon>
-                Logout
-              </MenuItem>
-            </Menu>
-          </Box>
+          <Button
+            color="inherit"
+            onClick={handleProfileMenuOpen}
+            className="home-profile-button"
+            startIcon={<AccountIcon />}
+          >
+            {userProfile.name}
+          </Button>
         </Toolbar>
-      </StyledAppBar>
+      </AppBar>
 
-      <Container maxWidth="xl" sx={{ py: 4 }}>
-        <Box sx={{ mb: 4 }}>
-          <Typography variant="h4" component="h1" sx={{ fontWeight: 700, mb: 1 }}>
-            Welcome back, {userProfile.name}! 👋
+      <Container maxWidth="xl" className="home-content">
+        <Box className="home-welcome-section">
+          <Typography variant="h4" className="home-welcome-title">
+            Welcome back, {userProfile.name}!
           </Typography>
-          <Typography variant="body1" color="text.secondary">
-            Here's what's happening with your business intelligence platform today.
+          <Typography variant="body1" className="home-welcome-subtitle">
+            Here's what's happening with your accounts and team today.
           </Typography>
         </Box>
 
-        <Grid container spacing={3}>
-          <Grid item xs={12} md={6}>
-            <DashboardCard>
-              <CardContent>
-                <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                  <TaskIcon sx={{ mr: 1.5, color: 'primary.main', fontSize: '1.75rem' }} />
-                  <Typography variant="h5" component="h2">
-                    My Tasks
-                  </Typography>
-                </Box>
-                <Grid container spacing={2}>
-                  <Grid item xs={6}>
-                    <Box sx={{ textAlign: 'center', p: 2.5, bgcolor: 'primary.light', borderRadius: 2.5 }}>
-                      <Typography variant="h4" color="white" sx={{ fontWeight: 700 }}>
-                        {myTasks.providerSelection}
-                      </Typography>
-                      <Typography variant="body2" color="white">
-                        Provider Selection
-                      </Typography>
-                    </Box>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <Box sx={{ textAlign: 'center', p: 2.5, bgcolor: 'warning.light', borderRadius: 2.5 }}>
-                      <Typography variant="h4" color="white" sx={{ fontWeight: 700 }}>
-                        {myTasks.superFlagged}
-                      </Typography>
-                      <Typography variant="body2" color="white">
-                        Super Flagged
-                      </Typography>
-                    </Box>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <Box sx={{ textAlign: 'center', p: 2.5, bgcolor: 'info.light', borderRadius: 2.5 }}>
-                      <Typography variant="h4" color="white" sx={{ fontWeight: 700 }}>
-                        {myTasks.draftedEmails}
-                      </Typography>
-                      <Typography variant="body2" color="white">
-                        Drafted Emails
-                      </Typography>
-                    </Box>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <Box sx={{ textAlign: 'center', p: 2.5, bgcolor: 'success.light', borderRadius: 2.5 }}>
-                      <Typography variant="h4" color="white" sx={{ fontWeight: 700 }}>
-                        {myTasks.newAccounts}
-                      </Typography>
-                      <Typography variant="body2" color="white">
-                        New Accounts
-                      </Typography>
-                    </Box>
-                  </Grid>
-                </Grid>
+        <Grid container spacing={3} className="home-stats-grid">
+          <Grid item xs={12} sm={6} md={3}>
+            <Card className="home-stat-card">
+              <CardContent sx={{ textAlign: 'center', py: 3 }}>
+                <Typography variant="h3" className="home-stat-value">
+                  {myTasks.providerSelection + teamTasks.providerSelection}
+                </Typography>
+                <Typography variant="body2" className="home-stat-label">
+                  Provider Selections
+                </Typography>
+                <Typography variant="h2" className="home-stat-icon">
+                  🏢
+                </Typography>
               </CardContent>
-            </DashboardCard>
+            </Card>
           </Grid>
 
-          <Grid item xs={12} md={6}>
-            <DashboardCard>
-              <CardContent>
-                <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                  <TrendingUpIcon sx={{ mr: 1.5, color: 'secondary.main', fontSize: '1.75rem' }} />
-                  <Typography variant="h5" component="h2">
-                    Team Tasks
-                  </Typography>
-                </Box>
-                <Grid container spacing={2}>
-                  <Grid item xs={6}>
-                    <Box sx={{ textAlign: 'center', p: 2.5, bgcolor: 'primary.light', borderRadius: 2.5 }}>
-                      <Typography variant="h4" color="white" sx={{ fontWeight: 700 }}>
-                        {teamTasks.providerSelection}
-                      </Typography>
-                      <Typography variant="body2" color="white">
-                        Provider Selection
-                      </Typography>
-                    </Box>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <Box sx={{ textAlign: 'center', p: 2.5, bgcolor: 'warning.light', borderRadius: 2.5 }}>
-                      <Typography variant="h4" color="white" sx={{ fontWeight: 700 }}>
-                        {teamTasks.superFlagged}
-                      </Typography>
-                      <Typography variant="body2" color="white">
-                        Super Flagged
-                      </Typography>
-                    </Box>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <Box sx={{ textAlign: 'center', p: 2.5, bgcolor: 'info.light', borderRadius: 2.5 }}>
-                      <Typography variant="h4" color="white" sx={{ fontWeight: 700 }}>
-                        {teamTasks.draftedEmails}
-                      </Typography>
-                      <Typography variant="body2" color="white">
-                        Drafted Emails
-                      </Typography>
-                    </Box>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <Box sx={{ textAlign: 'center', p: 2.5, bgcolor: 'success.light', borderRadius: 2.5 }}>
-                      <Typography variant="h4" color="white" sx={{ fontWeight: 700 }}>
-                        {teamTasks.newAccounts}
-                      </Typography>
-                      <Typography variant="body2" color="white">
-                        New Accounts
-                      </Typography>
-                    </Box>
-                  </Grid>
-                </Grid>
+          <Grid item xs={12} sm={6} md={3}>
+            <Card className="home-stat-card">
+              <CardContent sx={{ textAlign: 'center', py: 3 }}>
+                <Typography variant="h3" className="home-stat-value">
+                  {myTasks.superFlagged + teamTasks.superFlagged}
+                </Typography>
+                <Typography variant="body2" className="home-stat-label">
+                  Super Flagged
+                </Typography>
+                <Typography variant="h2" className="home-stat-icon">
+                  ⚠️
+                </Typography>
               </CardContent>
-            </DashboardCard>
+            </Card>
           </Grid>
 
-          <Grid item xs={12} md={6}>
-            <DashboardCard>
-              <CardContent>
-                <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                  <HealthIcon sx={{ mr: 1.5, color: 'success.main', fontSize: '1.75rem' }} />
-                  <Typography variant="h5" component="h2">
-                    System Health
-                  </Typography>
-                </Box>
-                <List>
-                  {systemHealth.map((system, index) => (
-                    <ListItem key={index} sx={{ px: 0, py: 1.5 }}>
-                      <ListItemIcon>
-                        <span style={{ fontSize: '1.375rem' }}>{system.icon}</span>
-                      </ListItemIcon>
-                      <ListItemText
-                        primary={system.name}
-                        secondary={system.lastRun}
-                        primaryTypographyProps={{ fontSize: '1.0625rem' }}
-                        secondaryTypographyProps={{ fontSize: '0.9375rem' }}
-                      />
-                      <Chip
-                        label={system.status}
-                        color={getStatusColor(system.status)}
-                        size="small"
-                      />
-                    </ListItem>
-                  ))}
-                </List>
+          <Grid item xs={12} sm={6} md={3}>
+            <Card className="home-stat-card">
+              <CardContent sx={{ textAlign: 'center', py: 3 }}>
+                <Typography variant="h3" className="home-stat-value">
+                  {myTasks.draftedEmails + teamTasks.draftedEmails}
+                </Typography>
+                <Typography variant="body2" className="home-stat-label">
+                  Drafted Emails
+                </Typography>
+                <Typography variant="h2" className="home-stat-icon">
+                  📧
+                </Typography>
               </CardContent>
-            </DashboardCard>
+            </Card>
           </Grid>
 
-          <Grid item xs={12} md={6}>
-            <DashboardCard>
-              <CardContent>
-                <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                  <DashboardIcon sx={{ mr: 1.5, color: 'info.main', fontSize: '1.75rem' }} />
-                  <Typography variant="h5" component="h2">
-                    Recent Activity
-                  </Typography>
-                </Box>
-                <List>
-                  {recentActivity.map((activity, index) => (
-                    <ListItem key={index} sx={{ px: 0, py: 1.5 }}>
-                      <ListItemIcon>
-                        <span style={{ fontSize: '1.375rem' }}>{activity.icon}</span>
-                      </ListItemIcon>
-                      <ListItemText
-                        primary={activity.action}
-                        secondary={activity.timestamp}
-                        primaryTypographyProps={{ fontSize: '1.0625rem' }}
-                        secondaryTypographyProps={{ fontSize: '0.9375rem' }}
-                      />
-                    </ListItem>
-                  ))}
-                </List>
+          <Grid item xs={12} sm={6} md={3}>
+            <Card className="home-stat-card">
+              <CardContent sx={{ textAlign: 'center', py: 3 }}>
+                <Typography variant="h3" className="home-stat-value">
+                  {myTasks.newAccounts + teamTasks.newAccounts}
+                </Typography>
+                <Typography variant="body2" className="home-stat-label">
+                  New Accounts
+                </Typography>
+                <Typography variant="h2" className="home-stat-icon">
+                  🆕
+                </Typography>
               </CardContent>
-            </DashboardCard>
+            </Card>
           </Grid>
         </Grid>
+
+        <Grid container spacing={3}>
+          <Grid item xs={12} md={6}>
+            <Typography variant="h6" className="home-section-title">
+              System Health
+            </Typography>
+            <Box className="home-health-grid">
+              {systemHealth.map((item, index) => (
+                <Box key={index} className="home-health-item">
+                  <Typography className="home-health-icon">
+                    {item.icon}
+                  </Typography>
+                  <Box className="home-health-info">
+                    <Typography variant="body1" className="home-health-name">
+                      {item.name}
+                    </Typography>
+                    <Typography variant="body2" className="home-health-status">
+                      {item.lastRun}
+                    </Typography>
+                  </Box>
+                  <Chip
+                    label={item.status}
+                    color={getStatusColor(item.status)}
+                    size="small"
+                    className={`home-status-chip home-status-${item.status.toLowerCase()}`}
+                  />
+                </Box>
+              ))}
+            </Box>
+          </Grid>
+
+          <Grid item xs={12} md={6}>
+            <Typography variant="h6" className="home-section-title">
+              Recent Activity
+            </Typography>
+            <Paper className="home-activity-list">
+              {recentActivity.map((activity, index) => (
+                <Box key={index} className="home-activity-item">
+                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                    <Typography className="home-activity-icon">
+                      {activity.icon}
+                    </Typography>
+                    <Box className="home-activity-content">
+                      <Typography variant="body2" className="home-activity-text">
+                        {activity.type === 'user' ? (
+                          <>
+                            <span className="home-activity-user">{activity.user}</span> {activity.action}
+                          </>
+                        ) : (
+                          activity.action
+                        )}
+                      </Typography>
+                      <Typography variant="caption" className="home-activity-timestamp">
+                        {activity.timestamp}
+                      </Typography>
+                    </Box>
+                  </Box>
+                </Box>
+              ))}
+            </Paper>
+          </Grid>
+        </Grid>
+
+        <Box className="home-quick-actions">
+          <Typography variant="h6" className="home-section-title">
+            Quick Actions
+          </Typography>
+          <Button
+            variant="contained"
+            startIcon={<DashboardIcon />}
+            onClick={() => handleNavigation('manager')}
+            className="home-action-button"
+          >
+            Manager Dashboard
+          </Button>
+          <Button
+            variant="outlined"
+            startIcon={<EmailIcon />}
+            onClick={() => handleNavigation('email-draft')}
+            className="home-action-button"
+          >
+            Email Drafts
+          </Button>
+          <Button
+            variant="outlined"
+            startIcon={<MoneyIcon />}
+            onClick={() => handleNavigation('commission')}
+            className="home-action-button"
+          >
+            Commission Dashboard
+          </Button>
+          <Button
+            variant="outlined"
+            startIcon={<BusinessIcon />}
+            onClick={() => handleNavigation('provider')}
+            className="home-action-button"
+          >
+            Provider Management
+          </Button>
+          <Button
+            variant="outlined"
+            startIcon={<HealthIcon />}
+            onClick={() => handleNavigation('system-health')}
+            className="home-action-button"
+          >
+            System Health
+          </Button>
+          <Button
+            variant="outlined"
+            startIcon={<TaskIcon />}
+            onClick={() => handleNavigation('task-queue')}
+            className="home-action-button"
+          >
+            Task Queue
+          </Button>
+        </Box>
       </Container>
+
+      <Menu
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={handleProfileMenuClose}
+        className="home-menu"
+      >
+        <MenuItem onClick={() => handleProfileAction('profile')} className="home-menu-item">
+          <AccountIcon sx={{ mr: 1 }} />
+          Profile
+        </MenuItem>
+        <MenuItem onClick={() => handleProfileAction('settings')} className="home-menu-item">
+          <SettingsIcon sx={{ mr: 1 }} />
+          Settings
+        </MenuItem>
+        <Divider />
+        <MenuItem onClick={() => handleProfileAction('logout')} className="home-menu-item">
+          <LogoutIcon sx={{ mr: 1 }} />
+          Logout
+        </MenuItem>
+      </Menu>
     </Box>
   );
 };

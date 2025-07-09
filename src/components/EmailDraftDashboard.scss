@@ -1,0 +1,342 @@
+/* EmailDraftDashboard component-scoped styles */
+
+.email-draft-dashboard {
+  min-height: 100vh;
+  background-color: #fafafa;
+}
+
+.email-draft-app-bar {
+  background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.email-draft-toolbar {
+  min-height: 72px;
+}
+
+.email-draft-logo {
+  width: 44px;
+  height: 44px;
+  margin-right: 14px;
+  border-radius: 9px;
+}
+
+.email-draft-brand {
+  font-weight: 700;
+}
+
+.email-draft-search-container {
+  display: flex;
+  align-items: center;
+  flex-grow: 1;
+  max-width: 600px;
+  margin: 0 32px;
+}
+
+.email-draft-search-field {
+  width: 100%;
+  
+  .MuiOutlinedInput-root {
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 24px;
+    
+    &:hover {
+      background-color: rgba(255, 255, 255, 1);
+    }
+  }
+}
+
+.email-draft-profile-button {
+  color: white;
+  text-transform: none;
+  font-weight: 600;
+}
+
+.email-draft-content {
+  padding: 32px 0;
+}
+
+.email-draft-header {
+  margin-bottom: 32px;
+}
+
+.email-draft-title {
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.email-draft-subtitle {
+  color: #666;
+  margin-bottom: 24px;
+}
+
+.email-draft-filters {
+  margin-bottom: 24px;
+  padding: 24px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.email-draft-filter-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.email-draft-filter-item {
+  min-width: 200px;
+}
+
+.email-draft-tabs {
+  margin-bottom: 24px;
+  
+  .MuiTabs-indicator {
+    background-color: #1976d2;
+    height: 3px;
+    border-radius: 2px;
+  }
+  
+  .MuiTab-root {
+    text-transform: none;
+    font-weight: 600;
+    font-size: 0.875rem;
+    min-width: 120px;
+    
+    &.Mui-selected {
+      color: #1976d2;
+    }
+  }
+}
+
+.email-draft-table-container {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  overflow: hidden;
+}
+
+.email-draft-table {
+  .MuiTableHead-root {
+    background-color: #f8f9fa;
+    
+    .MuiTableCell-head {
+      font-weight: 600;
+      color: #333;
+      border-bottom: 2px solid #e0e0e0;
+    }
+  }
+  
+  .MuiTableBody-root {
+    .MuiTableRow-root {
+      transition: background-color 0.2s ease;
+      
+      &:hover {
+        background-color: #f8f9fa;
+      }
+    }
+    
+    .MuiTableCell-body {
+      border-bottom: 1px solid #f0f0f0;
+      padding: 16px;
+    }
+  }
+}
+
+.email-draft-email-type-chip {
+  font-weight: 500;
+  border-radius: 16px;
+}
+
+.email-draft-type-pricing {
+  background-color: #e3f2fd;
+  color: #1976d2;
+}
+
+.email-draft-type-contract {
+  background-color: #e8f5e8;
+  color: #2e7d32;
+}
+
+.email-draft-type-manager {
+  background-color: #fff3e0;
+  color: #ed6c02;
+}
+
+.email-draft-action-button {
+  margin-right: 8px;
+  text-transform: none;
+  font-weight: 600;
+  border-radius: 20px;
+  padding: 8px 16px;
+  min-width: 80px;
+}
+
+.email-draft-dialog {
+  .MuiDialog-paper {
+    border-radius: 16px;
+    max-width: 800px;
+    width: 90%;
+  }
+}
+
+.email-draft-dialog-title {
+  font-weight: 600;
+  color: #333;
+}
+
+.email-draft-dialog-content {
+  padding: 24px;
+}
+
+.email-draft-email-details {
+  margin-bottom: 24px;
+}
+
+.email-draft-detail-row {
+  display: flex;
+  margin-bottom: 12px;
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.email-draft-detail-label {
+  font-weight: 600;
+  color: #666;
+  min-width: 120px;
+  margin-right: 16px;
+}
+
+.email-draft-detail-value {
+  color: #333;
+  flex-grow: 1;
+}
+
+.email-draft-email-body {
+  background-color: #f8f9fa;
+  padding: 16px;
+  border-radius: 8px;
+  border-left: 4px solid #1976d2;
+  margin: 16px 0;
+  white-space: pre-wrap;
+  font-family: 'Courier New', monospace;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.email-draft-attachments {
+  margin-top: 16px;
+}
+
+.email-draft-attachment-item {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  background-color: #f0f0f0;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.email-draft-attachment-icon {
+  margin-right: 8px;
+  color: #666;
+}
+
+.email-draft-attachment-name {
+  font-weight: 500;
+  color: #333;
+}
+
+.email-draft-bulk-actions {
+  margin-bottom: 16px;
+  padding: 16px;
+  background-color: #f8f9fa;
+  border-radius: 12px;
+  border: 1px solid #e0e0e0;
+}
+
+.email-draft-bulk-button {
+  margin-right: 12px;
+  text-transform: none;
+  font-weight: 600;
+  border-radius: 20px;
+}
+
+.email-draft-stats {
+  margin-bottom: 24px;
+}
+
+.email-draft-stat-card {
+  height: 100%;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+  }
+}
+
+.email-draft-stat-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1976d2;
+}
+
+.email-draft-stat-label {
+  color: #666;
+  font-weight: 500;
+}
+
+.email-draft-stat-icon {
+  font-size: 2.5rem;
+  margin-bottom: 8px;
+}
+
+.email-draft-menu-item {
+  font-weight: 500;
+}
+
+.email-draft-avatar {
+  width: 32px;
+  height: 32px;
+  margin-right: 8px;
+}
+
+.email-draft-badge {
+  .MuiBadge-badge {
+    background-color: #f44336;
+  }
+}
+
+.email-draft-empty-state {
+  text-align: center;
+  padding: 48px 24px;
+  color: #666;
+}
+
+.email-draft-empty-icon {
+  font-size: 4rem;
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+
+.email-draft-empty-text {
+  font-size: 1.125rem;
+  margin-bottom: 8px;
+}
+
+.email-draft-empty-subtext {
+  font-size: 0.875rem;
+  opacity: 0.7;
+} 

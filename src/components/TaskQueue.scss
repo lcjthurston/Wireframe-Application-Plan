@@ -1,0 +1,354 @@
+/* TaskQueue component-scoped styles */
+
+.task-queue-dashboard {
+  min-height: 100vh;
+  background-color: #fafafa;
+}
+
+.task-queue-app-bar {
+  background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.task-queue-toolbar {
+  min-height: 72px;
+}
+
+.task-queue-logo {
+  width: 44px;
+  height: 44px;
+  margin-right: 14px;
+  border-radius: 9px;
+}
+
+.task-queue-brand {
+  font-weight: 700;
+}
+
+.task-queue-search-container {
+  display: flex;
+  align-items: center;
+  flex-grow: 1;
+  max-width: 600px;
+  margin: 0 32px;
+}
+
+.task-queue-search-field {
+  width: 100%;
+  
+  .MuiOutlinedInput-root {
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 24px;
+    
+    &:hover {
+      background-color: rgba(255, 255, 255, 1);
+    }
+  }
+}
+
+.task-queue-profile-button {
+  color: white;
+  text-transform: none;
+  font-weight: 600;
+}
+
+.task-queue-content {
+  padding: 32px 0;
+}
+
+.task-queue-header {
+  margin-bottom: 32px;
+}
+
+.task-queue-title {
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.task-queue-subtitle {
+  color: #666;
+  margin-bottom: 24px;
+}
+
+.task-queue-stats {
+  margin-bottom: 32px;
+}
+
+.task-queue-stat-card {
+  height: 100%;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+  }
+}
+
+.task-queue-stat-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1976d2;
+}
+
+.task-queue-stat-label {
+  color: #666;
+  font-weight: 500;
+}
+
+.task-queue-stat-icon {
+  font-size: 2.5rem;
+  margin-bottom: 8px;
+}
+
+.task-queue-tabs {
+  margin-bottom: 24px;
+  
+  .MuiTabs-indicator {
+    background-color: #1976d2;
+    height: 3px;
+    border-radius: 2px;
+  }
+  
+  .MuiTab-root {
+    text-transform: none;
+    font-weight: 600;
+    font-size: 0.875rem;
+    min-width: 120px;
+    
+    &.Mui-selected {
+      color: #1976d2;
+    }
+  }
+}
+
+.task-queue-filters {
+  margin-bottom: 24px;
+  padding: 24px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.task-queue-filter-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.task-queue-filter-item {
+  min-width: 200px;
+}
+
+.task-queue-table-container {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  overflow: hidden;
+}
+
+.task-queue-table {
+  .MuiTableHead-root {
+    background-color: #f8f9fa;
+    
+    .MuiTableCell-head {
+      font-weight: 600;
+      color: #333;
+      border-bottom: 2px solid #e0e0e0;
+    }
+  }
+  
+  .MuiTableBody-root {
+    .MuiTableRow-root {
+      transition: background-color 0.2s ease;
+      
+      &:hover {
+        background-color: #f8f9fa;
+      }
+    }
+    
+    .MuiTableCell-body {
+      border-bottom: 1px solid #f0f0f0;
+      padding: 16px;
+    }
+  }
+}
+
+.task-queue-priority-chip {
+  font-weight: 500;
+  border-radius: 16px;
+}
+
+.task-queue-priority-high {
+  background-color: #ffebee;
+  color: #d32f2f;
+}
+
+.task-queue-priority-medium {
+  background-color: #fff3e0;
+  color: #ed6c02;
+}
+
+.task-queue-priority-low {
+  background-color: #e8f5e8;
+  color: #2e7d32;
+}
+
+.task-queue-action-button {
+  margin-right: 8px;
+  text-transform: none;
+  font-weight: 600;
+  border-radius: 20px;
+  padding: 8px 16px;
+  min-width: 80px;
+}
+
+.task-queue-task-card {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  padding: 24px;
+  margin-bottom: 16px;
+  transition: transform 0.2s ease;
+  
+  &:hover {
+    transform: translateY(-2px);
+  }
+}
+
+.task-queue-task-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.task-queue-task-title {
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.task-queue-task-type {
+  font-size: 0.875rem;
+  color: #666;
+}
+
+.task-queue-task-details {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.task-queue-detail-item {
+  text-align: center;
+  padding: 12px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+}
+
+.task-queue-detail-label {
+  font-size: 0.875rem;
+  color: #666;
+  margin-bottom: 4px;
+}
+
+.task-queue-detail-value {
+  font-weight: 600;
+  color: #333;
+}
+
+.task-queue-task-description {
+  color: #666;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  margin-bottom: 16px;
+}
+
+.task-queue-assignment-status {
+  font-weight: 500;
+  color: #666;
+}
+
+.task-queue-assigned {
+  color: #2e7d32;
+}
+
+.task-queue-unassigned {
+  color: #ed6c02;
+}
+
+.task-queue-empty-state {
+  text-align: center;
+  padding: 48px 24px;
+  color: #666;
+}
+
+.task-queue-empty-icon {
+  font-size: 4rem;
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+
+.task-queue-empty-text {
+  font-size: 1.125rem;
+  margin-bottom: 8px;
+}
+
+.task-queue-empty-subtext {
+  font-size: 0.875rem;
+  opacity: 0.7;
+}
+
+.task-queue-menu-item {
+  font-weight: 500;
+}
+
+.task-queue-avatar {
+  width: 32px;
+  height: 32px;
+  margin-right: 8px;
+}
+
+.task-queue-badge {
+  .MuiBadge-badge {
+    background-color: #f44336;
+  }
+}
+
+.task-queue-sort-button {
+  text-transform: none;
+  font-weight: 600;
+  border-radius: 20px;
+  padding: 8px 16px;
+  margin-left: 8px;
+}
+
+.task-queue-export-button {
+  text-transform: none;
+  font-weight: 600;
+  border-radius: 20px;
+  padding: 8px 16px;
+}
+
+.task-queue-account-link {
+  color: #1976d2;
+  text-decoration: none;
+  font-weight: 500;
+  
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.task-queue-assign-button {
+  text-transform: none;
+  font-weight: 600;
+  border-radius: 20px;
+  padding: 8px 16px;
+  margin-right: 8px;
+} 

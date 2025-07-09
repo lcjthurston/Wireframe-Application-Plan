@@ -1,15 +1,71 @@
 import React, { useState, useRef, useEffect } from 'react';
-import styled from 'styled-components';
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  TextField,
+  Button,
+  Tabs,
+  Tab,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Chip,
+  Avatar,
+  Menu,
+  MenuItem,
+  IconButton,
+  Badge,
+  Box,
+  Grid,
+  Card,
+  CardContent,
+  CardHeader,
+  Alert,
+  Divider,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemIcon,
+  InputAdornment
+} from '@mui/material';
+import {
+  Search as SearchIcon,
+  AccountCircle,
+  Business,
+  Phone,
+  Email,
+  LocationOn,
+  Person,
+  AttachMoney,
+  Description,
+  History,
+  Refresh,
+  GetApp,
+  Edit,
+  MoreVert,
+  CheckCircle,
+  Warning,
+  Error,
+  Info,
+  Add,
+  Remove,
+  Sort
+} from '@mui/icons-material';
 import kilowattImage from '../assets/image.png';
-import colors from '../assets/colors';
+import './ManagerDashboard.scss';
 
 const ManagerDashboard = ({ onLogout, onNavigate }) => {
-  const [activeTab, setActiveTab] = useState('accounts');
+  const [activeTab, setActiveTab] = useState(0);
   const [searchQuery, setSearchQuery] = useState('');
   const [sortField, setSortField] = useState('accountName');
   const [sortDirection, setSortDirection] = useState('asc');
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-  const dropdownRef = useRef();
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [profileAnchorEl, setProfileAnchorEl] = useState(null);
 
   // Mock data for manager/company
   const managerData = {
@@ -103,6 +159,11 @@ const ManagerDashboard = ({ onLogout, onNavigate }) => {
     }
   ];
 
+  const tabs = [
+    { id: 'accounts', label: 'Accounts', icon: <Business /> },
+    { id: 'activity', label: 'Activity History', icon: <History /> }
+  ];
+
   const handleSearch = (e) => {
     e.preventDefault();
     console.log('Searching for:', searchQuery);
@@ -121,6 +182,7 @@ const ManagerDashboard = ({ onLogout, onNavigate }) => {
     if (action === 'logout') {
       onLogout();
     }
+    setProfileAnchorEl(null);
   };
 
   const handleSort = (field) => {
@@ -166,885 +228,376 @@ const ManagerDashboard = ({ onLogout, onNavigate }) => {
     return filtered;
   };
 
+  const getStatusColor = (status) => {
+    switch (status) {
+      case 'Active': return 'success';
+      case 'Needs Pricing': return 'warning';
+      case 'Pending Contract': return 'info';
+      case 'Super Flagged': return 'error';
+      default: return 'default';
+    }
+  };
+
+  const getActivityIcon = (type) => {
+    switch (type) {
+      case 'account_added': return <Add />;
+      case 'manager_updated': return <Edit />;
+      case 'contract_renewed': return <CheckCircle />;
+      case 'status_changed': return <Info />;
+      case 'commission_updated': return <AttachMoney />;
+      default: return <Info />;
+    }
+  };
+
+  const getActivityColor = (type) => {
+    switch (type) {
+      case 'account_added': return 'success';
+      case 'manager_updated': return 'info';
+      case 'contract_renewed': return 'warning';
+      case 'status_changed': return 'secondary';
+      case 'commission_updated': return 'primary';
+      default: return 'default';
+    }
+  };
+
   const filteredAccounts = getFilteredAccounts();
 
-  useEffect(() => {
-    function handleClickOutside(event) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setDropdownOpen(false);
-      }
-    }
-    if (dropdownOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-    } else {
-      document.removeEventListener('mousedown', handleClickOutside);
-    }
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [dropdownOpen]);
-
   return (
-    <PageContainer>
-      {/* Dynamic Background Layers */}
-      <BackgroundGradient />
-      <BackgroundPattern />
-      <FloatingShapes />
-      
-      {/* Top Navigation Bar */}
-      <NavigationBar>
-        <NavLeft>
-          <LogoSection>
-            <LogoImage src={kilowattImage} alt="Kilowatt" />
-            <LogoText>Kilowatt</LogoText>
-          </LogoSection>
-        </NavLeft>
+    <div className="manager-dashboard-container">
+      <AppBar position="static" className="manager-dashboard-app-bar">
+        <Toolbar className="manager-dashboard-toolbar">
+          <Box display="flex" alignItems="center" flexGrow={1}>
+            <img src={kilowattImage} alt="Kilowatt" className="manager-dashboard-logo" />
+            <Typography variant="h5" className="manager-dashboard-brand">
+              Kilowatt
+            </Typography>
+          </Box>
 
-        <NavCenter>
-          <NavLinks>
-            <NavLink onClick={() => handleNavigation('home')}>
-              Home
-            </NavLink>
-            <NavLink onClick={() => handleNavigation('task-queue')}>
-              Task Queue
-            </NavLink>
-            <NavLink onClick={() => handleNavigation('accounts')}>
-              Accounts
-            </NavLink>
-            <DropdownContainer ref={dropdownRef}>
-              <MoreOptionsButton onClick={() => setDropdownOpen(v => !v)}>
-                More Options ▼
-              </MoreOptionsButton>
-              {dropdownOpen && (
-                <NavDropdownMenu>
-                  <NavDropdownItem onClick={() => { setDropdownOpen(false); handleNavigation('managers'); }}>Managers</NavDropdownItem>
-                  <NavDropdownItem onClick={() => { setDropdownOpen(false); handleNavigation('email-drafts'); }}>Email Drafts</NavDropdownItem>
-                  <NavDropdownItem onClick={() => { setDropdownOpen(false); handleNavigation('commissions'); }}>Commissions</NavDropdownItem>
-                  <NavDropdownItem onClick={() => { setDropdownOpen(false); handleNavigation('providers'); }}>Providers</NavDropdownItem>
-                  <NavDropdownItem onClick={() => { setDropdownOpen(false); handleNavigation('system-health'); }}>System Health</NavDropdownItem>
-                </NavDropdownMenu>
-              )}
-            </DropdownContainer>
-          </NavLinks>
-        </NavCenter>
-
-        <NavRight>
-          <SearchForm onSubmit={handleSearch}>
-            <SearchInput
-              type="text"
+          <Box className="manager-dashboard-search-container">
+            <TextField
               placeholder="Search accounts, managers, etc..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
+              className="manager-dashboard-search-field"
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon />
+                  </InputAdornment>
+                ),
+              }}
+              size="small"
             />
-            <SearchButton type="submit">
-              🔍
-            </SearchButton>
-          </SearchForm>
+          </Box>
 
-          <UserProfile>
-            <ProfileDropdown>
-              <ProfileButton>
-                <ProfileAvatar>J</ProfileAvatar>
-                <ProfileName>John Doe</ProfileName>
-                <DropdownArrow>▼</DropdownArrow>
-              </ProfileButton>
-              <DropdownMenu>
-                <DropdownItem onClick={() => handleProfileAction('settings')}>
-                  ⚙️ Settings
-                </DropdownItem>
-                <DropdownItem onClick={() => handleProfileAction('logout')}>
-                  🚪 Logout
-                </DropdownItem>
-              </DropdownMenu>
-            </ProfileDropdown>
-          </UserProfile>
-        </NavRight>
-      </NavigationBar>
-
-      {/* Main Content */}
-      <MainContainer>
-        {/* Header Section */}
-        <ManagerHeader>
-          <ManagerInfo>
-            <ManagerName>{managerData.name}</ManagerName>
-            <ManagerType>{managerData.type === 'manager' ? 'Manager' : 'Management Company'}</ManagerType>
-            <ManagerContact>
-              <ContactItem>
-                <ContactIcon>📧</ContactIcon>
-                <ContactValue>{managerData.email}</ContactValue>
-              </ContactItem>
-              <ContactItem>
-                <ContactIcon>📞</ContactIcon>
-                <ContactValue>{managerData.phone}</ContactValue>
-              </ContactItem>
-              {managerData.company && (
-                <ContactItem>
-                  <ContactIcon>🏢</ContactIcon>
-                  <ContactValue>{managerData.company}</ContactValue>
-                </ContactItem>
-              )}
-            </ManagerContact>
-          </ManagerInfo>
-        </ManagerHeader>
-
-        {/* Summary Statistics */}
-        <StatsGrid>
-          <StatCard>
-            <StatIcon>🏢</StatIcon>
-            <StatContent>
-              <StatValue>{summaryStats.totalActiveAccounts}</StatValue>
-              <StatLabel>Active Accounts</StatLabel>
-            </StatContent>
-          </StatCard>
-          <StatCard>
-            <StatIcon>⚡</StatIcon>
-            <StatContent>
-              <StatValue>{summaryStats.totalEsiids}</StatValue>
-              <StatLabel>Total ESIIDs</StatLabel>
-            </StatContent>
-          </StatCard>
-          <StatCard>
-            <StatIcon>💰</StatIcon>
-            <StatContent>
-              <StatValue>${summaryStats.totalYtdCommissions.toLocaleString()}</StatValue>
-              <StatLabel>YTD Commissions</StatLabel>
-            </StatContent>
-          </StatCard>
-          <StatCard>
-            <StatIcon>📋</StatIcon>
-            <StatContent>
-              <StatValue>{summaryStats.totalPendingContracts}</StatValue>
-              <StatLabel>Pending Contracts</StatLabel>
-            </StatContent>
-          </StatCard>
-        </StatsGrid>
-
-        {/* Tabbed Interface */}
-        <TabContainer>
-          <TabButton
-            active={activeTab === 'accounts'}
-            onClick={() => setActiveTab('accounts')}
+          <Button
+            color="inherit"
+            className="manager-dashboard-profile-button"
+            onClick={(e) => setProfileAnchorEl(e.currentTarget)}
+            startIcon={<AccountCircle />}
           >
-            Account List
-          </TabButton>
-          <TabButton
-            active={activeTab === 'activity'}
-            onClick={() => setActiveTab('activity')}
-          >
-            Activity History
-          </TabButton>
-        </TabContainer>
+            {managerData.name}
+          </Button>
+        </Toolbar>
+      </AppBar>
+
+      <Box className="manager-dashboard-content">
+        <Box className="manager-dashboard-header">
+          <Typography variant="h4" className="manager-dashboard-title">
+            Manager Dashboard
+          </Typography>
+          <Typography variant="body1" className="manager-dashboard-subtitle">
+            Manage accounts and track activity for {managerData.name}
+          </Typography>
+        </Box>
+
+        {/* Profile Section */}
+        <Card className="manager-dashboard-profile-section">
+          <Box className="manager-dashboard-profile-header">
+            <Avatar className="manager-dashboard-profile-avatar">
+              <Person />
+            </Avatar>
+            <Box className="manager-dashboard-profile-info">
+              <Typography variant="h5" className="manager-dashboard-profile-name">
+                {managerData.name}
+              </Typography>
+              <Typography variant="body2" className="manager-dashboard-profile-role">
+                {managerData.type === 'manager' ? 'Account Manager' : 'Management Company'}
+              </Typography>
+            </Box>
+          </Box>
+          <Grid container spacing={2} className="manager-dashboard-profile-details">
+            <Grid item xs={12} sm={6} md={3}>
+              <Box className="manager-dashboard-profile-detail">
+                <Email className="manager-dashboard-profile-detail-icon" />
+                <Typography className="manager-dashboard-profile-detail-text">
+                  {managerData.email}
+                </Typography>
+              </Box>
+            </Grid>
+            <Grid item xs={12} sm={6} md={3}>
+              <Box className="manager-dashboard-profile-detail">
+                <Phone className="manager-dashboard-profile-detail-icon" />
+                <Typography className="manager-dashboard-profile-detail-text">
+                  {managerData.phone}
+                </Typography>
+              </Box>
+            </Grid>
+            <Grid item xs={12} sm={6} md={3}>
+              <Box className="manager-dashboard-profile-detail">
+                <Business className="manager-dashboard-profile-detail-icon" />
+                <Typography className="manager-dashboard-profile-detail-text">
+                  {managerData.company}
+                </Typography>
+              </Box>
+            </Grid>
+          </Grid>
+        </Card>
+
+        {/* Statistics Cards */}
+        <Grid container spacing={3} className="manager-dashboard-stats">
+          <Grid item xs={12} sm={6} md={3}>
+            <Card className="manager-dashboard-stat-card">
+              <CardContent>
+                <Box display="flex" alignItems="center" justifyContent="center" flexDirection="column">
+                  <Business className="manager-dashboard-stat-icon" color="primary" />
+                  <Typography variant="h4" className="manager-dashboard-stat-value">
+                    {summaryStats.totalActiveAccounts}
+                  </Typography>
+                  <Typography variant="body2" className="manager-dashboard-stat-label">
+                    Active Accounts
+                  </Typography>
+                </Box>
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item xs={12} sm={6} md={3}>
+            <Card className="manager-dashboard-stat-card">
+              <CardContent>
+                <Box display="flex" alignItems="center" justifyContent="center" flexDirection="column">
+                  <AttachMoney className="manager-dashboard-stat-icon" color="success" />
+                  <Typography variant="h4" className="manager-dashboard-stat-value">
+                    {summaryStats.totalEsiids}
+                  </Typography>
+                  <Typography variant="body2" className="manager-dashboard-stat-label">
+                    Total ESIIDs
+                  </Typography>
+                </Box>
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item xs={12} sm={6} md={3}>
+            <Card className="manager-dashboard-stat-card">
+              <CardContent>
+                <Box display="flex" alignItems="center" justifyContent="center" flexDirection="column">
+                  <AttachMoney className="manager-dashboard-stat-icon" color="warning" />
+                  <Typography variant="h4" className="manager-dashboard-stat-value">
+                    ${summaryStats.totalYtdCommissions.toLocaleString()}
+                  </Typography>
+                  <Typography variant="body2" className="manager-dashboard-stat-label">
+                    YTD Commissions
+                  </Typography>
+                </Box>
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item xs={12} sm={6} md={3}>
+            <Card className="manager-dashboard-stat-card">
+              <CardContent>
+                <Box display="flex" alignItems="center" justifyContent="center" flexDirection="column">
+                  <Description className="manager-dashboard-stat-icon" color="info" />
+                  <Typography variant="h4" className="manager-dashboard-stat-value">
+                    {summaryStats.totalPendingContracts}
+                  </Typography>
+                  <Typography variant="body2" className="manager-dashboard-stat-label">
+                    Pending Contracts
+                  </Typography>
+                </Box>
+              </CardContent>
+            </Card>
+          </Grid>
+        </Grid>
+
+        {/* Tabs */}
+        <Tabs
+          value={activeTab}
+          onChange={(e, newValue) => setActiveTab(newValue)}
+          className="manager-dashboard-tabs"
+          variant="scrollable"
+          scrollButtons="auto"
+        >
+          {tabs.map((tab, index) => (
+            <Tab
+              key={tab.id}
+              label={
+                <Box display="flex" alignItems="center" gap={1}>
+                  {tab.icon}
+                  {tab.label}
+                </Box>
+              }
+            />
+          ))}
+        </Tabs>
 
         {/* Tab Content */}
-        <TabContent>
-          {activeTab === 'accounts' && (
-            <AccountsTab>
-              <Section>
-                <SectionTitle>Associated Accounts</SectionTitle>
-                <AccountsTable>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHeaderCell onClick={() => handleSort('accountName')}>
+        {activeTab === 0 && (
+          <Box>
+            {/* Accounts Table */}
+            <TableContainer component={Paper} className="manager-dashboard-table-container">
+              <Table className="manager-dashboard-table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell>
+                      <Button
+                        onClick={() => handleSort('accountName')}
+                        className="manager-dashboard-sort-button"
+                        startIcon={<Sort />}
+                      >
                         Account Name
-                        <SortIcon>{sortField === 'accountName' ? (sortDirection === 'asc' ? '↑' : '↓') : '↕'}</SortIcon>
-                      </TableHeaderCell>
-                      <TableHeaderCell onClick={() => handleSort('status')}>
+                      </Button>
+                    </TableCell>
+                    <TableCell>
+                      <Button
+                        onClick={() => handleSort('status')}
+                        className="manager-dashboard-sort-button"
+                        startIcon={<Sort />}
+                      >
                         Status
-                        <SortIcon>{sortField === 'status' ? (sortDirection === 'asc' ? '↑' : '↓') : '↕'}</SortIcon>
-                      </TableHeaderCell>
-                      <TableHeaderCell onClick={() => handleSort('contractEndDate')}>
+                      </Button>
+                    </TableCell>
+                    <TableCell>
+                      <Button
+                        onClick={() => handleSort('contractEndDate')}
+                        className="manager-dashboard-sort-button"
+                        startIcon={<Sort />}
+                      >
                         Contract End Date
-                        <SortIcon>{sortField === 'contractEndDate' ? (sortDirection === 'asc' ? '↑' : '↓') : '↕'}</SortIcon>
-                      </TableHeaderCell>
-                      <TableHeaderCell>ESIIDs</TableHeaderCell>
-                      <TableHeaderCell>Monthly Commission</TableHeaderCell>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {filteredAccounts.map(account => (
-                      <TableRow key={account.id}>
-                        <TableCell>
-                          <AccountLink onClick={() => handleGoToAccount(account.accountName)}>
-                            {account.accountName}
-                          </AccountLink>
-                        </TableCell>
-                        <TableCell>
-                          <StatusBadge status={account.status}>
-                            {account.status}
-                          </StatusBadge>
-                        </TableCell>
-                        <TableCell>
+                      </Button>
+                    </TableCell>
+                    <TableCell>ESIIDs</TableCell>
+                    <TableCell>Monthly Commission</TableCell>
+                    <TableCell>Actions</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {filteredAccounts.map(account => (
+                    <TableRow key={account.id}>
+                      <TableCell>
+                        <Button
+                          onClick={() => handleGoToAccount(account.accountName)}
+                          className="manager-dashboard-account-link"
+                        >
+                          {account.accountName}
+                        </Button>
+                      </TableCell>
+                      <TableCell>
+                        <Chip
+                          label={account.status}
+                          color={getStatusColor(account.status)}
+                          className="manager-dashboard-status-chip"
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <Typography className="manager-dashboard-contract-date">
                           {new Date(account.contractEndDate).toLocaleDateString()}
-                        </TableCell>
-                        <TableCell>
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography className="manager-dashboard-esiid-count">
                           {account.esiids}
-                        </TableCell>
-                        <TableCell>
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography className="manager-dashboard-commission-value">
                           ${account.monthlyCommission.toLocaleString()}
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </AccountsTable>
-              </Section>
-            </AccountsTab>
-          )}
-
-          {activeTab === 'activity' && (
-            <ActivityTab>
-              <Section>
-                <SectionTitle>Activity History</SectionTitle>
-                <ActivityList>
-                  {activityHistory.map((activity, index) => (
-                    <ActivityItem key={index}>
-                      <ActivityIcon>
-                        {activity.type === 'account_added' && '➕'}
-                        {activity.type === 'manager_updated' && '👤'}
-                        {activity.type === 'contract_renewed' && '📋'}
-                        {activity.type === 'status_changed' && '🔄'}
-                        {activity.type === 'commission_updated' && '💰'}
-                      </ActivityIcon>
-                      <ActivityContent>
-                        <ActivityText>{activity.action}</ActivityText>
-                        <ActivityTime>{activity.timestamp}</ActivityTime>
-                      </ActivityContent>
-                    </ActivityItem>
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Box display="flex" gap={1}>
+                          <Button
+                            variant="outlined"
+                            size="small"
+                            onClick={() => handleGoToAccount(account.accountName)}
+                            className="manager-dashboard-action-button"
+                          >
+                            View
+                          </Button>
+                          <Button
+                            variant="outlined"
+                            size="small"
+                            className="manager-dashboard-action-button"
+                          >
+                            Edit
+                          </Button>
+                        </Box>
+                      </TableCell>
+                    </TableRow>
                   ))}
-                </ActivityList>
-              </Section>
-            </ActivityTab>
-          )}
-        </TabContent>
-      </MainContainer>
-    </PageContainer>
+                </TableBody>
+              </Table>
+            </TableContainer>
+
+            {filteredAccounts.length === 0 && (
+              <Box className="manager-dashboard-empty-state">
+                <Business className="manager-dashboard-empty-icon" />
+                <Typography variant="h6" className="manager-dashboard-empty-text">
+                  No accounts found
+                </Typography>
+                <Typography variant="body2" className="manager-dashboard-empty-subtext">
+                  {searchQuery ? 'Try adjusting your search criteria.' : 'No accounts are currently assigned to this manager.'}
+                </Typography>
+              </Box>
+            )}
+          </Box>
+        )}
+
+        {activeTab === 1 && (
+          <Box>
+            {/* Activity History */}
+            <Card className="manager-dashboard-activity-section">
+              <Typography variant="h6" className="manager-dashboard-activity-title">
+                Recent Activity
+              </Typography>
+              <List>
+                {activityHistory.map((activity, index) => (
+                  <ListItem key={index} className="manager-dashboard-activity-item">
+                    <Avatar
+                      className={`manager-dashboard-activity-icon ${activity.type}`}
+                      color={getActivityColor(activity.type)}
+                    >
+                      {getActivityIcon(activity.type)}
+                    </Avatar>
+                    <Box className="manager-dashboard-activity-content">
+                      <Typography className="manager-dashboard-activity-action">
+                        {activity.action}
+                      </Typography>
+                      <Typography className="manager-dashboard-activity-timestamp">
+                        {activity.timestamp}
+                      </Typography>
+                    </Box>
+                  </ListItem>
+                ))}
+              </List>
+            </Card>
+          </Box>
+        )}
+      </Box>
+
+      {/* Profile Menu */}
+      <Menu
+        anchorEl={profileAnchorEl}
+        open={Boolean(profileAnchorEl)}
+        onClose={() => setProfileAnchorEl(null)}
+      >
+        <MenuItem onClick={() => handleProfileAction('settings')} className="manager-dashboard-menu-item">
+          Settings
+        </MenuItem>
+        <MenuItem onClick={() => handleProfileAction('logout')} className="manager-dashboard-menu-item">
+          Logout
+        </MenuItem>
+      </Menu>
+    </div>
   );
 };
-
-// Styled Components
-const PageContainer = styled.div`
-  min-height: 100vh;
-  position: relative;
-  overflow: hidden;
-  background: ${colors.primary};
-`;
-
-const BackgroundGradient = styled.div`
-  display: none;
-`;
-
-const BackgroundPattern = styled.div`
-  display: none;
-`;
-
-const FloatingShapes = styled.div`
-  display: none;
-`;
-
-const NavigationBar = styled.nav`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 40px;
-  height: 100px;
-  background: ${colors.primary};
-  border-bottom: 1px solid ${colors.border};
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  width: 100vw;
-  max-width: 100vw;
-  @media (max-width: 768px) {
-    padding: 0 12px;
-    height: 80px;
-  }
-`;
-
-const NavLeft = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 24px;
-`;
-
-const NavCenter = styled.div`
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  min-width: 0;
-`;
-
-const NavLinks = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 24px 32px;
-  justify-content: center;
-  align-items: center;
-  width: auto;
-  max-width: 100vw;
-  overflow-x: visible;
-  row-gap: 16px;
-`;
-
-const NavRight = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 24px;
-  flex-shrink: 0;
-`;
-
-const LogoSection = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 12px;
-`;
-
-const LogoImage = styled.img`
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-`;
-
-const LogoText = styled.span`
-  font-size: 20px;
-  font-weight: 700;
-  color: white;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-`;
-
-const SearchForm = styled.form`
-  display: flex;
-  align-items: center;
-  background: rgba(255, 255, 255, 0.15);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 12px;
-  padding: 8px 16px;
-  min-width: 300px;
-  backdrop-filter: blur(10px);
-
-  @media (max-width: 768px) {
-    min-width: 200px;
-  }
-`;
-
-const SearchInput = styled.input`
-  border: none;
-  background: none;
-  font-size: 14px;
-  color: white;
-  flex: 1;
-  outline: none;
-
-  &::placeholder {
-    color: rgba(255, 255, 255, 0.7);
-  }
-`;
-
-const SearchButton = styled.button`
-  background: none;
-  border: none;
-  font-size: 16px;
-  cursor: pointer;
-  padding: 4px;
-  border-radius: 6px;
-  transition: background-color 0.2s ease;
-  color: white;
-
-  &:hover {
-    background: rgba(255, 255, 255, 0.1);
-  }
-`;
-
-const UserProfile = styled.div`
-  position: relative;
-`;
-
-const ProfileDropdown = styled.div`
-  position: relative;
-`;
-
-const ProfileButton = styled.button`
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  cursor: pointer;
-  padding: 8px 12px;
-  border-radius: 8px;
-  transition: all 0.3s ease;
-  backdrop-filter: blur(10px);
-
-  &:hover {
-    background: rgba(255, 255, 255, 0.2);
-    transform: translateY(-1px);
-  }
-`;
-
-const ProfileAvatar = styled.div`
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 600;
-  font-size: 14px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-`;
-
-const ProfileName = styled.span`
-  font-size: 14px;
-  font-weight: 500;
-  color: white;
-
-  @media (max-width: 768px) {
-    display: none;
-  }
-`;
-
-const DropdownArrow = styled.span`
-  font-size: 12px;
-  color: rgba(255, 255, 255, 0.8);
-`;
-
-const DropdownMenu = styled.div`
-  position: absolute;
-  top: 100%;
-  right: 0;
-  margin-top: 8px;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 12px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-  min-width: 160px;
-  z-index: 1000;
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(-10px);
-  transition: all 0.3s ease;
-
-  ${ProfileDropdown}:hover & {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
-  }
-`;
-
-const DropdownItem = styled.button`
-  width: 100%;
-  padding: 12px 16px;
-  background: none;
-  border: none;
-  text-align: left;
-  font-size: 14px;
-  color: #1e293b;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-
-  &:hover {
-    background: rgba(102, 126, 234, 0.1);
-  }
-
-  &:first-child {
-    border-radius: 12px 12px 0 0;
-  }
-
-  &:last-child {
-    border-radius: 0 0 12px 12px;
-  }
-`;
-
-const MainContainer = styled.div`
-  padding: 32px;
-  max-width: 1400px;
-  margin: 0 auto;
-  position: relative;
-  z-index: 3;
-
-  @media (max-width: 768px) {
-    padding: 16px;
-  }
-`;
-
-const ManagerHeader = styled.div`
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(20px);
-  border-radius: 16px;
-  padding: 24px;
-  margin-bottom: 24px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-`;
-
-const ManagerInfo = styled.div`
-  text-align: center;
-`;
-
-const ManagerName = styled.h1`
-  font-size: 32px;
-  font-weight: 700;
-  color: white;
-  margin: 0 0 8px 0;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-`;
-
-const ManagerType = styled.div`
-  font-size: 16px;
-  color: rgba(255, 255, 255, 0.8);
-  margin-bottom: 16px;
-  font-weight: 500;
-`;
-
-const ManagerContact = styled.div`
-  display: flex;
-  justify-content: center;
-  gap: 24px;
-  flex-wrap: wrap;
-
-  @media (max-width: 768px) {
-    flex-direction: column;
-    gap: 12px;
-  }
-`;
-
-const ContactItem = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 8px;
-`;
-
-const ContactIcon = styled.span`
-  font-size: 16px;
-`;
-
-const ContactValue = styled.span`
-  font-size: 14px;
-  color: white;
-  font-weight: 500;
-`;
-
-const StatsGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 20px;
-  margin-bottom: 32px;
-`;
-
-const StatCard = styled.div`
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(20px);
-  border-radius: 16px;
-  padding: 24px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  transition: all 0.3s ease;
-
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
-    border-color: rgba(255, 255, 255, 0.3);
-  }
-`;
-
-const StatIcon = styled.div`
-  font-size: 32px;
-`;
-
-const StatContent = styled.div`
-  flex: 1;
-`;
-
-const StatValue = styled.div`
-  font-size: 24px;
-  font-weight: 700;
-  color: white;
-  margin-bottom: 4px;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-`;
-
-const StatLabel = styled.div`
-  font-size: 14px;
-  color: rgba(255, 255, 255, 0.8);
-  font-weight: 500;
-`;
-
-const TabContainer = styled.div`
-  display: flex;
-  gap: 8px;
-  margin-bottom: 24px;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(20px);
-  border-radius: 12px;
-  padding: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-`;
-
-const TabButton = styled.button`
-  background: ${props => props.active ? 'rgba(255, 255, 255, 0.2)' : 'transparent'};
-  border: none;
-  color: ${props => props.active ? 'white' : 'rgba(255, 255, 255, 0.8)'};
-  padding: 12px 20px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 500;
-  transition: all 0.3s ease;
-
-  &:hover {
-    background: rgba(255, 255, 255, 0.1);
-    color: white;
-  }
-
-  ${props => props.active && `
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  `}
-`;
-
-const TabContent = styled.div`
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(20px);
-  border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  overflow: hidden;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-`;
-
-const Section = styled.div`
-  padding: 24px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-
-  &:last-child {
-    border-bottom: none;
-  }
-`;
-
-const SectionTitle = styled.h2`
-  font-size: 18px;
-  font-weight: 600;
-  color: white;
-  margin: 0 0 20px 0;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-`;
-
-const AccountsTable = styled.table`
-  width: 100%;
-  border-collapse: collapse;
-`;
-
-const TableHeader = styled.thead`
-  background: rgba(255, 255, 255, 0.1);
-`;
-
-const TableRow = styled.tr`
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  transition: background-color 0.2s ease;
-
-  &:hover {
-    background: rgba(255, 255, 255, 0.05);
-  }
-
-  &:last-child {
-    border-bottom: none;
-  }
-`;
-
-const TableHeaderCell = styled.th`
-  padding: 16px;
-  text-align: left;
-  font-size: 14px;
-  font-weight: 600;
-  color: white;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-
-  &:hover {
-    background: rgba(255, 255, 255, 0.1);
-  }
-`;
-
-const SortIcon = styled.span`
-  font-size: 12px;
-  opacity: 0.7;
-`;
-
-const TableBody = styled.tbody``;
-
-const TableCell = styled.td`
-  padding: 16px;
-  font-size: 14px;
-  color: white;
-  vertical-align: middle;
-`;
-
-const AccountLink = styled.button`
-  background: none;
-  border: none;
-  color: #fbbf24;
-  font-weight: 600;
-  cursor: pointer;
-  text-decoration: none;
-  transition: color 0.2s ease;
-
-  &:hover {
-    color: #f59e0b;
-    text-decoration: underline;
-  }
-`;
-
-const StatusBadge = styled.span`
-  padding: 4px 12px;
-  border-radius: 12px;
-  font-size: 12px;
-  font-weight: 600;
-  background: ${props => {
-    switch (props.status) {
-      case 'Active': return 'rgba(34, 197, 94, 0.2)';
-      case 'Needs Pricing': return 'rgba(245, 158, 11, 0.2)';
-      case 'Pending Contract': return 'rgba(59, 130, 246, 0.2)';
-      case 'Super Flagged': return 'rgba(239, 68, 68, 0.2)';
-      default: return 'rgba(107, 114, 128, 0.2)';
-    }
-  }};
-  color: ${props => {
-    switch (props.status) {
-      case 'Active': return '#86efac';
-      case 'Needs Pricing': return '#fcd34d';
-      case 'Pending Contract': return '#93c5fd';
-      case 'Super Flagged': return '#fca5a5';
-      default: return '#d1d5db';
-    }
-  }};
-  border: 1px solid ${props => {
-    switch (props.status) {
-      case 'Active': return 'rgba(34, 197, 94, 0.3)';
-      case 'Needs Pricing': return 'rgba(245, 158, 11, 0.3)';
-      case 'Pending Contract': return 'rgba(59, 130, 246, 0.3)';
-      case 'Super Flagged': return 'rgba(239, 68, 68, 0.3)';
-      default: return 'rgba(107, 114, 128, 0.3)';
-    }
-  }};
-`;
-
-const ActivityList = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-`;
-
-const ActivityItem = styled.div`
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  padding: 12px;
-  border-radius: 8px;
-  transition: all 0.3s ease;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-
-  &:hover {
-    background: rgba(255, 255, 255, 0.1);
-    transform: translateX(4px);
-    border-color: rgba(255, 255, 255, 0.2);
-  }
-`;
-
-const ActivityIcon = styled.span`
-  font-size: 16px;
-  margin-top: 2px;
-`;
-
-const ActivityContent = styled.div`
-  flex: 1;
-`;
-
-const ActivityText = styled.div`
-  font-size: 14px;
-  color: white;
-  margin-bottom: 4px;
-  line-height: 1.4;
-`;
-
-const ActivityTime = styled.div`
-  font-size: 12px;
-  color: rgba(255, 255, 255, 0.7);
-`;
-
-// Tab content components
-const AccountsTab = styled.div``;
-const ActivityTab = styled.div``;
-
-const NavLink = styled.button`
-  background: none;
-  border: none;
-  font-size: 1.25rem;
-  font-weight: 500;
-  color: ${props => props.active ? colors.background : 'rgba(255,255,255,0.8)'};
-  cursor: pointer;
-  padding: 18px 28px;
-  border-radius: 8px;
-  transition: all 0.3s ease;
-  position: relative;
-  white-space: nowrap;
-  &:hover {
-    color: ${colors.background};
-    background: ${colors.accent1};
-  }
-  ${props => props.active && `
-    background: ${colors.accent1};
-    color: ${colors.background};
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-  `}
-`;
-
-const DropdownContainer = styled.div`
-  position: relative;
-  display: inline-block;
-`;
-const MoreOptionsButton = styled(NavLink)`
-  padding-right: 36px;
-  &::after {
-    content: '';
-    display: inline-block;
-    margin-left: 8px;
-  }
-`;
-const NavDropdownMenu = styled.div`
-  position: absolute;
-  top: 100%;
-  left: 0;
-  background: ${colors.primary};
-  border: 1px solid ${colors.border};
-  border-radius: 8px;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
-  min-width: 180px;
-  z-index: 1000;
-  padding: 8px 0;
-`;
-const NavDropdownItem = styled.button`
-  width: 100%;
-  background: none;
-  border: none;
-  color: white;
-  font-size: 1.1rem;
-  text-align: left;
-  padding: 12px 24px;
-  cursor: pointer;
-  transition: background 0.2s;
-  &:hover {
-    background: ${colors.accent1};
-    color: ${colors.background};
-  }
-`;
 
 export default ManagerDashboard; 

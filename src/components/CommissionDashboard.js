@@ -57,8 +57,8 @@ import {
   Edit as EditIcon,
   Delete as DeleteIcon
 } from '@mui/icons-material';
-import { styled } from '@mui/material/styles';
 import kilowattImage from '../assets/image.png';
+import './CommissionDashboard.scss';
 
 const CommissionDashboard = ({ onLogout, onNavigate }) => {
   const [activeTab, setActiveTab] = useState(0);
@@ -214,14 +214,15 @@ const CommissionDashboard = ({ onLogout, onNavigate }) => {
   const getFilteredCommissions = () => {
     let filtered = commissionHistory;
 
+    // Filter by search query
     if (searchQuery) {
       filtered = filtered.filter(commission =>
         commission.accountName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        commission.manager.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        commission.paymentStatus.toLowerCase().includes(searchQuery.toLowerCase())
+        commission.manager.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
 
+    // Sort
     filtered.sort((a, b) => {
       let aValue = a[sortField];
       let bValue = b[sortField];
@@ -241,361 +242,352 @@ const CommissionDashboard = ({ onLogout, onNavigate }) => {
     return filtered;
   };
 
-  const filteredCommissions = getFilteredCommissions();
-
   const getStatusColor = (status) => {
     switch (status) {
       case 'Paid':
-      case 'Completed':
         return 'success';
       case 'Pending':
         return 'warning';
-      case 'Failed':
-      case 'Cancelled':
+      case 'Overdue':
         return 'error';
       default:
         return 'default';
     }
   };
 
-  const StyledAppBar = styled(AppBar)(({ theme }) => ({
-    background: 'linear-gradient(135deg, #1976d2 0%, #1565c0 100%)',
-    boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-  }));
+  const getStatusClass = (status) => {
+    switch (status) {
+      case 'Paid':
+        return 'commission-status-paid';
+      case 'Pending':
+        return 'commission-status-pending';
+      case 'Overdue':
+        return 'commission-status-overdue';
+      default:
+        return '';
+    }
+  };
 
-  const LogoImage = styled('img')({
-    width: 40,
-    height: 40,
-    marginRight: 12,
-    borderRadius: 8,
-  });
+  const getPaymentStatusClass = (status) => {
+    switch (status) {
+      case 'Completed':
+        return 'commission-payment-completed';
+      case 'Pending':
+        return 'commission-payment-pending';
+      case 'Failed':
+        return 'commission-payment-failed';
+      default:
+        return '';
+    }
+  };
 
-  const DashboardCard = styled(Card)(({ theme }) => ({
-    height: '100%',
-    transition: 'transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out',
-    '&:hover': {
-      transform: 'translateY(-4px)',
-      boxShadow: '0 8px 25px rgba(0,0,0,0.15)',
-    },
-  }));
+  const filteredCommissions = getFilteredCommissions();
 
   return (
-    <Box sx={{ minHeight: '100vh', bgcolor: 'background.default' }}>
-      <StyledAppBar position="static">
-        <Toolbar>
+    <Box className="commission-dashboard">
+      <AppBar position="static" className="commission-app-bar">
+        <Toolbar className="commission-toolbar">
           <Box sx={{ display: 'flex', alignItems: 'center', flexGrow: 1 }}>
-            <LogoImage src={kilowattImage} alt="Kilowatt" />
-            <Typography variant="h6" component="div" sx={{ fontWeight: 700 }}>
+            <img src={kilowattImage} alt="Kilowatt" className="commission-logo" />
+            <Typography variant="h6" component="div" className="commission-brand">
               Kilowatt
             </Typography>
           </Box>
 
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            <Button color="inherit" onClick={() => handleNavigation('home')}>
-              Home
-            </Button>
-            <Button color="inherit" onClick={() => handleNavigation('task-queue')}>
-              Task Queue
-            </Button>
-            <Button color="inherit" onClick={() => handleNavigation('accounts')}>
-              Accounts
-            </Button>
-            <Button color="inherit" onClick={() => handleNavigation('managers')}>
-              Managers
-            </Button>
-            <Button color="inherit" onClick={() => handleNavigation('email-drafts')}>
-              Email Drafts
-            </Button>
-            <Button color="inherit" variant="contained" sx={{ bgcolor: 'rgba(255,255,255,0.2)' }}>
-              Commissions
-            </Button>
-            <Button color="inherit" onClick={() => handleNavigation('providers')}>
-              Providers
-            </Button>
-            <Button color="inherit" onClick={() => handleNavigation('system-health')}>
-              System Health
-            </Button>
+          <Box className="commission-search-container">
+            <TextField
+              placeholder="Search commissions..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              variant="outlined"
+              size="small"
+              className="commission-search-field"
+              InputProps={{
+                startAdornment: (
+                  <SearchIcon sx={{ color: 'text.secondary', mr: 1 }} />
+                ),
+              }}
+            />
           </Box>
 
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, ml: 2 }}>
-            <Paper component="form" onSubmit={handleSearch} sx={{ display: 'flex', alignItems: 'center', px: 2 }}>
-              <TextField
-                size="small"
-                placeholder="Search commissions..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                variant="standard"
-                sx={{ minWidth: 200 }}
-                InputProps={{ disableUnderline: true }}
-              />
-              <IconButton type="submit" size="small">
-                <SearchIcon />
-              </IconButton>
-            </Paper>
-
-            <IconButton onClick={onLogout} sx={{ color: 'inherit' }}>
-              <LogoutIcon />
-            </IconButton>
-          </Box>
+          <Button
+            color="inherit"
+            onClick={() => handleNavigation('home')}
+            className="commission-profile-button"
+            startIcon={<AccountIcon />}
+          >
+            Profile
+          </Button>
         </Toolbar>
-      </StyledAppBar>
+      </AppBar>
 
-      <Container maxWidth="xl" sx={{ py: 4 }}>
-        <Box sx={{ mb: 4 }}>
-          <Typography variant="h4" component="h1" sx={{ fontWeight: 700, mb: 1 }}>
+      <Container maxWidth="xl" className="commission-content">
+        <Box className="commission-header">
+          <Typography variant="h4" className="commission-title">
             Commission Dashboard
           </Typography>
-          <Typography variant="body1" color="text.secondary">
-            Track commissions, payments, and financial performance
+          <Typography variant="body1" className="commission-subtitle">
+            Track and manage commission payments and earnings
           </Typography>
         </Box>
 
-        {/* Period Selector */}
-        <Box sx={{ mb: 4 }}>
-          <FormControl sx={{ minWidth: 200 }}>
-            <InputLabel>Select Period</InputLabel>
-            <Select
-              value={selectedPeriod}
-              onChange={(e) => setSelectedPeriod(e.target.value)}
-              label="Select Period"
-            >
-              {periodOptions.map((option) => (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </Box>
-
-        {/* Commission Stats Cards */}
-        <Grid container spacing={3} sx={{ mb: 4 }}>
+        <Grid container spacing={3} className="commission-stats">
           <Grid item xs={12} sm={6} md={3}>
-            <DashboardCard>
-              <CardContent>
-                <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                  <MoneyIcon sx={{ mr: 1, color: 'primary.main' }} />
-                  <Typography variant="h6">Total Commissions</Typography>
-                </Box>
-                <Typography variant="h4" sx={{ fontWeight: 700, color: 'primary.main' }}>
+            <Card className="commission-stat-card">
+              <CardContent sx={{ textAlign: 'center', py: 3 }}>
+                <Typography variant="h3" className="commission-stat-value">
                   ${commissionStats.totalCommissions.toLocaleString()}
                 </Typography>
+                <Typography variant="body2" className="commission-stat-label">
+                  Total Commissions
+                </Typography>
+                <Typography variant="h2" className="commission-stat-icon">
+                  💰
+                </Typography>
               </CardContent>
-            </DashboardCard>
+            </Card>
           </Grid>
+
           <Grid item xs={12} sm={6} md={3}>
-            <DashboardCard>
-              <CardContent>
-                <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                  <WarningIcon sx={{ mr: 1, color: 'warning.main' }} />
-                  <Typography variant="h6">Pending</Typography>
-                </Box>
-                <Typography variant="h4" sx={{ fontWeight: 700, color: 'warning.main' }}>
+            <Card className="commission-stat-card">
+              <CardContent sx={{ textAlign: 'center', py: 3 }}>
+                <Typography variant="h3" className="commission-stat-value">
                   ${commissionStats.pendingCommissions.toLocaleString()}
                 </Typography>
-              </CardContent>
-            </DashboardCard>
-          </Grid>
-          <Grid item xs={12} sm={6} md={3}>
-            <DashboardCard>
-              <CardContent>
-                <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                  <CheckCircleIcon sx={{ mr: 1, color: 'success.main' }} />
-                  <Typography variant="h6">Paid</Typography>
-                </Box>
-                <Typography variant="h4" sx={{ fontWeight: 700, color: 'success.main' }}>
-                  ${commissionStats.paidCommissions.toLocaleString()}
+                <Typography variant="body2" className="commission-stat-label">
+                  Pending Commissions
+                </Typography>
+                <Typography variant="h2" className="commission-stat-icon">
+                  ⏳
                 </Typography>
               </CardContent>
-            </DashboardCard>
+            </Card>
           </Grid>
+
           <Grid item xs={12} sm={6} md={3}>
-            <DashboardCard>
-              <CardContent>
-                <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                  <TrendingUpIcon sx={{ mr: 1, color: 'info.main' }} />
-                  <Typography variant="h6">Average</Typography>
-                </Box>
-                <Typography variant="h4" sx={{ fontWeight: 700, color: 'info.main' }}>
+            <Card className="commission-stat-card">
+              <CardContent sx={{ textAlign: 'center', py: 3 }}>
+                <Typography variant="h3" className="commission-stat-value">
                   ${commissionStats.averageCommission.toLocaleString()}
                 </Typography>
+                <Typography variant="body2" className="commission-stat-label">
+                  Average Commission
+                </Typography>
+                <Typography variant="h2" className="commission-stat-icon">
+                  📊
+                </Typography>
               </CardContent>
-            </DashboardCard>
+            </Card>
+          </Grid>
+
+          <Grid item xs={12} sm={6} md={3}>
+            <Card className="commission-stat-card">
+              <CardContent sx={{ textAlign: 'center', py: 3 }}>
+                <Typography variant="h3" className="commission-stat-value">
+                  {commissionStats.activeAccounts}
+                </Typography>
+                <Typography variant="body2" className="commission-stat-label">
+                  Active Accounts
+                </Typography>
+                <Typography variant="h2" className="commission-stat-icon">
+                  🏢
+                </Typography>
+              </CardContent>
+            </Card>
           </Grid>
         </Grid>
 
-        {/* Tabs */}
-        <Paper sx={{ mb: 4 }}>
-          <Tabs value={activeTab} onChange={(e, newValue) => setActiveTab(newValue)}>
-            <Tab label="Commission Overview" />
-            <Tab label="Payment History" />
-            <Tab label="Reports" />
-          </Tabs>
-        </Paper>
+        <FormControl className="commission-period-selector">
+          <InputLabel>Select Period</InputLabel>
+          <Select
+            value={selectedPeriod}
+            onChange={(e) => setSelectedPeriod(e.target.value)}
+            label="Select Period"
+          >
+            {periodOptions.map((option) => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
 
-        {/* Tab Content */}
+        <Tabs
+          value={activeTab}
+          onChange={(e, newValue) => setActiveTab(newValue)}
+          className="commission-tabs"
+        >
+          <Tab label="Commission History" />
+          <Tab label="Payment History" />
+          <Tab label="Analytics" />
+        </Tabs>
+
         {activeTab === 0 && (
-          <DashboardCard>
-            <CardContent>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-                <Typography variant="h6">Commission History</Typography>
-                <Button variant="outlined" startIcon={<DownloadIcon />}>
-                  Export
+          <>
+            <Paper className="commission-filters">
+              <Box className="commission-filter-row">
+                <Button
+                  variant="outlined"
+                  startIcon={<DownloadIcon />}
+                  className="commission-export-button"
+                >
+                  Export Data
+                </Button>
+                <Button
+                  variant="outlined"
+                  startIcon={<SortIcon />}
+                  onClick={() => handleSort('commissionAmount')}
+                  className="commission-sort-button"
+                >
+                  Sort by Amount
+                </Button>
+                <Button
+                  variant="outlined"
+                  startIcon={<SortIcon />}
+                  onClick={() => handleSort('paymentStatus')}
+                  className="commission-sort-button"
+                >
+                  Sort by Status
                 </Button>
               </Box>
-              <TableContainer>
-                <Table>
-                  <TableHead>
-                    <TableRow>
+            </Paper>
+
+            <TableContainer className="commission-table-container">
+              <Table className="commission-table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Account</TableCell>
+                    <TableCell>Manager</TableCell>
+                    <TableCell>Commission Amount</TableCell>
+                    <TableCell>Status</TableCell>
+                    <TableCell>Payment Date</TableCell>
+                    <TableCell>Contract Type</TableCell>
+                    <TableCell>Actions</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {filteredCommissions.map((commission) => (
+                    <TableRow key={commission.id}>
+                      <TableCell>{commission.accountName}</TableCell>
+                      <TableCell>{commission.manager}</TableCell>
+                      <TableCell>
+                        <Typography className="commission-amount">
+                          ${commission.commissionAmount.toLocaleString()}
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Chip
+                          label={commission.paymentStatus}
+                          color={getStatusColor(commission.paymentStatus)}
+                          size="small"
+                          className={`commission-status-chip ${getStatusClass(commission.paymentStatus)}`}
+                        />
+                      </TableCell>
+                      <TableCell>
+                        {commission.paymentDate || 'Pending'}
+                      </TableCell>
+                      <TableCell>{commission.contractType}</TableCell>
                       <TableCell>
                         <Button
-                          startIcon={<SortIcon />}
-                          onClick={() => handleSort('accountName')}
-                          sx={{ textTransform: 'none' }}
+                          size="small"
+                          startIcon={<VisibilityIcon />}
+                          onClick={() => handleCommissionAction('view', commission.id)}
+                          className="commission-action-button"
                         >
-                          Account Name
+                          View
                         </Button>
-                      </TableCell>
-                      <TableCell>Manager</TableCell>
-                      <TableCell>
                         <Button
-                          startIcon={<SortIcon />}
-                          onClick={() => handleSort('commissionAmount')}
-                          sx={{ textTransform: 'none' }}
+                          size="small"
+                          startIcon={<EditIcon />}
+                          onClick={() => handleCommissionAction('edit', commission.id)}
+                          className="commission-action-button"
                         >
-                          Commission Amount
+                          Edit
                         </Button>
                       </TableCell>
-                      <TableCell>Payment Status</TableCell>
-                      <TableCell>Payment Date</TableCell>
-                      <TableCell>Actions</TableCell>
                     </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {filteredCommissions.map((commission) => (
-                      <TableRow key={commission.id}>
-                        <TableCell>
-                          <Typography variant="body1" fontWeight={600}>
-                            {commission.accountName}
-                          </Typography>
-                          <Typography variant="body2" color="text.secondary">
-                            {commission.contractType} • {commission.esiidCount} ESIIDs
-                          </Typography>
-                        </TableCell>
-                        <TableCell>{commission.manager}</TableCell>
-                        <TableCell>
-                          <Typography variant="body1" fontWeight={600}>
-                            ${commission.commissionAmount.toLocaleString()}
-                          </Typography>
-                        </TableCell>
-                        <TableCell>
-                          <Chip
-                            label={commission.paymentStatus}
-                            color={getStatusColor(commission.paymentStatus)}
-                            size="small"
-                          />
-                        </TableCell>
-                        <TableCell>
-                          {commission.paymentDate ? commission.paymentDate : 'Pending'}
-                        </TableCell>
-                        <TableCell>
-                          <Box sx={{ display: 'flex', gap: 1 }}>
-                            <IconButton size="small" onClick={() => handleCommissionAction('view', commission.id)}>
-                              <VisibilityIcon />
-                            </IconButton>
-                            <IconButton size="small" onClick={() => handleCommissionAction('edit', commission.id)}>
-                              <EditIcon />
-                            </IconButton>
-                          </Box>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </CardContent>
-          </DashboardCard>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </>
         )}
 
         {activeTab === 1 && (
-          <DashboardCard>
-            <CardContent>
-              <Typography variant="h6" sx={{ mb: 3 }}>
-                Payment History
-              </Typography>
-              <TableContainer>
-                <Table>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Payment Date</TableCell>
-                      <TableCell>Amount</TableCell>
-                      <TableCell>Account</TableCell>
-                      <TableCell>Method</TableCell>
-                      <TableCell>Status</TableCell>
-                      <TableCell>Reference</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {paymentHistory.map((payment) => (
-                      <TableRow key={payment.id}>
-                        <TableCell>{payment.paymentDate}</TableCell>
-                        <TableCell>
-                          <Typography variant="body1" fontWeight={600}>
-                            ${payment.amount.toLocaleString()}
-                          </Typography>
-                        </TableCell>
-                        <TableCell>{payment.account}</TableCell>
-                        <TableCell>{payment.method}</TableCell>
-                        <TableCell>
-                          <Chip
-                            label={payment.status}
-                            color={getStatusColor(payment.status)}
-                            size="small"
-                          />
-                        </TableCell>
-                        <TableCell>{payment.reference}</TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </CardContent>
-          </DashboardCard>
+          <TableContainer className="commission-table-container">
+            <Table className="commission-table">
+              <TableHead>
+                <TableRow>
+                  <TableCell>Payment Date</TableCell>
+                  <TableCell>Amount</TableCell>
+                  <TableCell>Account</TableCell>
+                  <TableCell>Method</TableCell>
+                  <TableCell>Status</TableCell>
+                  <TableCell>Reference</TableCell>
+                  <TableCell>Actions</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {paymentHistory.map((payment) => (
+                  <TableRow key={payment.id}>
+                    <TableCell>{payment.paymentDate}</TableCell>
+                    <TableCell>
+                      <Typography className="commission-amount">
+                        ${payment.amount.toLocaleString()}
+                      </Typography>
+                    </TableCell>
+                    <TableCell>{payment.account}</TableCell>
+                    <TableCell>
+                      <Typography className="commission-payment-method">
+                        {payment.method}
+                      </Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography className={`commission-payment-status ${getPaymentStatusClass(payment.status)}`}>
+                        {payment.status}
+                      </Typography>
+                    </TableCell>
+                    <TableCell>{payment.reference}</TableCell>
+                    <TableCell>
+                      <Button
+                        size="small"
+                        startIcon={<VisibilityIcon />}
+                        onClick={() => handlePaymentAction('view', payment.id)}
+                        className="commission-action-button"
+                      >
+                        View
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
         )}
 
         {activeTab === 2 && (
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={6}>
-              <DashboardCard>
-                <CardContent>
-                  <Typography variant="h6" sx={{ mb: 2 }}>
-                    Commission Summary Report
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Detailed breakdown of commissions by period, manager, and account type.
-                  </Typography>
-                  <Button variant="outlined" sx={{ mt: 2 }} startIcon={<DownloadIcon />}>
-                    Download Report
-                  </Button>
-                </CardContent>
-              </DashboardCard>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <DashboardCard>
-                <CardContent>
-                  <Typography variant="h6" sx={{ mb: 2 }}>
-                    Payment Analysis
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Analysis of payment trends, methods, and processing times.
-                  </Typography>
-                  <Button variant="outlined" sx={{ mt: 2 }} startIcon={<DownloadIcon />}>
-                    Download Report
-                  </Button>
-                </CardContent>
-              </DashboardCard>
-            </Grid>
-          </Grid>
+          <Box className="commission-chart-container">
+            <Typography variant="h6" className="commission-chart-title">
+              Commission Analytics
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              Charts and analytics will be displayed here
+            </Typography>
+          </Box>
+        )}
+
+        {filteredCommissions.length === 0 && activeTab === 0 && (
+          <Box className="commission-empty-state">
+            <Typography className="commission-empty-icon">
+              💰
+            </Typography>
+            <Typography variant="h6" className="commission-empty-text">
+              No commission data found
+            </Typography>
+            <Typography variant="body2" className="commission-empty-subtext">
+              Try adjusting your filters or search terms
+            </Typography>
+          </Box>
         )}
       </Container>
     </Box>

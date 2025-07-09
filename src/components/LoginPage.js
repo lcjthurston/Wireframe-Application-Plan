@@ -10,45 +10,41 @@ import {
   CircularProgress,
   Container,
   Paper,
-  Link
+  Link,
+  Tabs,
+  Tab,
+  Divider,
+  IconButton,
+  InputAdornment,
+  Fade,
+  Slide
 } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import {
+  Visibility,
+  VisibilityOff,
+  Email,
+  Lock,
+  Person
+} from '@mui/icons-material';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import kilowattImage from '../assets/image.png';
+import './LoginPage.scss';
 
 const LoginPage = ({ onLogin }) => {
   const [formData, setFormData] = useState({
     username: '',
-    password: ''
+    email: '',
+    password: '',
+    confirmPassword: ''
   });
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
-  const [animationLoaded, setAnimationLoaded] = useState(false);
-  const [Player, setPlayer] = useState(null);
-  const [serverAnimation, setServerAnimation] = useState(null);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [mode, setMode] = useState('signin'); // 'signin' or 'signup'
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-
-  useEffect(() => {
-    const loadAnimation = async () => {
-      try {
-        // Dynamically import lottie-react
-        const lottieModule = await import('lottie-react');
-        setPlayer(() => lottieModule.Player);
-        
-        // Dynamically import the animation JSON
-        const animationData = await import('../assets/serverAnimation.json');
-        setServerAnimation(animationData.default);
-        setAnimationLoaded(true);
-      } catch (error) {
-        console.warn('Animation failed to load:', error);
-        setAnimationLoaded(true); // Still set to true so the page renders
-      }
-    };
-
-    loadAnimation();
-  }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -64,18 +60,45 @@ const LoginPage = ({ onLogin }) => {
     }
   };
 
+  const validateForm = () => {
+    const newErrors = {};
+    
+    if (mode === 'signin') {
+      if (!formData.username) {
+        newErrors.username = 'Username or email is required';
+      }
+      if (!formData.password) {
+        newErrors.password = 'Password is required';
+      }
+    } else {
+      if (!formData.username) {
+        newErrors.username = 'Username is required';
+      }
+      if (!formData.email) {
+        newErrors.email = 'Email is required';
+      } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+        newErrors.email = 'Please enter a valid email address';
+      }
+      if (!formData.password) {
+        newErrors.password = 'Password is required';
+      } else if (formData.password.length < 6) {
+        newErrors.password = 'Password must be at least 6 characters';
+      }
+      if (!formData.confirmPassword) {
+        newErrors.confirmPassword = 'Please confirm your password';
+      } else if (formData.password !== formData.confirmPassword) {
+        newErrors.confirmPassword = 'Passwords do not match';
+      }
+    }
+
+    return newErrors;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
     
-    const newErrors = {};
-    if (!formData.username) {
-      newErrors.username = 'Username or email is required';
-    }
-    if (!formData.password) {
-      newErrors.password = 'Password is required';
-    }
-
+    const newErrors = validateForm();
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       setIsLoading(false);
@@ -84,11 +107,11 @@ const LoginPage = ({ onLogin }) => {
 
     try {
       await new Promise(resolve => setTimeout(resolve, 1000));
-      console.log('Login attempt:', formData);
+      console.log(`${mode === 'signin' ? 'Sign in' : 'Sign up'} attempt:`, formData);
       onLogin();
     } catch (error) {
-      console.error('Login error:', error);
-      setErrors({ general: 'Login failed. Please try again.' });
+      console.error(`${mode === 'signin' ? 'Sign in' : 'Sign up'} error:`, error);
+      setErrors({ general: `${mode === 'signin' ? 'Sign in' : 'Sign up'} failed. Please try again.` });
     } finally {
       setIsLoading(false);
     }
@@ -98,184 +121,238 @@ const LoginPage = ({ onLogin }) => {
     console.log('Forgot password clicked');
   };
 
-  const StyledCard = styled(Card)(({ theme }) => ({
-    width: '100%',
-    maxWidth: 450,
-    borderRadius: 20,
-    boxShadow: '0 8px 32px rgba(0,0,0,0.10)',
-    padding: theme.spacing(7),
-    position: 'relative',
-    zIndex: 3,
-    [theme.breakpoints.down('md')]: {
-      padding: theme.spacing(5),
-      maxWidth: '90%',
-      margin: theme.spacing(2.5),
-    },
-  }));
-
-  const LogoImage = styled('img')({
-    width: 90,
-    height: 90,
-    marginBottom: 20,
-    borderRadius: 14,
-    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
-  });
+  const handleModeChange = (event, newMode) => {
+    setMode(newMode);
+    setErrors({});
+    setFormData({
+      username: '',
+      email: '',
+      password: '',
+      confirmPassword: ''
+    });
+  };
 
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        minHeight: '100vh',
-        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-        position: 'relative',
-        overflow: 'hidden',
-      }}
-    >
-      <Container maxWidth="md">
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: isMobile ? 'column' : 'row',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: 4,
-          }}
-        >
-          <StyledCard>
-            <CardContent sx={{ textAlign: 'center', p: 0 }}>
-              <Box sx={{ mb: 5 }}>
-                <LogoImage src={kilowattImage} alt="Kilowatt Logo" />
-                <Typography variant="h3" component="h1" sx={{ fontWeight: 700, color: 'primary.main', mb: 1 }}>
+    <Box className="login-page">
+      <Container maxWidth="lg">
+        <Box className="login-container">
+          <Card className="login-card">
+            <CardContent className="login-card-content">
+              <Box className="login-header">
+                <img src={kilowattImage} alt="Kilowatt Logo" className="login-logo" />
+                <Typography 
+                  variant="h2" 
+                  component="h1" 
+                  className="login-title"
+                >
                   Kilowatt
                 </Typography>
-                <Typography variant="h6" color="text.secondary">
+                <Typography 
+                  variant="h6" 
+                  color="text.secondary"
+                  className="login-subtitle"
+                >
                   Business Intelligence Platform
                 </Typography>
               </Box>
+
+              <Tabs
+                value={mode}
+                onChange={handleModeChange}
+                centered
+                sx={{ mb: 4 }}
+              >
+                <Tab 
+                  label="Sign In" 
+                  value="signin"
+                  icon={<Person sx={{ mb: 0.5 }} />}
+                  iconPosition="top"
+                />
+                <Tab 
+                  label="Sign Up" 
+                  value="signup"
+                  icon={<Email sx={{ mb: 0.5 }} />}
+                  iconPosition="top"
+                />
+              </Tabs>
               
               {errors.general && (
-                <Alert severity="error" sx={{ mb: 3 }}>
+                <Alert severity="error" className="login-alert">
                   {errors.general}
                 </Alert>
               )}
 
-              <Box component="form" onSubmit={handleSubmit} sx={{ textAlign: 'left' }}>
-                <TextField
-                  fullWidth
-                  label="Username or Email"
-                  name="username"
-                  value={formData.username}
-                  onChange={handleInputChange}
-                  error={!!errors.username}
-                  helperText={errors.username}
-                  margin="normal"
-                  autoComplete="username"
-                  sx={{ mb: 2 }}
-                  InputProps={{
-                    style: { fontSize: '1.125rem', padding: '14px 12px' }
-                  }}
-                  InputLabelProps={{
-                    style: { fontSize: '1.125rem' }
-                  }}
-                />
-
-                <TextField
-                  fullWidth
-                  label="Password"
-                  name="password"
-                  type="password"
-                  value={formData.password}
-                  onChange={handleInputChange}
-                  error={!!errors.password}
-                  helperText={errors.password}
-                  margin="normal"
-                  autoComplete="current-password"
-                  sx={{ mb: 3 }}
-                  InputProps={{
-                    style: { fontSize: '1.125rem', padding: '14px 12px' }
-                  }}
-                  InputLabelProps={{
-                    style: { fontSize: '1.125rem' }
-                  }}
-                />
-
-                <Button
-                  type="submit"
-                  fullWidth
-                  variant="contained"
-                  size="large"
-                  disabled={isLoading}
-                  sx={{ 
-                    mb: 2, 
-                    py: 1.5, 
-                    fontSize: '1.125rem',
-                    fontWeight: 600
-                  }}
-                >
-                  {isLoading ? (
-                    <>
-                      <CircularProgress size={22} sx={{ mr: 1.5 }} />
-                      Logging in...
-                    </>
-                  ) : (
-                    'Sign In'
-                  )}
-                </Button>
-
-                <Box sx={{ textAlign: 'center' }}>
-                  <Link
-                    component="button"
-                    variant="h6"
-                    onClick={handleForgotPassword}
-                    sx={{ 
-                      cursor: 'pointer',
-                      fontSize: '1.125rem',
-                      fontWeight: 500
+              <Fade in={true} timeout={500}>
+                <Box component="form" onSubmit={handleSubmit} className="login-form">
+                  <TextField
+                    fullWidth
+                    label="Username"
+                    name="username"
+                    value={formData.username}
+                    onChange={handleInputChange}
+                    error={!!errors.username}
+                    helperText={errors.username}
+                    margin="normal"
+                    autoComplete="username"
+                    className="login-text-field"
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <Person color="action" />
+                        </InputAdornment>
+                      ),
                     }}
+                  />
+
+                  {mode === 'signup' && (
+                    <Slide direction="up" in={mode === 'signup'} timeout={300}>
+                      <TextField
+                        fullWidth
+                        label="Email"
+                        name="email"
+                        type="email"
+                        value={formData.email}
+                        onChange={handleInputChange}
+                        error={!!errors.email}
+                        helperText={errors.email}
+                        margin="normal"
+                        autoComplete="email"
+                        className="login-text-field"
+                        InputProps={{
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              <Email color="action" />
+                            </InputAdornment>
+                          ),
+                        }}
+                      />
+                    </Slide>
+                  )}
+
+                  <TextField
+                    fullWidth
+                    label="Password"
+                    name="password"
+                    type={showPassword ? 'text' : 'password'}
+                    value={formData.password}
+                    onChange={handleInputChange}
+                    error={!!errors.password}
+                    helperText={errors.password}
+                    margin="normal"
+                    autoComplete={mode === 'signin' ? 'current-password' : 'new-password'}
+                    sx={{ mb: mode === 'signup' ? 3 : 4 }}
+                    className="login-text-field"
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <Lock color="action" />
+                        </InputAdornment>
+                      ),
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            onClick={() => setShowPassword(!showPassword)}
+                            edge="end"
+                          >
+                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+
+                  {mode === 'signup' && (
+                    <Slide direction="up" in={mode === 'signup'} timeout={400}>
+                      <TextField
+                        fullWidth
+                        label="Confirm Password"
+                        name="confirmPassword"
+                        type={showConfirmPassword ? 'text' : 'password'}
+                        value={formData.confirmPassword}
+                        onChange={handleInputChange}
+                        error={!!errors.confirmPassword}
+                        helperText={errors.confirmPassword}
+                        margin="normal"
+                        autoComplete="new-password"
+                        sx={{ mb: 4 }}
+                        className="login-text-field"
+                        InputProps={{
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              <Lock color="action" />
+                            </InputAdornment>
+                          ),
+                          endAdornment: (
+                            <InputAdornment position="end">
+                              <IconButton
+                                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                edge="end"
+                              >
+                                {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
+                              </IconButton>
+                            </InputAdornment>
+                          ),
+                        }}
+                      />
+                    </Slide>
+                  )}
+
+                  <Button
+                    type="submit"
+                    fullWidth
+                    variant="contained"
+                    size="large"
+                    disabled={isLoading}
+                    className="login-button"
                   >
-                    Forgot Password?
-                  </Link>
+                    {isLoading ? (
+                      <>
+                        <CircularProgress size={24} sx={{ mr: 2, color: 'white' }} />
+                        {mode === 'signin' ? 'Signing In...' : 'Creating Account...'}
+                      </>
+                    ) : (
+                      mode === 'signin' ? 'Sign In' : 'Create Account'
+                    )}
+                  </Button>
+
+                  {mode === 'signin' && (
+                    <Box sx={{ textAlign: 'center' }}>
+                      <Link
+                        component="button"
+                        variant="body1"
+                        onClick={handleForgotPassword}
+                        className="login-forgot-password"
+                      >
+                        Forgot Password?
+                      </Link>
+                    </Box>
+                  )}
                 </Box>
-              </Box>
+              </Fade>
             </CardContent>
-          </StyledCard>
+          </Card>
           
-          <Box
-            sx={{
-              width: isMobile ? '100%' : 400,
-              maxWidth: 450,
-              minWidth: 300,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              mt: isMobile ? 4 : 0,
-              height: 400,
-              overflow: 'visible',
-            }}
-          >
-            <div
-              style={{ 
-                width: '100%', 
-                height: '100%',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center'
-              }}
-              dangerouslySetInnerHTML={{
-                __html: `<lottie-player
-                  src="/assets/serverAnimation.json"
-                  background="transparent"
-                  speed="1"
-                  style="width: 100%; height: 100%;"
-                  loop
-                  autoplay
-                  mode="normal"
-                  rendererSettings='{"preserveAspectRatio": "xMidYMid slice"}'
-                ></lottie-player>`
-              }}
-            />
+          <Box className="login-animation-container">
+            <div className="login-animation">
+              <div
+                style={{ 
+                  width: '100%', 
+                  height: '100%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  background: 'rgba(255, 255, 255, 0.1)',
+                  borderRadius: '16px',
+                  backdropFilter: 'blur(10px)'
+                }}
+              >
+                <Typography variant="h4" color="white" sx={{ textAlign: 'center' }}>
+                  Welcome to<br />
+                  <strong>Kilowatt</strong><br />
+                  Business Intelligence Platform
+                </Typography>
+              </div>
+            </div>
           </Box>
         </Box>
       </Container>

@@ -1,0 +1,345 @@
+/* CommissionDashboard component-scoped styles */
+
+.commission-dashboard {
+  min-height: 100vh;
+  background-color: #fafafa;
+}
+
+.commission-app-bar {
+  background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.commission-toolbar {
+  min-height: 72px;
+}
+
+.commission-logo {
+  width: 44px;
+  height: 44px;
+  margin-right: 14px;
+  border-radius: 9px;
+}
+
+.commission-brand {
+  font-weight: 700;
+}
+
+.commission-search-container {
+  display: flex;
+  align-items: center;
+  flex-grow: 1;
+  max-width: 600px;
+  margin: 0 32px;
+}
+
+.commission-search-field {
+  width: 100%;
+  
+  .MuiOutlinedInput-root {
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 24px;
+    
+    &:hover {
+      background-color: rgba(255, 255, 255, 1);
+    }
+  }
+}
+
+.commission-profile-button {
+  color: white;
+  text-transform: none;
+  font-weight: 600;
+}
+
+.commission-content {
+  padding: 32px 0;
+}
+
+.commission-header {
+  margin-bottom: 32px;
+}
+
+.commission-title {
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.commission-subtitle {
+  color: #666;
+  margin-bottom: 24px;
+}
+
+.commission-stats {
+  margin-bottom: 32px;
+}
+
+.commission-stat-card {
+  height: 100%;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+  }
+}
+
+.commission-stat-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1976d2;
+}
+
+.commission-stat-label {
+  color: #666;
+  font-weight: 500;
+}
+
+.commission-stat-icon {
+  font-size: 2.5rem;
+  margin-bottom: 8px;
+}
+
+.commission-tabs {
+  margin-bottom: 24px;
+  
+  .MuiTabs-indicator {
+    background-color: #1976d2;
+    height: 3px;
+    border-radius: 2px;
+  }
+  
+  .MuiTab-root {
+    text-transform: none;
+    font-weight: 600;
+    font-size: 0.875rem;
+    min-width: 120px;
+    
+    &.Mui-selected {
+      color: #1976d2;
+    }
+  }
+}
+
+.commission-filters {
+  margin-bottom: 24px;
+  padding: 24px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.commission-filter-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.commission-filter-item {
+  min-width: 200px;
+}
+
+.commission-table-container {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  overflow: hidden;
+}
+
+.commission-table {
+  .MuiTableHead-root {
+    background-color: #f8f9fa;
+    
+    .MuiTableCell-head {
+      font-weight: 600;
+      color: #333;
+      border-bottom: 2px solid #e0e0e0;
+    }
+  }
+  
+  .MuiTableBody-root {
+    .MuiTableRow-root {
+      transition: background-color 0.2s ease;
+      
+      &:hover {
+        background-color: #f8f9fa;
+      }
+    }
+    
+    .MuiTableCell-body {
+      border-bottom: 1px solid #f0f0f0;
+      padding: 16px;
+    }
+  }
+}
+
+.commission-status-chip {
+  font-weight: 500;
+  border-radius: 16px;
+}
+
+.commission-status-paid {
+  background-color: #e8f5e8;
+  color: #2e7d32;
+}
+
+.commission-status-pending {
+  background-color: #fff3e0;
+  color: #ed6c02;
+}
+
+.commission-status-overdue {
+  background-color: #ffebee;
+  color: #d32f2f;
+}
+
+.commission-action-button {
+  margin-right: 8px;
+  text-transform: none;
+  font-weight: 600;
+  border-radius: 20px;
+  padding: 8px 16px;
+  min-width: 80px;
+}
+
+.commission-amount {
+  font-weight: 600;
+  color: #1976d2;
+}
+
+.commission-payment-method {
+  font-weight: 500;
+  color: #666;
+}
+
+.commission-payment-status {
+  font-weight: 500;
+}
+
+.commission-payment-completed {
+  color: #2e7d32;
+}
+
+.commission-payment-pending {
+  color: #ed6c02;
+}
+
+.commission-payment-failed {
+  color: #d32f2f;
+}
+
+.commission-summary-card {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.commission-summary-title {
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: #333;
+}
+
+.commission-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.commission-summary-item {
+  text-align: center;
+  padding: 16px;
+  background-color: #f8f9fa;
+  border-radius: 12px;
+}
+
+.commission-summary-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1976d2;
+  margin-bottom: 4px;
+}
+
+.commission-summary-label {
+  font-size: 0.875rem;
+  color: #666;
+  font-weight: 500;
+}
+
+.commission-chart-container {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.commission-chart-title {
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: #333;
+}
+
+.commission-empty-state {
+  text-align: center;
+  padding: 48px 24px;
+  color: #666;
+}
+
+.commission-empty-icon {
+  font-size: 4rem;
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+
+.commission-empty-text {
+  font-size: 1.125rem;
+  margin-bottom: 8px;
+}
+
+.commission-empty-subtext {
+  font-size: 0.875rem;
+  opacity: 0.7;
+}
+
+.commission-menu-item {
+  font-weight: 500;
+}
+
+.commission-avatar {
+  width: 32px;
+  height: 32px;
+  margin-right: 8px;
+}
+
+.commission-badge {
+  .MuiBadge-badge {
+    background-color: #f44336;
+  }
+}
+
+.commission-period-selector {
+  margin-bottom: 24px;
+}
+
+.commission-export-button {
+  text-transform: none;
+  font-weight: 600;
+  border-radius: 20px;
+  padding: 8px 16px;
+}
+
+.commission-sort-button {
+  text-transform: none;
+  font-weight: 600;
+  border-radius: 20px;
+  padding: 8px 16px;
+  margin-left: 8px;
+} 
