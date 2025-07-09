@@ -46,8 +46,10 @@ import {
   Error,
   Info
 } from '@mui/icons-material';
-import kilowattImage from '../assets/image.png';
+import kilowattImage from '../../assets/image.png';
 import './AccountDashboard.scss';
+import { styled } from '@mui/material/styles';
+import colors from '../../assets/colors';
 
 const AccountDashboard = ({ onLogout, onNavigate }) => {
   const [activeTab, setActiveTab] = useState('overview');
@@ -197,74 +199,74 @@ const AccountDashboard = ({ onLogout, onNavigate }) => {
       <BackgroundGradient />
       <BackgroundPattern />
       <FloatingShapes />
-      
-      {/* Top Navigation Bar */}
-      <NavigationBar>
-        <NavLeft>
-          <LogoSection>
-            <LogoImage src={kilowattImage} alt="Kilowatt" />
-            <LogoText>Kilowatt</LogoText>
-          </LogoSection>
-        </NavLeft>
 
-        <NavCenter>
-          <NavLinks>
-            <NavLink onClick={() => handleNavigation('home')}>
-              Home
-            </NavLink>
-            <NavLink onClick={() => handleNavigation('task-queue')}>
-              Task Queue
-            </NavLink>
-            <NavLink active onClick={() => handleNavigation('accounts')}>
-              Accounts
-            </NavLink>
-            <DropdownContainer ref={dropdownRef}>
-              <MoreOptionsButton onClick={() => setDropdownOpen(v => !v)}>
-                More Options ▼
-              </MoreOptionsButton>
+      {/* Top AppBar (Material-UI, modeled after TaskQueue) */}
+      <AppBar position="static" className="account-dashboard-app-bar">
+        <Toolbar className="account-dashboard-toolbar">
+          <Box display="flex" alignItems="center" flexGrow={1}>
+            <img src={kilowattImage} alt="Kilowatt" className="account-dashboard-logo" />
+            <Typography variant="h5" className="account-dashboard-brand">
+              Kilowatt
+            </Typography>
+            {/* Navigation Links */}
+            <Box ml={4} display="flex" alignItems="center" gap={2}>
+              <Button color="inherit" onClick={() => handleNavigation('home')}>Home</Button>
+              <Button color="inherit" onClick={() => handleNavigation('task-queue')}>Task Queue</Button>
+              <Button color="inherit" onClick={() => handleNavigation('accounts')} variant="outlined">Accounts</Button>
+              <Button
+                color="inherit"
+                onClick={() => setDropdownOpen(v => !v)}
+                ref={dropdownRef}
+                endIcon={<MoreVert />}
+              >
+                More
+              </Button>
               {dropdownOpen && (
-                <NavDropdownMenu>
-                  <NavDropdownItem onClick={() => { setDropdownOpen(false); handleNavigation('managers'); }}>Managers</NavDropdownItem>
-                  <NavDropdownItem onClick={() => { setDropdownOpen(false); handleNavigation('email-drafts'); }}>Email Drafts</NavDropdownItem>
-                  <NavDropdownItem onClick={() => { setDropdownOpen(false); handleNavigation('commissions'); }}>Commissions</NavDropdownItem>
-                  <NavDropdownItem onClick={() => { setDropdownOpen(false); handleNavigation('providers'); }}>Providers</NavDropdownItem>
-                  <NavDropdownItem onClick={() => { setDropdownOpen(false); handleNavigation('system-health'); }}>System Health</NavDropdownItem>
-                </NavDropdownMenu>
+                <Menu
+                  anchorEl={dropdownRef.current}
+                  open={dropdownOpen}
+                  onClose={() => setDropdownOpen(false)}
+                  anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+                  transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+                >
+                  <MenuItem onClick={() => { setDropdownOpen(false); handleNavigation('managers'); }}>Managers</MenuItem>
+                  <MenuItem onClick={() => { setDropdownOpen(false); handleNavigation('email-drafts'); }}>Email Drafts</MenuItem>
+                  <MenuItem onClick={() => { setDropdownOpen(false); handleNavigation('commissions'); }}>Commissions</MenuItem>
+                  <MenuItem onClick={() => { setDropdownOpen(false); handleNavigation('providers'); }}>Providers</MenuItem>
+                  <MenuItem onClick={() => { setDropdownOpen(false); handleNavigation('system-health'); }}>System Health</MenuItem>
+                </Menu>
               )}
-            </DropdownContainer>
-          </NavLinks>
-        </NavCenter>
+            </Box>
+          </Box>
 
-        <NavRight>
-          <SearchForm onSubmit={(e) => e.preventDefault()}>
-            <SearchInput
-              type="text"
+          {/* Search */}
+          <Box className="account-dashboard-search-container">
+            <TextField
               placeholder="Search accounts, managers, etc..."
+              variant="outlined"
+              size="small"
+              className="account-dashboard-search-field"
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon />
+                  </InputAdornment>
+                ),
+              }}
             />
-            <SearchButton type="submit">
-              🔍
-            </SearchButton>
-          </SearchForm>
+          </Box>
 
-          <UserProfile>
-            <ProfileDropdown>
-              <ProfileButton>
-                <ProfileAvatar>J</ProfileAvatar>
-                <ProfileName>John Doe</ProfileName>
-                <DropdownArrow>▼</DropdownArrow>
-              </ProfileButton>
-              <DropdownMenu>
-                <DropdownItem onClick={() => handleProfileAction('settings')}>
-                  ⚙️ Settings
-                </DropdownItem>
-                <DropdownItem onClick={() => handleProfileAction('logout')}>
-                  🚪 Logout
-                </DropdownItem>
-              </DropdownMenu>
-            </ProfileDropdown>
-          </UserProfile>
-        </NavRight>
-      </NavigationBar>
+          {/* Profile */}
+          <Button
+            color="inherit"
+            className="account-dashboard-profile-button"
+            onClick={() => handleProfileAction('profile')}
+            startIcon={<AccountCircle />}
+          >
+            John Doe
+          </Button>
+        </Toolbar>
+      </AppBar>
 
       {/* Main Content */}
       <MainContainer>

@@ -41,7 +41,7 @@ import {
   Person,
   Business
 } from '@mui/icons-material';
-import kilowattImage from '../assets/image.png';
+import kilowattImage from '../../assets/image.png';
 import './TaskQueue.scss';
 
 const TaskQueue = ({ onLogout, onNavigate }) => {

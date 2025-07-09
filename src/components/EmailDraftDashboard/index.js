@@ -65,7 +65,7 @@ import {
   ExpandMore as ExpandMoreIcon,
   AttachFile as AttachFileIcon
 } from '@mui/icons-material';
-import kilowattImage from '../assets/image.png';
+import kilowattImage from '../../assets/image.png';
 import './EmailDraftDashboard.scss';
 
 const EmailDraftDashboard = ({ onLogout, onNavigate }) => {

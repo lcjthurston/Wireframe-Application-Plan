@@ -56,7 +56,7 @@ import {
   Remove,
   Sort
 } from '@mui/icons-material';
-import kilowattImage from '../assets/image.png';
+import kilowattImage from '../../assets/image.png';
 import './ManagerDashboard.scss';
 
 const ManagerDashboard = ({ onLogout, onNavigate }) => {

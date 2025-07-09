@@ -39,7 +39,7 @@ import {
   CheckCircle as CheckCircleIcon,
   Error as ErrorIcon
 } from '@mui/icons-material';
-import kilowattImage from '../assets/image.png';
+import kilowattImage from '../../assets/image.png';
 import './HomePage.scss';
 
 const HomePage = ({ onLogout, onNavigate, onOpenDataEntry }) => {

@@ -57,7 +57,7 @@ import {
   Edit as EditIcon,
   Delete as DeleteIcon
 } from '@mui/icons-material';
-import kilowattImage from '../assets/image.png';
+import kilowattImage from '../../assets/image.png';
 import './CommissionDashboard.scss';
 
 const CommissionDashboard = ({ onLogout, onNavigate }) => {

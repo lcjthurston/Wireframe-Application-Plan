@@ -28,7 +28,7 @@ import {
 } from '@mui/icons-material';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import kilowattImage from '../assets/image.png';
+// import kilowattImage from '../../assets/image.png';
 import './LoginPage.scss';
 
 const LoginPage = ({ onLogin }) => {
@@ -139,7 +139,7 @@ const LoginPage = ({ onLogin }) => {
           <Card className="login-card">
             <CardContent className="login-card-content">
               <Box className="login-header">
-                <img src={kilowattImage} alt="Kilowatt Logo" className="login-logo" />
+                {/* <img src={kilowattImage} alt="Kilowatt Logo" className="login-logo" /> */}
                 <Typography 
                   variant="h2" 
                   component="h1" 

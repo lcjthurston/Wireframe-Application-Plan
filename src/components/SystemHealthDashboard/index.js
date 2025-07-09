@@ -56,7 +56,7 @@ import {
   NetworkCheck as NetworkIcon
 } from '@mui/icons-material';
 import { styled } from '@mui/material/styles';
-import kilowattImage from '../assets/image.png';
+import kilowattImage from '../../assets/image.png';
 import './SystemHealthDashboard.scss';
 
 const SystemHealthDashboard = ({ onLogout, onNavigate }) => {
