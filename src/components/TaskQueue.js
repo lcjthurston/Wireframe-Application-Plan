@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
-import kilowattImage from '../assets/image.png';
+import Header from './Header';
 import colors from '../assets/colors';
 
 const TaskQueue = ({ onLogout, onNavigate }) => {
@@ -151,6 +151,12 @@ const TaskQueue = ({ onLogout, onNavigate }) => {
     }
   };
 
+  const handleSearch = (e) => {
+    e.preventDefault();
+    console.log('Searching for:', searchQuery);
+    // TODO: Implement search functionality
+  };
+
   const filteredTasks = getFilteredTasks();
 
   useEffect(() => {
@@ -177,74 +183,14 @@ const TaskQueue = ({ onLogout, onNavigate }) => {
       <FloatingShapes />
       
       {/* Top Navigation Bar */}
-      <NavigationBar>
-        <NavLeft>
-          <LogoSection>
-            <LogoImage src={kilowattImage} alt="Kilowatt" />
-            <LogoText>Kilowatt</LogoText>
-          </LogoSection>
-        </NavLeft>
-
-        <NavCenter>
-          <NavLinks>
-            <NavLink onClick={() => handleNavigation('home')}>
-              Home
-            </NavLink>
-            <NavLink active onClick={() => handleNavigation('task-queue')}>
-              Task Queue
-            </NavLink>
-            <NavLink onClick={() => handleNavigation('accounts')}>
-              Accounts
-            </NavLink>
-            <DropdownContainer ref={dropdownRef}>
-              <MoreOptionsButton onClick={() => setDropdownOpen(v => !v)}>
-                More Options ▼
-              </MoreOptionsButton>
-              {dropdownOpen && (
-                <NavDropdownMenu>
-                  <NavDropdownItem onClick={() => { setDropdownOpen(false); handleNavigation('managers'); }}>Managers</NavDropdownItem>
-                  <NavDropdownItem onClick={() => { setDropdownOpen(false); handleNavigation('email-drafts'); }}>Email Drafts</NavDropdownItem>
-                  <NavDropdownItem onClick={() => { setDropdownOpen(false); handleNavigation('commissions'); }}>Commissions</NavDropdownItem>
-                  <NavDropdownItem onClick={() => { setDropdownOpen(false); handleNavigation('providers'); }}>Providers</NavDropdownItem>
-                  <NavDropdownItem onClick={() => { setDropdownOpen(false); handleNavigation('system-health'); }}>System Health</NavDropdownItem>
-                </NavDropdownMenu>
-              )}
-            </DropdownContainer>
-          </NavLinks>
-        </NavCenter>
-
-        <NavRight>
-          <SearchForm onSubmit={(e) => e.preventDefault()}>
-            <SearchInput
-              type="text"
-              placeholder="Search tasks, accounts, etc..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-            <SearchButton type="submit">
-              🔍
-            </SearchButton>
-          </SearchForm>
-
-          <UserProfile>
-            <ProfileDropdown>
-              <ProfileButton>
-                <ProfileAvatar>J</ProfileAvatar>
-                <ProfileName>John Doe</ProfileName>
-                <DropdownArrow>▼</DropdownArrow>
-              </ProfileButton>
-              <DropdownMenu>
-                <DropdownItem onClick={() => handleProfileAction('settings')}>
-                  ⚙️ Settings
-                </DropdownItem>
-                <DropdownItem onClick={() => handleProfileAction('logout')}>
-                  🚪 Logout
-                </DropdownItem>
-              </DropdownMenu>
-            </ProfileDropdown>
-          </UserProfile>
-        </NavRight>
-      </NavigationBar>
+      <Header
+        activePage="task-queue"
+        onNavigate={handleNavigation}
+        onLogout={onLogout}
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        onSearch={handleSearch}
+      />
 
       {/* Main Content */}
       <MainContainer>
@@ -273,20 +219,16 @@ const TaskQueue = ({ onLogout, onNavigate }) => {
             <TableHeader>
               <TableRow>
                 <TableHeaderCell onClick={() => handleSort('accountName')}>
-                  Account Name
-                  <SortIcon>{sortField === 'accountName' ? (sortDirection === 'asc' ? '↑' : '↓') : '↕'}</SortIcon>
+                  Account Name {sortField === 'accountName' ? (sortDirection === 'asc' ? '↑' : '↓') : '↕'}
                 </TableHeaderCell>
                 <TableHeaderCell onClick={() => handleSort('taskType')}>
-                  Task Type
-                  <SortIcon>{sortField === 'taskType' ? (sortDirection === 'asc' ? '↑' : '↓') : '↕'}</SortIcon>
+                  Task Type {sortField === 'taskType' ? (sortDirection === 'asc' ? '↑' : '↓') : '↕'}
                 </TableHeaderCell>
                 <TableHeaderCell onClick={() => handleSort('dateCreated')}>
-                  Date Created
-                  <SortIcon>{sortField === 'dateCreated' ? (sortDirection === 'asc' ? '↑' : '↓') : '↕'}</SortIcon>
+                  Date Created {sortField === 'dateCreated' ? (sortDirection === 'asc' ? '↑' : '↓') : '↕'}
                 </TableHeaderCell>
                 <TableHeaderCell onClick={() => handleSort('assignedTo')}>
-                  Assigned To
-                  <SortIcon>{sortField === 'assignedTo' ? (sortDirection === 'asc' ? '↑' : '↓') : '↕'}</SortIcon>
+                  Assigned To {sortField === 'assignedTo' ? (sortDirection === 'asc' ? '↑' : '↓') : '↕'}
                 </TableHeaderCell>
                 <TableHeaderCell>Actions</TableHeaderCell>
               </TableRow>
@@ -353,7 +295,7 @@ const PageContainer = styled.div`
   min-height: 100vh;
   position: relative;
   overflow: hidden;
-  background: ${colors.primary};
+  background: ${colors.background};
 `;
 
 const BackgroundGradient = styled.div`
@@ -374,12 +316,12 @@ const NavigationBar = styled.nav`
   align-items: center;
   padding: 0 40px;
   height: 100px;
-  background: ${colors.primary};
-  border-bottom: 1px solid ${colors.border};
+  background: ${colors.surface};
+  border-bottom: 2px solid ${colors.border};
   position: sticky;
   top: 0;
   z-index: 100;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 20px ${colors.shadow};
   width: 100vw;
   max-width: 100vw;
   @media (max-width: 768px) {
@@ -425,12 +367,11 @@ const NavRight = styled.div`
 const SearchForm = styled.form`
   display: flex;
   align-items: center;
-  background: rgba(255, 255, 255, 0.15);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: ${colors.surface};
+  border: 2px solid ${colors.border};
   border-radius: 12px;
   padding: 8px 16px;
   min-width: 300px;
-  backdrop-filter: blur(10px);
 
   @media (max-width: 768px) {
     min-width: 200px;
@@ -441,12 +382,12 @@ const SearchInput = styled.input`
   border: none;
   background: none;
   font-size: 14px;
-  color: white;
+  color: ${colors.text};
   flex: 1;
   outline: none;
 
   &::placeholder {
-    color: rgba(255, 255, 255, 0.7);
+    color: ${colors.textLight};
   }
 `;
 
@@ -458,10 +399,10 @@ const SearchButton = styled.button`
   padding: 4px;
   border-radius: 6px;
   transition: background-color 0.2s ease;
-  color: white;
+  color: ${colors.primary};
 
   &:hover {
-    background: rgba(255, 255, 255, 0.1);
+    background: ${colors.accent5};
   }
 `;
 
@@ -477,16 +418,15 @@ const ProfileButton = styled.button`
   display: flex;
   align-items: center;
   gap: 8px;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: ${colors.surface};
+  border: 2px solid ${colors.border};
   cursor: pointer;
   padding: 8px 12px;
   border-radius: 8px;
   transition: all 0.3s ease;
-  backdrop-filter: blur(10px);
 
   &:hover {
-    background: rgba(255, 255, 255, 0.2);
+    background: ${colors.surfaceHover};
     transform: translateY(-1px);
   }
 `;
@@ -508,7 +448,7 @@ const ProfileAvatar = styled.div`
 const ProfileName = styled.span`
   font-size: 14px;
   font-weight: 500;
-  color: white;
+  color: ${colors.text};
 
   @media (max-width: 768px) {
     display: none;
@@ -517,7 +457,7 @@ const ProfileName = styled.span`
 
 const DropdownArrow = styled.span`
   font-size: 12px;
-  color: rgba(255, 255, 255, 0.8);
+  color: ${colors.primary};
 `;
 
 const DropdownMenu = styled.div`
@@ -525,11 +465,10 @@ const DropdownMenu = styled.div`
   top: 100%;
   right: 0;
   margin-top: 8px;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: ${colors.surface};
+  border: 2px solid ${colors.border};
   border-radius: 12px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 10px 25px ${colors.shadow};
   min-width: 160px;
   z-index: 1000;
   opacity: 0;
@@ -551,12 +490,12 @@ const DropdownItem = styled.button`
   border: none;
   text-align: left;
   font-size: 14px;
-  color: #1e293b;
+  color: ${colors.text};
   cursor: pointer;
   transition: background-color 0.2s ease;
 
   &:hover {
-    background: rgba(102, 126, 234, 0.1);
+    background: ${colors.accent5};
   }
 
   &:first-child {
@@ -588,9 +527,8 @@ const PageHeader = styled.div`
 const PageTitle = styled.h1`
   font-size: 32px;
   font-weight: 700;
-  color: white;
+  color: ${colors.text};
   margin-bottom: 8px;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 
   @media (max-width: 768px) {
     font-size: 24px;
@@ -599,20 +537,18 @@ const PageTitle = styled.h1`
 
 const PageSubtitle = styled.p`
   font-size: 16px;
-  color: rgba(255, 255, 255, 0.9);
+  color: ${colors.textLight};
   margin: 0;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 `;
 
 const TabContainer = styled.div`
   display: flex;
   gap: 8px;
   margin-bottom: 24px;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(20px);
+  background: ${colors.accent5};
   border-radius: 12px;
   padding: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 2px solid ${colors.border};
 
   @media (max-width: 768px) {
     flex-wrap: wrap;
@@ -620,9 +556,9 @@ const TabContainer = styled.div`
 `;
 
 const TabButton = styled.button`
-  background: ${props => props.active ? 'rgba(255, 255, 255, 0.2)' : 'transparent'};
+  background: ${props => props.active ? colors.primary : 'transparent'};
   border: none;
-  color: ${props => props.active ? 'white' : 'rgba(255, 255, 255, 0.8)'};
+  color: ${props => props.active ? colors.background : colors.text};
   padding: 12px 20px;
   border-radius: 8px;
   cursor: pointer;
@@ -634,18 +570,18 @@ const TabButton = styled.button`
   gap: 8px;
 
   &:hover {
-    background: rgba(255, 255, 255, 0.1);
-    color: white;
+    background: ${colors.surfaceHover};
+    color: ${colors.primary};
   }
 
   ${props => props.active && `
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 8px ${colors.shadow};
   `}
 `;
 
 const TabCount = styled.span`
-  background: rgba(255, 255, 255, 0.2);
-  color: white;
+  background: ${colors.primary};
+  color: ${colors.background};
   padding: 2px 8px;
   border-radius: 12px;
   font-size: 12px;
@@ -653,12 +589,11 @@ const TabCount = styled.span`
 `;
 
 const TableContainer = styled.div`
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(20px);
+  background: ${colors.surface};
   border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 2px solid ${colors.border};
   overflow: hidden;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 32px ${colors.shadow};
 `;
 
 const TaskTable = styled.table`
@@ -667,15 +602,16 @@ const TaskTable = styled.table`
 `;
 
 const TableHeader = styled.thead`
-  background: rgba(255, 255, 255, 0.1);
+  background: ${colors.accent5};
 `;
 
 const TableRow = styled.tr`
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid ${colors.accent6};
   transition: background-color 0.2s ease;
+  display: table-row;
 
   &:hover {
-    background: rgba(255, 255, 255, 0.05);
+    background: ${colors.surfaceHover};
   }
 
   &:last-child {
@@ -688,30 +624,27 @@ const TableHeaderCell = styled.th`
   text-align: left;
   font-size: 14px;
   font-weight: 600;
-  color: white;
+  color: ${colors.text};
   cursor: pointer;
   transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  gap: 8px;
+  display: table-cell;
+  vertical-align: middle;
 
   &:hover {
-    background: rgba(255, 255, 255, 0.1);
+    background: ${colors.surfaceHover};
   }
 `;
 
-const SortIcon = styled.span`
-  font-size: 12px;
-  opacity: 0.7;
-`;
+
 
 const TableBody = styled.tbody``;
 
 const TableCell = styled.td`
   padding: 16px;
   font-size: 14px;
-  color: white;
+  color: ${colors.text};
   vertical-align: middle;
+  display: table-cell;
 `;
 
 const AccountLink = styled.button`
@@ -782,9 +715,9 @@ const ActionButtons = styled.div`
 `;
 
 const ActionButton = styled.button`
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: white;
+  background: ${colors.surface};
+  border: 2px solid ${colors.border};
+  color: ${colors.text};
   padding: 6px 12px;
   border-radius: 6px;
   font-size: 12px;
@@ -793,7 +726,7 @@ const ActionButton = styled.button`
   transition: all 0.2s ease;
 
   &:hover {
-    background: rgba(255, 255, 255, 0.2);
+    background: ${colors.surfaceHover};
     transform: translateY(-1px);
   }
 `;
@@ -801,7 +734,7 @@ const ActionButton = styled.button`
 const EmptyState = styled.div`
   text-align: center;
   padding: 64px 32px;
-  color: white;
+  color: ${colors.text};
 `;
 
 const EmptyIcon = styled.div`
@@ -813,12 +746,12 @@ const EmptyTitle = styled.h3`
   font-size: 20px;
   font-weight: 600;
   margin-bottom: 8px;
-  color: white;
+  color: ${colors.text};
 `;
 
 const EmptyMessage = styled.p`
   font-size: 14px;
-  color: rgba(255, 255, 255, 0.8);
+  color: ${colors.textLight};
   margin: 0;
 `;
 
@@ -838,7 +771,7 @@ const LogoImage = styled.img`
 const LogoText = styled.span`
   font-size: 2.5rem;
   font-weight: 700;
-  color: ${colors.background};
+  color: ${colors.primary};
 `;
 
 const NavLink = styled.button`
@@ -846,7 +779,7 @@ const NavLink = styled.button`
   border: none;
   font-size: 1.25rem;
   font-weight: 500;
-  color: ${props => props.active ? colors.background : 'rgba(255,255,255,0.8)'};
+  color: ${props => props.active ? colors.background : colors.textLight};
   cursor: pointer;
   padding: 18px 28px;
   border-radius: 8px;
@@ -854,13 +787,13 @@ const NavLink = styled.button`
   position: relative;
   white-space: nowrap;
   &:hover {
-    color: ${colors.background};
-    background: ${colors.accent1};
+    color: ${colors.primary};
+    background: ${colors.accent5};
   }
   ${props => props.active && `
-    background: ${colors.accent1};
+    background: ${colors.primary};
     color: ${colors.background};
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    box-shadow: 0 2px 8px ${colors.shadow};
   `}
 `;
 
@@ -882,10 +815,10 @@ const NavDropdownMenu = styled.div`
   position: absolute;
   top: 100%;
   left: 0;
-  background: ${colors.primary};
-  border: 1px solid ${colors.border};
+  background: ${colors.surface};
+  border: 2px solid ${colors.border};
   border-radius: 8px;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+  box-shadow: 0 4px 16px ${colors.shadow};
   min-width: 180px;
   z-index: 1000;
   padding: 8px 0;
@@ -895,15 +828,15 @@ const NavDropdownItem = styled.button`
   width: 100%;
   background: none;
   border: none;
-  color: white;
+  color: ${colors.text};
   font-size: 1.1rem;
   text-align: left;
   padding: 12px 24px;
   cursor: pointer;
   transition: background 0.2s;
   &:hover {
-    background: ${colors.accent1};
-    color: ${colors.background};
+    background: ${colors.accent5};
+    color: ${colors.primary};
   }
 `;
 

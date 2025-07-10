@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import kilowattImage from '../assets/image.png';
 import colors from '../assets/colors';
+import Header from './Header';
 
 const EmailDraftDashboard = ({ onLogout, onNavigate }) => {
   const [selectedEmail, setSelectedEmail] = useState(null);
@@ -227,75 +228,14 @@ Kilowatt Team`,
       <FloatingShapes />
       
       {/* Top Navigation Bar */}
-      <NavigationBar>
-        <NavLeft>
-          <LogoSection>
-            <LogoImage src={kilowattImage} alt="Kilowatt" />
-            <LogoText>Kilowatt</LogoText>
-          </LogoSection>
-        </NavLeft>
-
-        <NavCenter>
-          <NavLinks>
-            <NavLink onClick={() => handleNavigation('home')}>
-              Home
-            </NavLink>
-            <NavLink onClick={() => handleNavigation('task-queue')}>
-              Task Queue
-            </NavLink>
-            <NavLink onClick={() => handleNavigation('accounts')}>
-              Accounts
-            </NavLink>
-            <NavLink onClick={() => handleNavigation('managers')}>
-              Managers
-            </NavLink>
-            <NavLink active onClick={() => handleNavigation('email-drafts')}>
-              Email Drafts
-            </NavLink>
-            <NavLink onClick={() => handleNavigation('commissions')}>
-              Commissions
-            </NavLink>
-            <NavLink onClick={() => handleNavigation('providers')}>
-              Providers
-            </NavLink>
-            <NavLink onClick={() => handleNavigation('system-health')}>
-              System Health
-            </NavLink>
-          </NavLinks>
-        </NavCenter>
-
-        <NavRight>
-          <SearchForm onSubmit={handleSearch}>
-            <SearchInput
-              type="text"
-              placeholder="Search emails, accounts, etc..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-            <SearchButton type="submit">
-              🔍
-            </SearchButton>
-          </SearchForm>
-
-          <UserProfile>
-            <ProfileDropdown>
-              <ProfileButton>
-                <ProfileAvatar>J</ProfileAvatar>
-                <ProfileName>John Doe</ProfileName>
-                <DropdownArrow>▼</DropdownArrow>
-              </ProfileButton>
-              <DropdownMenu>
-                <DropdownItem onClick={() => handleProfileAction('settings')}>
-                  ⚙️ Settings
-                </DropdownItem>
-                <DropdownItem onClick={() => handleProfileAction('logout')}>
-                  🚪 Logout
-                </DropdownItem>
-              </DropdownMenu>
-            </ProfileDropdown>
-          </UserProfile>
-        </NavRight>
-      </NavigationBar>
+      <Header
+        activePage="email-drafts"
+        onNavigate={handleNavigation}
+        onLogout={onLogout}
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        onSearch={handleSearch}
+      />
 
       {/* Main Content */}
       <MainContainer>
@@ -470,7 +410,7 @@ const PageContainer = styled.div`
   min-height: 100vh;
   position: relative;
   overflow: hidden;
-  background: ${colors.primary};
+  background: ${colors.background};
 `;
 
 const BackgroundGradient = styled.div`
@@ -483,226 +423,6 @@ const BackgroundPattern = styled.div`
 
 const FloatingShapes = styled.div`
   display: none;
-`;
-
-const NavigationBar = styled.nav`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 40px;
-  height: 100px;
-  background: ${colors.primary};
-  border-bottom: 1px solid ${colors.border};
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  width: 100vw;
-  max-width: 100vw;
-  @media (max-width: 768px) {
-    padding: 0 12px;
-    height: 80px;
-  }
-`;
-
-const NavLeft = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 24px;
-`;
-
-const NavCenter = styled.div`
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  min-width: 0;
-`;
-
-const NavLinks = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 24px 32px;
-  justify-content: center;
-  align-items: center;
-  width: auto;
-  max-width: 100vw;
-  overflow-x: visible;
-  row-gap: 16px;
-`;
-
-const NavRight = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 24px;
-  flex-shrink: 0;
-`;
-
-const LogoSection = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 12px;
-`;
-
-const LogoImage = styled.img`
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-`;
-
-const LogoText = styled.span`
-  font-size: 20px;
-  font-weight: 700;
-  color: white;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-`;
-
-const SearchForm = styled.form`
-  display: flex;
-  align-items: center;
-  background: rgba(255, 255, 255, 0.15);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 12px;
-  padding: 8px 16px;
-  min-width: 300px;
-  backdrop-filter: blur(10px);
-
-  @media (max-width: 768px) {
-    min-width: 200px;
-  }
-`;
-
-const SearchInput = styled.input`
-  border: none;
-  background: none;
-  font-size: 14px;
-  color: white;
-  flex: 1;
-  outline: none;
-
-  &::placeholder {
-    color: rgba(255, 255, 255, 0.7);
-  }
-`;
-
-const SearchButton = styled.button`
-  background: none;
-  border: none;
-  font-size: 16px;
-  cursor: pointer;
-  padding: 4px;
-  border-radius: 6px;
-  transition: background-color 0.2s ease;
-  color: white;
-
-  &:hover {
-    background: rgba(255, 255, 255, 0.1);
-  }
-`;
-
-const UserProfile = styled.div`
-  position: relative;
-`;
-
-const ProfileDropdown = styled.div`
-  position: relative;
-`;
-
-const ProfileButton = styled.button`
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  cursor: pointer;
-  padding: 8px 12px;
-  border-radius: 8px;
-  transition: all 0.3s ease;
-  backdrop-filter: blur(10px);
-
-  &:hover {
-    background: rgba(255, 255, 255, 0.2);
-    transform: translateY(-1px);
-  }
-`;
-
-const ProfileAvatar = styled.div`
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 600;
-  font-size: 14px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-`;
-
-const ProfileName = styled.span`
-  font-size: 14px;
-  font-weight: 500;
-  color: white;
-
-  @media (max-width: 768px) {
-    display: none;
-  }
-`;
-
-const DropdownArrow = styled.span`
-  font-size: 12px;
-  color: rgba(255, 255, 255, 0.8);
-`;
-
-const DropdownMenu = styled.div`
-  position: absolute;
-  top: 100%;
-  right: 0;
-  margin-top: 8px;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 12px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-  min-width: 160px;
-  z-index: 1000;
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(-10px);
-  transition: all 0.3s ease;
-
-  ${ProfileDropdown}:hover & {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
-  }
-`;
-
-const DropdownItem = styled.button`
-  width: 100%;
-  padding: 12px 16px;
-  background: none;
-  border: none;
-  text-align: left;
-  font-size: 14px;
-  color: #1e293b;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-
-  &:hover {
-    background: rgba(102, 126, 234, 0.1);
-  }
-
-  &:first-child {
-    border-radius: 12px 12px 0 0;
-  }
-
-  &:last-child {
-    border-radius: 0 0 12px 12px;
-  }
 `;
 
 const MainContainer = styled.div`
@@ -725,9 +445,8 @@ const PageHeader = styled.div`
 const PageTitle = styled.h1`
   font-size: 32px;
   font-weight: 700;
-  color: white;
+  color: ${colors.text};
   margin-bottom: 8px;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 
   @media (max-width: 768px) {
     font-size: 24px;
@@ -736,19 +455,17 @@ const PageTitle = styled.h1`
 
 const PageSubtitle = styled.p`
   font-size: 16px;
-  color: rgba(255, 255, 255, 0.9);
+  color: ${colors.textLight};
   margin: 0;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 `;
 
 const ControlsSection = styled.div`
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(20px);
+  background: ${colors.surface};
   border-radius: 16px;
   padding: 24px;
   margin-bottom: 24px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border: 2px solid ${colors.border};
+  box-shadow: 0 8px 32px ${colors.shadow};
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -781,27 +498,27 @@ const FilterGroup = styled.div`
 const FilterLabel = styled.label`
   font-size: 14px;
   font-weight: 500;
-  color: white;
+  color: ${colors.text};
 `;
 
 const FilterSelect = styled.select`
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: ${colors.surface};
+  border: 1px solid ${colors.border};
   border-radius: 8px;
   padding: 8px 12px;
   font-size: 14px;
-  color: white;
+  color: ${colors.text};
   outline: none;
   transition: all 0.2s ease;
 
   &:focus {
-    border-color: rgba(255, 255, 255, 0.4);
-    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
+    border-color: ${colors.accent};
+    box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.1);
   }
 
   option {
-    background: #1e293b;
-    color: white;
+    background: ${colors.surface};
+    color: ${colors.text};
   }
 `;
 
@@ -840,27 +557,25 @@ const EmailContainer = styled.div`
 `;
 
 const EmailQueue = styled.div`
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(20px);
+  background: ${colors.surface};
   border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 2px solid ${colors.border};
   overflow: hidden;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 32px ${colors.shadow};
   display: flex;
   flex-direction: column;
 `;
 
 const QueueHeader = styled.div`
   padding: 20px 24px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid ${colors.border};
 `;
 
 const QueueTitle = styled.h2`
   font-size: 18px;
   font-weight: 600;
-  color: white;
+  color: ${colors.text};
   margin: 0;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 `;
 
 const QueueList = styled.div`
@@ -871,13 +586,13 @@ const QueueList = styled.div`
 
 const QueueItem = styled.div`
   padding: 16px 24px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid ${colors.border};
   cursor: pointer;
   transition: all 0.3s ease;
-  background: ${props => props.selected ? 'rgba(255, 255, 255, 0.15)' : 'transparent'};
+  background: ${props => props.selected ? colors.accent1 : 'transparent'};
 
   &:hover {
-    background: rgba(255, 255, 255, 0.1);
+    background: ${colors.accent1};
   }
 
   &:last-child {
@@ -892,13 +607,13 @@ const EmailInfo = styled.div`
 const EmailRecipient = styled.div`
   font-size: 14px;
   font-weight: 600;
-  color: white;
+  color: ${colors.text};
   margin-bottom: 4px;
 `;
 
 const EmailAccount = styled.div`
   font-size: 12px;
-  color: rgba(255, 255, 255, 0.8);
+  color: ${colors.textLight};
   margin-bottom: 4px;
 `;
 
@@ -911,7 +626,7 @@ const EmailType = styled.div`
 
 const EmailDate = styled.div`
   font-size: 11px;
-  color: rgba(255, 255, 255, 0.6);
+  color: ${colors.textLight};
 `;
 
 const EmailActions = styled.div`
@@ -920,9 +635,9 @@ const EmailActions = styled.div`
 `;
 
 const ActionButton = styled.button`
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: white;
+  background: ${colors.surface};
+  border: 1px solid ${colors.border};
+  color: ${colors.text};
   padding: 4px 8px;
   border-radius: 4px;
   font-size: 12px;
@@ -931,25 +646,24 @@ const ActionButton = styled.button`
   transition: all 0.2s ease;
 
   &:hover {
-    background: rgba(255, 255, 255, 0.2);
+    background: ${colors.accent1};
     transform: translateY(-1px);
   }
 `;
 
 const PreviewPane = styled.div`
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(20px);
+  background: ${colors.surface};
   border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 2px solid ${colors.border};
   overflow: hidden;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 32px ${colors.shadow};
   display: flex;
   flex-direction: column;
 `;
 
 const PreviewHeader = styled.div`
   padding: 20px 24px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid ${colors.border};
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -958,9 +672,8 @@ const PreviewHeader = styled.div`
 const PreviewTitle = styled.h2`
   font-size: 18px;
   font-weight: 600;
-  color: white;
+  color: ${colors.text};
   margin: 0;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 `;
 
 const PreviewActions = styled.div`
@@ -969,9 +682,9 @@ const PreviewActions = styled.div`
 `;
 
 const PreviewButton = styled.button`
-  background: ${props => props.danger ? 'rgba(239, 68, 68, 0.2)' : 'rgba(255, 255, 255, 0.1)'};
-  border: 1px solid ${props => props.danger ? 'rgba(239, 68, 68, 0.3)' : 'rgba(255, 255, 255, 0.2)'};
-  color: ${props => props.danger ? '#fca5a5' : 'white'};
+  background: ${props => props.danger ? colors.accent : colors.surface};
+  border: 1px solid ${props => props.danger ? colors.accent : colors.border};
+  color: ${props => props.danger ? colors.background : colors.text};
   padding: 6px 12px;
   border-radius: 6px;
   font-size: 12px;
@@ -980,7 +693,7 @@ const PreviewButton = styled.button`
   transition: all 0.2s ease;
 
   &:hover {
-    background: ${props => props.danger ? 'rgba(239, 68, 68, 0.3)' : 'rgba(255, 255, 255, 0.2)'};
+    background: ${props => props.danger ? colors.accent : colors.accent1};
     transform: translateY(-1px);
   }
 `;
@@ -1004,14 +717,14 @@ const DetailRow = styled.div`
 const DetailLabel = styled.div`
   font-size: 14px;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.8);
+  color: ${colors.textLight};
   min-width: 100px;
   margin-right: 16px;
 `;
 
 const DetailValue = styled.div`
   font-size: 14px;
-  color: white;
+  color: ${colors.text};
   flex: 1;
 `;
 
@@ -1020,40 +733,40 @@ const TypeBadge = styled.span`
   border-radius: 6px;
   font-size: 12px;
   font-weight: 600;
-  background: rgba(251, 191, 36, 0.2);
-  color: #fbbf24;
-  border: 1px solid rgba(251, 191, 36, 0.3);
+  background: ${colors.accent1};
+  color: ${colors.accent};
+  border: 1px solid ${colors.accent};
 `;
 
 const AttachmentLink = styled.a`
   display: block;
-  color: #fbbf24;
+  color: ${colors.accent};
   text-decoration: none;
   font-size: 12px;
   margin-bottom: 4px;
   transition: color 0.2s ease;
 
   &:hover {
-    color: #f59e0b;
+    color: ${colors.accent};
     text-decoration: underline;
   }
 `;
 
 const EmailBody = styled.div`
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 1px solid ${colors.border};
   padding-top: 20px;
 `;
 
 const BodyLabel = styled.div`
   font-size: 14px;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.8);
+  color: ${colors.textLight};
   margin-bottom: 12px;
 `;
 
 const BodyContent = styled.div`
   font-size: 14px;
-  color: white;
+  color: ${colors.text};
   line-height: 1.6;
   white-space: pre-wrap;
 `;
@@ -1076,37 +789,14 @@ const EmptyIcon = styled.div`
 const EmptyTitle = styled.h3`
   font-size: 18px;
   font-weight: 600;
-  color: white;
+  color: ${colors.text};
   margin-bottom: 8px;
 `;
 
 const EmptyMessage = styled.p`
   font-size: 14px;
-  color: rgba(255, 255, 255, 0.7);
+  color: ${colors.textLight};
   margin: 0;
-`;
-
-const NavLink = styled.button`
-  background: none;
-  border: none;
-  font-size: 1.25rem;
-  font-weight: 500;
-  color: ${props => props.active ? colors.background : 'rgba(255,255,255,0.8)'};
-  cursor: pointer;
-  padding: 18px 28px;
-  border-radius: 8px;
-  transition: all 0.3s ease;
-  position: relative;
-  white-space: nowrap;
-  &:hover {
-    color: ${colors.background};
-    background: ${colors.accent1};
-  }
-  ${props => props.active && `
-    background: ${colors.accent1};
-    color: ${colors.background};
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-  `}
 `;
 
 export default EmailDraftDashboard; 

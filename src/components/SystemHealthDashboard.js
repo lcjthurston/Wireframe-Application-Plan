@@ -2,14 +2,15 @@ import React, { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import kilowattImage from '../assets/image.png';
 import colors from '../assets/colors';
+import Header from './Header';
 
 // Styled Components
 const PageContainer = styled.div`
   min-height: 100vh;
   position: relative;
   overflow: hidden;
-  background: ${colors.primary};
-  color: ${colors.textLight};
+  background: ${colors.background};
+  color: ${colors.text};
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
 `;
 
@@ -25,139 +26,6 @@ const FloatingShapes = styled.div`
   display: none;
 `;
 
-const NavigationBar = styled.nav`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 40px;
-  height: 100px;
-  background: ${colors.primary};
-  border-bottom: 1px solid ${colors.border};
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  width: 100vw;
-  max-width: 100vw;
-  @media (max-width: 768px) {
-    padding: 0 12px;
-    height: 80px;
-  }
-`;
-
-const NavLeft = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 24px;
-`;
-
-const NavCenter = styled.div`
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  min-width: 0;
-`;
-
-const LogoSection = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-`;
-
-const LogoImage = styled.img`
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-`;
-
-const LogoText = styled.span`
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: ${colors.textLight};
-`;
-
-const NavLinks = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 24px 32px;
-  justify-content: center;
-  align-items: center;
-  width: auto;
-  max-width: 100vw;
-  overflow-x: visible;
-  row-gap: 16px;
-`;
-
-const NavLink = styled.button`
-  background: none;
-  border: none;
-  font-size: 1.25rem;
-  font-weight: 500;
-  color: ${props => props.active ? colors.background : 'rgba(255,255,255,0.8)'};
-  cursor: pointer;
-  padding: 18px 28px;
-  border-radius: 8px;
-  transition: all 0.3s ease;
-  position: relative;
-  white-space: nowrap;
-  &:hover {
-    color: ${colors.background};
-    background: ${colors.accent1};
-  }
-  ${props => props.active && `
-    background: ${colors.accent1};
-    color: ${colors.background};
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-  `}
-`;
-
-const NavRight = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 24px;
-  flex-shrink: 0;
-`;
-
-const SearchForm = styled.form`
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-`;
-
-const SearchInput = styled.input`
-  background: ${colors.border};
-  border: 1px solid ${colors.border};
-  border-radius: 0.5rem;
-  padding: 0.5rem 1rem;
-  color: ${colors.textLight};
-  width: 300px;
-  
-  &::placeholder {
-    color: ${colors.textLight};
-  }
-  
-  &:focus {
-    outline: none;
-    border-color: ${colors.accent};
-  }
-`;
-
-const SearchButton = styled.button`
-  background: ${colors.border};
-  border: 1px solid ${colors.border};
-  border-radius: 0.5rem;
-  padding: 0.5rem;
-  color: ${colors.textLight};
-  cursor: pointer;
-  transition: all 0.3s ease;
-  
-  &:hover {
-    background: ${colors.accent};
-  }
-`;
-
 const MainContainer = styled.div`
   padding: 2rem;
   max-width: 1400px;
@@ -171,7 +39,7 @@ const PageHeader = styled.div`
 
 const PageTitle = styled.h1`
   font-size: 2.5rem;
-  color: ${colors.textLight};
+  color: ${colors.text};
   margin-bottom: 0.5rem;
   font-weight: 700;
 `;
@@ -189,9 +57,8 @@ const StatsGrid = styled.div`
 `;
 
 const StatCard = styled.div`
-  background: ${colors.border};
-  backdrop-filter: blur(10px);
-  border: 1px solid ${colors.border};
+  background: ${colors.surface};
+  border: 2px solid ${colors.border};
   border-radius: 1rem;
   padding: 1.5rem;
   display: flex;
@@ -201,7 +68,8 @@ const StatCard = styled.div`
   
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 8px 25px ${colors.shadow};
+    border-color: ${colors.accent3};
   }
 `;
 
@@ -214,7 +82,7 @@ const StatContent = styled.div``;
 const StatValue = styled.div`
   font-size: 1.5rem;
   font-weight: bold;
-  color: ${colors.textLight};
+  color: ${colors.text};
   margin-bottom: 0.25rem;
 `;
 
@@ -227,17 +95,16 @@ const TabContainer = styled.div`
   display: flex;
   gap: 0.5rem;
   margin-bottom: 2rem;
-  background: ${colors.border};
-  backdrop-filter: blur(10px);
-  border: 1px solid ${colors.border};
+  background: ${colors.surface};
+  border: 2px solid ${colors.border};
   border-radius: 1rem;
   padding: 0.5rem;
 `;
 
 const TabButton = styled.button`
-  background: ${props => props.active ? colors.accent : 'transparent'};
+  background: ${props => props.active ? colors.accent1 : 'transparent'};
   border: none;
-  color: ${props => props.active ? colors.textLight : colors.textLight};
+  color: ${props => props.active ? colors.accent : colors.textLight};
   padding: 0.75rem 1.5rem;
   border-radius: 0.5rem;
   cursor: pointer;
@@ -245,22 +112,21 @@ const TabButton = styled.button`
   font-weight: ${props => props.active ? '600' : '400'};
   
   &:hover {
-    background: ${colors.border};
+    background: ${colors.accent1};
     color: ${colors.accent};
   }
 `;
 
 const TabContent = styled.div`
-  background: ${colors.border};
-  backdrop-filter: blur(10px);
-  border: 1px solid ${colors.border};
+  background: ${colors.surface};
+  border: 2px solid ${colors.border};
   border-radius: 1rem;
   padding: 2rem;
   min-height: 500px;
 `;
 
 const SectionTitle = styled.h2`
-  color: ${colors.textLight};
+  color: ${colors.text};
   font-size: 1.5rem;
   margin-bottom: 1.5rem;
   font-weight: 600;
@@ -275,15 +141,16 @@ const AutomationGrid = styled.div`
 `;
 
 const AutomationCard = styled.div`
-  background: ${colors.border};
-  border: 1px solid ${colors.border};
+  background: ${colors.surface};
+  border: 2px solid ${colors.border};
   border-radius: 1rem;
   padding: 1.5rem;
   transition: all 0.3s ease;
   
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 8px 25px ${colors.shadow};
+    border-color: ${colors.accent3};
   }
 `;
 
@@ -295,14 +162,14 @@ const AutomationHeader = styled.div`
 `;
 
 const AutomationName = styled.h3`
-  color: ${colors.textLight};
+  color: ${colors.text};
   font-size: 1.2rem;
   font-weight: 600;
 `;
 
 const AutomationStatus = styled.span`
   background: ${props => props.color};
-  color: ${colors.textLight};
+  color: ${colors.background};
   padding: 0.25rem 0.75rem;
   border-radius: 1rem;
   font-size: 0.8rem;
@@ -339,17 +206,17 @@ const AutomationTable = styled.table`
   }
   
   th {
-    color: ${colors.textLight};
+    color: ${colors.text};
     font-weight: 600;
-    background: ${colors.border};
+    background: ${colors.accent1};
   }
   
   td {
-    color: ${colors.textLight};
+    color: ${colors.text};
   }
   
   tr:hover {
-    background: ${colors.border};
+    background: ${colors.accent1};
   }
 `;
 
@@ -366,17 +233,17 @@ const LogsTable = styled.table`
   }
   
   th {
-    color: ${colors.textLight};
+    color: ${colors.text};
     font-weight: 600;
-    background: ${colors.border};
+    background: ${colors.accent1};
   }
   
   td {
-    color: ${colors.textLight};
+    color: ${colors.text};
   }
   
   tr:hover {
-    background: ${colors.border};
+    background: ${colors.accent1};
   }
 `;
 
@@ -389,7 +256,7 @@ const LogLevel = styled.span`
       default: return '#6b7280';
     }
   }};
-  color: ${colors.textLight};
+  color: ${colors.background};
   padding: 0.25rem 0.5rem;
   border-radius: 0.25rem;
   font-size: 0.8rem;
@@ -405,8 +272,8 @@ const MetricsGrid = styled.div`
 `;
 
 const MetricCard = styled.div`
-  background: ${colors.border};
-  border: 1px solid ${colors.border};
+  background: ${colors.surface};
+  border: 2px solid ${colors.border};
   border-radius: 1rem;
   padding: 1.5rem;
   text-align: center;
@@ -414,7 +281,8 @@ const MetricCard = styled.div`
   
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 8px 25px ${colors.shadow};
+    border-color: ${colors.accent3};
   }
 `;
 
@@ -425,7 +293,7 @@ const MetricName = styled.div`
 `;
 
 const MetricValue = styled.div`
-  color: ${colors.textLight};
+  color: ${colors.text};
   font-size: 2rem;
   font-weight: bold;
   margin-bottom: 0.5rem;
@@ -442,23 +310,37 @@ const DropdownContainer = styled.div`
   display: inline-block;
 `;
 
-const MoreOptionsButton = styled(NavLink)`
-  padding-right: 36px;
-  &::after {
-    content: '';
-    display: inline-block;
-    margin-left: 8px;
+const MoreOptionsButton = styled.button`
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: ${props => props.active ? colors.accent : colors.textLight};
+  cursor: pointer;
+  padding: 18px 28px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  position: relative;
+  white-space: nowrap;
+  &:hover {
+    color: ${colors.accent};
+    background: ${colors.accent1};
   }
+  ${props => props.active && `
+    background: ${colors.accent1};
+    color: ${colors.accent};
+    box-shadow: 0 2px 8px ${colors.shadow};
+  `}
 `;
 
 const NavDropdownMenu = styled.div`
   position: absolute;
   top: 100%;
   left: 0;
-  background: ${colors.primary};
-  border: 1px solid ${colors.border};
+  background: ${colors.surface};
+  border: 2px solid ${colors.border};
   border-radius: 8px;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+  box-shadow: 0 4px 16px ${colors.shadow};
   min-width: 180px;
   z-index: 1000;
   padding: 8px 0;
@@ -468,7 +350,7 @@ const NavDropdownItem = styled.button`
   width: 100%;
   background: none;
   border: none;
-  color: white;
+  color: ${colors.text};
   font-size: 1.1rem;
   text-align: left;
   padding: 12px 24px;
@@ -476,7 +358,7 @@ const NavDropdownItem = styled.button`
   transition: background 0.2s;
   &:hover {
     background: ${colors.accent1};
-    color: ${colors.background};
+    color: ${colors.accent};
   }
 `;
 
@@ -673,46 +555,14 @@ const SystemHealthDashboard = ({ onLogout, onNavigate }) => {
       <BackgroundGradient />
       <BackgroundPattern />
       <FloatingShapes />
-      <NavigationBar>
-        <NavLeft>
-          <LogoSection>
-            <LogoImage src={kilowattImage} alt="Kilowatt" />
-            <LogoText>Kilowatt</LogoText>
-          </LogoSection>
-        </NavLeft>
-        <NavCenter>
-          <NavLinks>
-            <NavLink onClick={() => handleNavigation('home')}>Home</NavLink>
-            <NavLink onClick={() => handleNavigation('task-queue')}>Task Queue</NavLink>
-            <NavLink onClick={() => handleNavigation('accounts')}>Accounts</NavLink>
-            <DropdownContainer ref={dropdownRef}>
-              <MoreOptionsButton onClick={() => setDropdownOpen(v => !v)}>
-                More Options ▼
-              </MoreOptionsButton>
-              {dropdownOpen && (
-                <NavDropdownMenu>
-                  <NavDropdownItem onClick={() => { setDropdownOpen(false); handleNavigation('managers'); }}>Managers</NavDropdownItem>
-                  <NavDropdownItem onClick={() => { setDropdownOpen(false); handleNavigation('email-drafts'); }}>Email Drafts</NavDropdownItem>
-                  <NavDropdownItem onClick={() => { setDropdownOpen(false); handleNavigation('commissions'); }}>Commissions</NavDropdownItem>
-                  <NavDropdownItem onClick={() => { setDropdownOpen(false); handleNavigation('providers'); }}>Providers</NavDropdownItem>
-                  <NavDropdownItem onClick={() => { setDropdownOpen(false); handleNavigation('system-health'); }}>System Health</NavDropdownItem>
-                </NavDropdownMenu>
-              )}
-            </DropdownContainer>
-          </NavLinks>
-        </NavCenter>
-        <NavRight>
-          <SearchForm onSubmit={handleSearch}>
-            <SearchInput
-              type="text"
-              placeholder="Search logs, automations, etc..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-            <SearchButton type="submit">🔍</SearchButton>
-          </SearchForm>
-        </NavRight>
-      </NavigationBar>
+      <Header
+        activePage="system-health"
+        onNavigate={handleNavigation}
+        onLogout={onLogout}
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        onSearch={handleSearch}
+      />
       <MainContainer>
         <PageHeader>
           <PageTitle>System Automation Health Dashboard</PageTitle>

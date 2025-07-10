@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import kilowattImage from '../assets/image.png';
 import colors from '../assets/colors';
+import Header from './Header';
 
 const CommissionDashboard = ({ onLogout, onNavigate }) => {
   const [activeTab, setActiveTab] = useState('overview');
@@ -222,75 +223,14 @@ const CommissionDashboard = ({ onLogout, onNavigate }) => {
       <FloatingShapes />
       
       {/* Top Navigation Bar */}
-      <NavigationBar>
-        <NavLeft>
-          <LogoSection>
-            <LogoImage src={kilowattImage} alt="Kilowatt" />
-            <LogoText>Kilowatt</LogoText>
-          </LogoSection>
-        </NavLeft>
-
-        <NavCenter>
-          <NavLinks>
-            <NavLink onClick={() => handleNavigation('home')}>
-              Home
-            </NavLink>
-            <NavLink onClick={() => handleNavigation('task-queue')}>
-              Task Queue
-            </NavLink>
-            <NavLink onClick={() => handleNavigation('accounts')}>
-              Accounts
-            </NavLink>
-            <NavLink onClick={() => handleNavigation('managers')}>
-              Managers
-            </NavLink>
-            <NavLink onClick={() => handleNavigation('email-drafts')}>
-              Email Drafts
-            </NavLink>
-            <NavLink active onClick={() => handleNavigation('commissions')}>
-              Commissions
-            </NavLink>
-            <NavLink onClick={() => handleNavigation('providers')}>
-              Providers
-            </NavLink>
-            <NavLink onClick={() => handleNavigation('system-health')}>
-              System Health
-            </NavLink>
-          </NavLinks>
-        </NavCenter>
-
-        <NavRight>
-          <SearchForm onSubmit={handleSearch}>
-            <SearchInput
-              type="text"
-              placeholder="Search commissions, accounts, etc..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-            <SearchButton type="submit">
-              🔍
-            </SearchButton>
-          </SearchForm>
-
-          <UserProfile>
-            <ProfileDropdown>
-              <ProfileButton>
-                <ProfileAvatar>J</ProfileAvatar>
-                <ProfileName>John Doe</ProfileName>
-                <DropdownArrow>▼</DropdownArrow>
-              </ProfileButton>
-              <DropdownMenu>
-                <DropdownItem onClick={() => handleProfileAction('settings')}>
-                  ⚙️ Settings
-                </DropdownItem>
-                <DropdownItem onClick={() => handleProfileAction('logout')}>
-                  🚪 Logout
-                </DropdownItem>
-              </DropdownMenu>
-            </ProfileDropdown>
-          </UserProfile>
-        </NavRight>
-      </NavigationBar>
+      <Header
+        activePage="commissions"
+        onNavigate={handleNavigation}
+        onLogout={onLogout}
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        onSearch={handleSearch}
+      />
 
       {/* Main Content */}
       <MainContainer>
@@ -601,7 +541,7 @@ const PageContainer = styled.div`
   min-height: 100vh;
   position: relative;
   overflow: hidden;
-  background: ${colors.primary};
+  background: ${colors.background};
 `;
 
 const BackgroundGradient = styled.div`
@@ -616,205 +556,7 @@ const FloatingShapes = styled.div`
   display: none;
 `;
 
-const NavigationBar = styled.nav`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 40px;
-  height: 100px;
-  background: ${colors.primary};
-  border-bottom: 1px solid ${colors.border};
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  width: 100vw;
-  max-width: 100vw;
-  @media (max-width: 768px) {
-    padding: 0 12px;
-    height: 80px;
-  }
-`;
 
-const NavLeft = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 24px;
-`;
-
-const NavCenter = styled.div`
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  min-width: 0;
-`;
-
-const NavLinks = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 24px 32px;
-  justify-content: center;
-  align-items: center;
-  width: auto;
-  max-width: 100vw;
-  overflow-x: visible;
-  row-gap: 16px;
-`;
-
-const NavRight = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 24px;
-  flex-shrink: 0;
-`;
-
-const SearchForm = styled.form`
-  display: flex;
-  align-items: center;
-  background: rgba(255, 255, 255, 0.15);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 12px;
-  padding: 8px 16px;
-  min-width: 300px;
-  backdrop-filter: blur(10px);
-
-  @media (max-width: 768px) {
-    min-width: 200px;
-  }
-`;
-
-const SearchInput = styled.input`
-  border: none;
-  background: none;
-  font-size: 14px;
-  color: white;
-  flex: 1;
-  outline: none;
-
-  &::placeholder {
-    color: rgba(255, 255, 255, 0.7);
-  }
-`;
-
-const SearchButton = styled.button`
-  background: none;
-  border: none;
-  font-size: 16px;
-  cursor: pointer;
-  padding: 4px;
-  border-radius: 6px;
-  transition: background-color 0.2s ease;
-  color: white;
-
-  &:hover {
-    background: rgba(255, 255, 255, 0.1);
-  }
-`;
-
-const UserProfile = styled.div`
-  position: relative;
-`;
-
-const ProfileDropdown = styled.div`
-  position: relative;
-`;
-
-const ProfileButton = styled.button`
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  cursor: pointer;
-  padding: 8px 12px;
-  border-radius: 8px;
-  transition: all 0.3s ease;
-  backdrop-filter: blur(10px);
-
-  &:hover {
-    background: rgba(255, 255, 255, 0.2);
-    transform: translateY(-1px);
-  }
-`;
-
-const ProfileAvatar = styled.div`
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 600;
-  font-size: 14px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-`;
-
-const ProfileName = styled.span`
-  font-size: 14px;
-  font-weight: 500;
-  color: white;
-
-  @media (max-width: 768px) {
-    display: none;
-  }
-`;
-
-const DropdownArrow = styled.span`
-  font-size: 12px;
-  color: rgba(255, 255, 255, 0.8);
-`;
-
-const DropdownMenu = styled.div`
-  position: absolute;
-  top: 100%;
-  right: 0;
-  margin-top: 8px;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 12px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-  min-width: 160px;
-  z-index: 1000;
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(-10px);
-  transition: all 0.3s ease;
-
-  ${ProfileDropdown}:hover & {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
-  }
-`;
-
-const DropdownItem = styled.button`
-  width: 100%;
-  padding: 12px 16px;
-  background: none;
-  border: none;
-  text-align: left;
-  font-size: 14px;
-  color: #1e293b;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-
-  &:hover {
-    background: rgba(102, 126, 234, 0.1);
-  }
-
-  &:first-child {
-    border-radius: 12px 12px 0 0;
-  }
-
-  &:last-child {
-    border-radius: 0 0 12px 12px;
-  }
-`;
 
 const MainContainer = styled.div`
   padding: 32px;
@@ -836,9 +578,8 @@ const PageHeader = styled.div`
 const PageTitle = styled.h1`
   font-size: 32px;
   font-weight: 700;
-  color: white;
+  color: ${colors.text};
   margin-bottom: 8px;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 
   @media (max-width: 768px) {
     font-size: 24px;
@@ -847,19 +588,17 @@ const PageTitle = styled.h1`
 
 const PageSubtitle = styled.p`
   font-size: 16px;
-  color: rgba(255, 255, 255, 0.9);
+  color: ${colors.textLight};
   margin: 0;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 `;
 
 const PeriodSelector = styled.div`
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(20px);
+  background: ${colors.surface};
   border-radius: 16px;
   padding: 20px 24px;
   margin-bottom: 24px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border: 2px solid ${colors.border};
+  box-shadow: 0 8px 32px ${colors.shadow};
   display: flex;
   align-items: center;
   gap: 16px;
@@ -873,27 +612,27 @@ const PeriodSelector = styled.div`
 const PeriodLabel = styled.label`
   font-size: 14px;
   font-weight: 600;
-  color: white;
+  color: ${colors.text};
 `;
 
 const PeriodSelect = styled.select`
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: ${colors.surface};
+  border: 1px solid ${colors.border};
   border-radius: 8px;
   padding: 8px 12px;
   font-size: 14px;
-  color: white;
+  color: ${colors.text};
   outline: none;
   transition: all 0.2s ease;
 
   &:focus {
-    border-color: rgba(255, 255, 255, 0.4);
-    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
+    border-color: ${colors.accent};
+    box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.1);
   }
 
   option {
-    background: #1e293b;
-    color: white;
+    background: ${colors.surface};
+    color: ${colors.text};
   }
 `;
 
@@ -905,11 +644,10 @@ const StatsGrid = styled.div`
 `;
 
 const StatCard = styled.div`
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(20px);
+  background: ${colors.surface};
   border-radius: 16px;
   padding: 24px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 2px solid ${colors.border};
   display: flex;
   align-items: center;
   gap: 16px;
@@ -917,8 +655,8 @@ const StatCard = styled.div`
 
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
-    border-color: rgba(255, 255, 255, 0.3);
+    box-shadow: 0 12px 40px ${colors.shadow};
+    border-color: ${colors.accent3};
   }
 `;
 
@@ -933,14 +671,13 @@ const StatContent = styled.div`
 const StatValue = styled.div`
   font-size: 24px;
   font-weight: 700;
-  color: white;
+  color: ${colors.text};
   margin-bottom: 4px;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 `;
 
 const StatLabel = styled.div`
   font-size: 14px;
-  color: rgba(255, 255, 255, 0.8);
+  color: ${colors.textLight};
   font-weight: 500;
 `;
 
@@ -948,17 +685,16 @@ const TabContainer = styled.div`
   display: flex;
   gap: 8px;
   margin-bottom: 24px;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(20px);
+  background: ${colors.surface};
   border-radius: 12px;
   padding: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 2px solid ${colors.border};
 `;
 
 const TabButton = styled.button`
-  background: ${props => props.active ? 'rgba(255, 255, 255, 0.2)' : 'transparent'};
+  background: ${props => props.active ? colors.accent1 : 'transparent'};
   border: none;
-  color: ${props => props.active ? 'white' : 'rgba(255, 255, 255, 0.8)'};
+  color: ${props => props.active ? colors.accent : colors.textLight};
   padding: 12px 20px;
   border-radius: 8px;
   cursor: pointer;
@@ -967,27 +703,26 @@ const TabButton = styled.button`
   transition: all 0.3s ease;
 
   &:hover {
-    background: rgba(255, 255, 255, 0.1);
-    color: white;
+    background: ${colors.accent1};
+    color: ${colors.accent};
   }
 
   ${props => props.active && `
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 8px ${colors.shadow};
   `}
 `;
 
 const TabContent = styled.div`
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(20px);
+  background: ${colors.surface};
   border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 2px solid ${colors.border};
   overflow: hidden;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 32px ${colors.shadow};
 `;
 
 const Section = styled.div`
   padding: 24px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid ${colors.border};
 
   &:last-child {
     border-bottom: none;
@@ -997,9 +732,8 @@ const Section = styled.div`
 const SectionTitle = styled.h2`
   font-size: 18px;
   font-weight: 600;
-  color: white;
+  color: ${colors.text};
   margin: 0 0 20px 0;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 `;
 
 const CommissionTable = styled.table`
@@ -1013,15 +747,15 @@ const PaymentTable = styled.table`
 `;
 
 const TableHeader = styled.thead`
-  background: rgba(255, 255, 255, 0.1);
+  background: ${colors.accent1};
 `;
 
 const TableRow = styled.tr`
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid ${colors.border};
   transition: background-color 0.2s ease;
 
   &:hover {
-    background: rgba(255, 255, 255, 0.05);
+    background: ${colors.accent1};
   }
 
   &:last-child {
@@ -1034,15 +768,14 @@ const TableHeaderCell = styled.th`
   text-align: left;
   font-size: 14px;
   font-weight: 600;
-  color: white;
+  color: ${colors.text};
   cursor: pointer;
   transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  gap: 8px;
+  display: table-cell;
+  vertical-align: middle;
 
   &:hover {
-    background: rgba(255, 255, 255, 0.1);
+    background: ${colors.surfaceHover};
   }
 `;
 
@@ -1056,21 +789,22 @@ const TableBody = styled.tbody``;
 const TableCell = styled.td`
   padding: 16px;
   font-size: 14px;
-  color: white;
+  color: ${colors.text};
   vertical-align: middle;
+  display: table-cell;
 `;
 
 const AccountLink = styled.button`
   background: none;
   border: none;
-  color: #fbbf24;
+  color: ${colors.accent};
   font-weight: 600;
   cursor: pointer;
   text-decoration: none;
   transition: color 0.2s ease;
 
   &:hover {
-    color: #f59e0b;
+    color: ${colors.accent};
     text-decoration: underline;
   }
 `;
@@ -1090,9 +824,9 @@ const ContractBadge = styled.span`
   border-radius: 6px;
   font-size: 12px;
   font-weight: 600;
-  background: ${props => props.type === 'Premium' ? 'rgba(251, 191, 36, 0.2)' : 'rgba(59, 130, 246, 0.2)'};
-  color: ${props => props.type === 'Premium' ? '#fbbf24' : '#93c5fd'};
-  border: 1px solid ${props => props.type === 'Premium' ? 'rgba(251, 191, 36, 0.3)' : 'rgba(59, 130, 246, 0.3)'};
+  background: ${props => props.type === 'Premium' ? colors.accent1 : colors.accent1};
+  color: ${props => props.type === 'Premium' ? colors.accent : colors.accent};
+  border: 1px solid ${props => props.type === 'Premium' ? colors.accent : colors.accent};
 `;
 
 const ActionButtons = styled.div`
@@ -1101,9 +835,9 @@ const ActionButtons = styled.div`
 `;
 
 const ActionButton = styled.button`
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: white;
+  background: ${colors.surface};
+  border: 2px solid ${colors.border};
+  color: ${colors.text};
   padding: 4px 8px;
   border-radius: 4px;
   font-size: 12px;
@@ -1112,7 +846,7 @@ const ActionButton = styled.button`
   transition: all 0.2s ease;
 
   &:hover {
-    background: rgba(255, 255, 255, 0.2);
+    background: ${colors.surfaceHover};
     transform: translateY(-1px);
   }
 `;
@@ -1124,17 +858,16 @@ const ReportGrid = styled.div`
 `;
 
 const ReportCard = styled.div`
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(20px);
+  background: ${colors.surface};
   border-radius: 16px;
   padding: 24px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 2px solid ${colors.border};
   transition: all 0.3s ease;
 
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
-    border-color: rgba(255, 255, 255, 0.3);
+    box-shadow: 0 12px 40px ${colors.shadow};
+    border-color: ${colors.accent3};
   }
 `;
 
@@ -1146,13 +879,13 @@ const ReportIcon = styled.div`
 const ReportTitle = styled.h3`
   font-size: 16px;
   font-weight: 600;
-  color: white;
+  color: ${colors.text};
   margin-bottom: 8px;
 `;
 
 const ReportDescription = styled.p`
   font-size: 14px;
-  color: rgba(255, 255, 255, 0.8);
+  color: ${colors.textLight};
   margin-bottom: 16px;
   line-height: 1.5;
 `;
@@ -1163,9 +896,9 @@ const ReportActions = styled.div`
 `;
 
 const ReportButton = styled.button`
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: white;
+  background: ${colors.surface};
+  border: 2px solid ${colors.border};
+  color: ${colors.text};
   padding: 8px 12px;
   border-radius: 6px;
   font-size: 12px;
@@ -1174,7 +907,7 @@ const ReportButton = styled.button`
   transition: all 0.2s ease;
 
   &:hover {
-    background: rgba(255, 255, 255, 0.2);
+    background: ${colors.surfaceHover};
     transform: translateY(-1px);
   }
 `;
@@ -1184,27 +917,6 @@ const OverviewTab = styled.div``;
 const PaymentsTab = styled.div``;
 const ReportsTab = styled.div``;
 
-const NavLink = styled.button`
-  background: none;
-  border: none;
-  font-size: 1.25rem;
-  font-weight: 500;
-  color: ${props => props.active ? colors.background : 'rgba(255,255,255,0.8)'};
-  cursor: pointer;
-  padding: 18px 28px;
-  border-radius: 8px;
-  transition: all 0.3s ease;
-  position: relative;
-  white-space: nowrap;
-  &:hover {
-    color: ${colors.background};
-    background: ${colors.accent1};
-  }
-  ${props => props.active && `
-    background: ${colors.accent1};
-    color: ${colors.background};
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-  `}
-`;
+
 
 export default CommissionDashboard; 

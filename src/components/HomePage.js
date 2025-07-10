@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import kilowattImage from '../assets/image.png';
+import Header from './Header';
 import colors from '../assets/colors';
 
 const HomePage = ({ onLogout, onNavigate, onOpenDataEntry }) => {
@@ -117,79 +117,14 @@ const HomePage = ({ onLogout, onNavigate, onOpenDataEntry }) => {
       <FloatingShapes />
       
       {/* Top Navigation Bar */}
-      <NavigationBar>
-        <NavLeft>
-          <LogoSection>
-            <LogoImage src={kilowattImage} alt="Kilowatt" />
-            <LogoText>Kilowatt</LogoText>
-          </LogoSection>
-          
-          <NavLinks>
-            <NavLink active onClick={() => handleNavigation('home')}>
-              Home
-            </NavLink>
-            <NavLink onClick={() => handleNavigation('task-queue')}>
-              Task Queue
-            </NavLink>
-            <NavLink onClick={() => handleNavigation('accounts')}>
-              Accounts
-            </NavLink>
-            <NavLink onClick={() => handleNavigation('managers')}>
-              Managers
-            </NavLink>
-            <NavLink onClick={() => handleNavigation('email-drafts')}>
-              Email Drafts
-            </NavLink>
-            <NavLink onClick={() => handleNavigation('commissions')}>
-              Commissions
-            </NavLink>
-            <NavLink onClick={() => handleNavigation('providers')}>
-              Providers
-            </NavLink>
-            <NavLink onClick={() => handleNavigation('system-health')}>
-              System Health
-            </NavLink>
-          </NavLinks>
-        </NavLeft>
-
-        <NavRight>
-          <SearchForm onSubmit={handleSearch}>
-            <SearchInput
-              type="text"
-              placeholder="Search accounts, managers, etc..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-            <SearchButton type="submit">
-              🔍
-            </SearchButton>
-          </SearchForm>
-
-          <UserProfile>
-            <ProfileDropdown>
-              <ProfileButton>
-                <ProfileAvatar>
-                  {userProfile.avatar ? (
-                    <img src={userProfile.avatar} alt={userProfile.name} />
-                  ) : (
-                    userProfile.name.charAt(0)
-                  )}
-                </ProfileAvatar>
-                <ProfileName>{userProfile.name}</ProfileName>
-                <DropdownArrow>▼</DropdownArrow>
-              </ProfileButton>
-              <DropdownMenu>
-                <DropdownItem onClick={() => handleProfileAction('settings')}>
-                  ⚙️ Settings
-                </DropdownItem>
-                <DropdownItem onClick={() => handleProfileAction('logout')}>
-                  🚪 Logout
-                </DropdownItem>
-              </DropdownMenu>
-            </ProfileDropdown>
-          </UserProfile>
-        </NavRight>
-      </NavigationBar>
+      <Header
+        activePage="home"
+        onNavigate={handleNavigation}
+        onLogout={onLogout}
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        onSearch={handleSearch}
+      />
 
       {/* Main Dashboard Content */}
       <DashboardContainer>
@@ -211,141 +146,99 @@ const HomePage = ({ onLogout, onNavigate, onOpenDataEntry }) => {
           </HeaderContent>
         </DashboardHeader>
 
-        <WidgetGrid>
-          {/* My Tasks Widget */}
-          <Widget>
-            <WidgetHeader>
-              <WidgetTitle>My Tasks</WidgetTitle>
-              <WidgetAction onClick={() => handleNavigation('task-queue')}>
-                View All →
-              </WidgetAction>
-            </WidgetHeader>
-            <TaskList>
-              <TaskItem onClick={() => handleNavigation('task-queue')}>
-                <TaskIcon>🏢</TaskIcon>
-                <TaskInfo>
-                  <TaskName>Accounts Needing Provider Selection</TaskName>
-                  <TaskCount>{myTasks.providerSelection} tasks</TaskCount>
-                </TaskInfo>
-              </TaskItem>
-              <TaskItem onClick={() => handleNavigation('task-queue')}>
-                <TaskIcon>🚨</TaskIcon>
-                <TaskInfo>
-                  <TaskName>Super Flagged Contracts</TaskName>
-                  <TaskCount>{myTasks.superFlagged} tasks</TaskCount>
-                </TaskInfo>
-              </TaskItem>
-              <TaskItem onClick={() => handleNavigation('email-drafts')}>
-                <TaskIcon>📧</TaskIcon>
-                <TaskInfo>
-                  <TaskName>Drafted Emails to Review</TaskName>
-                  <TaskCount>{myTasks.draftedEmails} emails</TaskCount>
-                </TaskInfo>
-              </TaskItem>
-              <TaskItem onClick={() => handleNavigation('task-queue')}>
-                <TaskIcon>✅</TaskIcon>
-                <TaskInfo>
-                  <TaskName>New Accounts for Verification</TaskName>
-                  <TaskCount>{myTasks.newAccounts} accounts</TaskCount>
-                </TaskInfo>
-              </TaskItem>
-            </TaskList>
-          </Widget>
+        {/* My Tasks Widget */}
+        <Widget fullWidth>
+          <WidgetHeader>
+            <WidgetTitle>My Tasks</WidgetTitle>
+            <WidgetAction onClick={() => handleNavigation('task-queue')}>
+              View All →
+            </WidgetAction>
+          </WidgetHeader>
+          <TaskList>
+            <TaskItem onClick={() => handleNavigation('task-queue')}>
+              <TaskIcon>🏢</TaskIcon>
+              <TaskInfo>
+                <TaskName>Accounts Needing Provider Selection</TaskName>
+                <TaskCount>{myTasks.providerSelection} tasks</TaskCount>
+              </TaskInfo>
+            </TaskItem>
+            <TaskItem onClick={() => handleNavigation('task-queue')}>
+              <TaskIcon>🚨</TaskIcon>
+              <TaskInfo>
+                <TaskName>Super Flagged Contracts</TaskName>
+                <TaskCount>{myTasks.superFlagged} tasks</TaskCount>
+              </TaskInfo>
+            </TaskItem>
+            <TaskItem onClick={() => handleNavigation('email-drafts')}>
+              <TaskIcon>📧</TaskIcon>
+              <TaskInfo>
+                <TaskName>Drafted Emails to Review</TaskName>
+                <TaskCount>{myTasks.draftedEmails} emails</TaskCount>
+              </TaskInfo>
+            </TaskItem>
+            <TaskItem onClick={() => handleNavigation('task-queue')}>
+              <TaskIcon>✅</TaskIcon>
+              <TaskInfo>
+                <TaskName>New Accounts for Verification</TaskName>
+                <TaskCount>{myTasks.newAccounts} accounts</TaskCount>
+              </TaskInfo>
+            </TaskItem>
+          </TaskList>
+        </Widget>
 
-          {/* Team Tasks Widget */}
-          <Widget>
-            <WidgetHeader>
-              <WidgetTitle>Team Tasks</WidgetTitle>
-              <WidgetAction onClick={() => handleNavigation('task-queue')}>
-                View All →
-              </WidgetAction>
-            </WidgetHeader>
-            <TaskList>
-              <TaskItem onClick={() => handleNavigation('task-queue')}>
-                <TaskIcon>🏢</TaskIcon>
-                <TaskInfo>
-                  <TaskName>Accounts Needing Provider Selection</TaskName>
-                  <TaskCount>{teamTasks.providerSelection} tasks</TaskCount>
-                </TaskInfo>
-              </TaskItem>
-              <TaskItem onClick={() => handleNavigation('task-queue')}>
-                <TaskIcon>🚨</TaskIcon>
-                <TaskInfo>
-                  <TaskName>Super Flagged Contracts</TaskName>
-                  <TaskCount>{teamTasks.superFlagged} tasks</TaskCount>
-                </TaskInfo>
-              </TaskItem>
-              <TaskItem onClick={() => handleNavigation('email-drafts')}>
-                <TaskIcon>📧</TaskIcon>
-                <TaskInfo>
-                  <TaskName>Drafted Emails to Review</TaskName>
-                  <TaskCount>{teamTasks.draftedEmails} emails</TaskCount>
-                </TaskInfo>
-              </TaskItem>
-              <TaskItem onClick={() => handleNavigation('task-queue')}>
-                <TaskIcon>✅</TaskIcon>
-                <TaskInfo>
-                  <TaskName>New Accounts for Verification</TaskName>
-                  <TaskCount>{teamTasks.newAccounts} accounts</TaskCount>
-                </TaskInfo>
-              </TaskItem>
-            </TaskList>
-          </Widget>
+        {/* System Health Widget */}
+        <Widget fullWidth>
+          <WidgetHeader>
+            <WidgetTitle>System Automation Health</WidgetTitle>
+            <WidgetAction onClick={() => handleNavigation('system-health')}>
+              View Details →
+            </WidgetAction>
+          </WidgetHeader>
+          <SystemHealthList>
+            {systemHealth.map((process, index) => (
+              <SystemHealthItem key={index}>
+                <ProcessIcon>{process.icon}</ProcessIcon>
+                <ProcessInfo>
+                  <ProcessName>{process.name}</ProcessName>
+                  <ProcessStatus status={process.status}>
+                    {process.status}
+                  </ProcessStatus>
+                </ProcessInfo>
+                <ProcessTime>{process.lastRun}</ProcessTime>
+              </SystemHealthItem>
+            ))}
+          </SystemHealthList>
+        </Widget>
 
-          {/* System Health Widget */}
-          <Widget>
-            <WidgetHeader>
-              <WidgetTitle>System Automation Health</WidgetTitle>
-              <WidgetAction onClick={() => handleNavigation('system-health')}>
-                View Details →
-              </WidgetAction>
-            </WidgetHeader>
-            <SystemHealthList>
-              {systemHealth.map((process, index) => (
-                <SystemHealthItem key={index}>
-                  <ProcessIcon>{process.icon}</ProcessIcon>
-                  <ProcessInfo>
-                    <ProcessName>{process.name}</ProcessName>
-                    <ProcessStatus status={process.status}>
-                      {process.status}
-                    </ProcessStatus>
-                  </ProcessInfo>
-                  <ProcessTime>{process.lastRun}</ProcessTime>
-                </SystemHealthItem>
-              ))}
-            </SystemHealthList>
-          </Widget>
-
-          {/* Recent Activity Widget */}
-          <Widget fullWidth>
-            <WidgetHeader>
-              <WidgetTitle>Recent Activity</WidgetTitle>
-              <WidgetAction onClick={() => handleNavigation('activity')}>
-                View All →
-              </WidgetAction>
-            </WidgetHeader>
-            <ActivityList>
-              {recentActivity.map((activity, index) => (
-                <ActivityItem key={index}>
-                  <ActivityIcon>{activity.icon}</ActivityIcon>
-                  <ActivityInfo>
-                    <ActivityText>
-                      {activity.type === 'bot' ? (
-                        activity.action
-                      ) : (
-                        <>
-                          <ActivityUser>{activity.user}</ActivityUser>
-                          {activity.action}
-                        </>
-                      )}
-                    </ActivityText>
-                    <ActivityTime>{activity.timestamp}</ActivityTime>
-                  </ActivityInfo>
-                </ActivityItem>
-              ))}
-            </ActivityList>
-          </Widget>
-        </WidgetGrid>
+        {/* Recent Activity Widget */}
+        <Widget fullWidth>
+          <WidgetHeader>
+            <WidgetTitle>Recent Activity</WidgetTitle>
+            <WidgetAction onClick={() => handleNavigation('activity')}>
+              View All →
+            </WidgetAction>
+          </WidgetHeader>
+          <ActivityList>
+            {recentActivity.map((activity, index) => (
+              <ActivityItem key={index}>
+                <ActivityIcon>{activity.icon}</ActivityIcon>
+                <ActivityInfo>
+                  <ActivityText>
+                    {activity.type === 'bot' ? (
+                      activity.action
+                    ) : (
+                      <>
+                        <ActivityUser>{activity.user}</ActivityUser>
+                        {activity.action}
+                      </>
+                    )}
+                  </ActivityText>
+                  <ActivityTime>{activity.timestamp}</ActivityTime>
+                </ActivityInfo>
+              </ActivityItem>
+            ))}
+          </ActivityList>
+        </Widget>
       </DashboardContainer>
     </PageContainer>
   );
@@ -356,7 +249,7 @@ const PageContainer = styled.div`
   min-height: 100vh;
   position: relative;
   overflow: hidden;
-  background: ${colors.primary};
+  background: ${colors.background};
 `;
 
 const BackgroundGradient = styled.div`
@@ -371,230 +264,7 @@ const FloatingShapes = styled.div`
   display: none;
 `;
 
-const NavigationBar = styled.nav`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 32px;
-  height: 72px;
-  background: ${colors.primary};
-  border-bottom: 1px solid ${colors.border};
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  @media (max-width: 768px) {
-    padding: 0 16px;
-    height: 64px;
-  }
-`;
 
-const NavLeft = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 48px;
-
-  @media (max-width: 768px) {
-    gap: 24px;
-  }
-`;
-
-const LogoSection = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 12px;
-`;
-
-const LogoImage = styled.img`
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-`;
-
-const LogoText = styled.span`
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: ${colors.background};
-`;
-
-const NavLinks = styled.div`
-  display: flex;
-  gap: 32px;
-
-  @media (max-width: 1024px) {
-    display: none;
-  }
-`;
-
-const NavLink = styled.button`
-  background: none;
-  border: none;
-  font-size: 1.25rem;
-  font-weight: 500;
-  color: ${props => props.active ? colors.background : 'rgba(255,255,255,0.8)'};
-  cursor: pointer;
-  padding: 12px 24px;
-  border-radius: 8px;
-  transition: all 0.3s ease;
-  position: relative;
-  &:hover {
-    color: ${colors.background};
-    background: ${colors.accent1};
-  }
-  ${props => props.active && `
-    background: ${colors.accent1};
-    color: ${colors.background};
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-  `}
-`;
-
-const NavRight = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 24px;
-`;
-
-const SearchForm = styled.form`
-  display: flex;
-  align-items: center;
-  background: ${colors.background};
-  border: 1px solid ${colors.border};
-  border-radius: 12px;
-  padding: 8px 16px;
-  min-width: 300px;
-  @media (max-width: 768px) {
-    min-width: 200px;
-  }
-`;
-
-const SearchInput = styled.input`
-  border: none;
-  background: none;
-  font-size: 1.25rem;
-  color: ${colors.text};
-  flex: 1;
-  outline: none;
-  &::placeholder {
-    color: #bdbdbd;
-    font-size: 1.25rem;
-  }
-`;
-
-const SearchButton = styled.button`
-  background: none;
-  border: none;
-  font-size: 1.5rem;
-  cursor: pointer;
-  padding: 4px;
-  border-radius: 6px;
-  color: ${colors.primary};
-  &:hover {
-    background: ${colors.accent1};
-    color: ${colors.background};
-  }
-`;
-
-const UserProfile = styled.div`
-  position: relative;
-`;
-
-const ProfileDropdown = styled.div`
-  position: relative;
-`;
-
-const ProfileButton = styled.button`
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: ${colors.background};
-  border: 1px solid ${colors.border};
-  cursor: pointer;
-  padding: 12px 20px;
-  border-radius: 8px;
-  transition: all 0.3s ease;
-  font-size: 1.25rem;
-  &:hover {
-    background: ${colors.accent5};
-    transform: translateY(-1px);
-  }
-`;
-
-const ProfileAvatar = styled.div`
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: ${colors.primary};
-  color: ${colors.background};
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 600;
-  font-size: 14px;
-`;
-
-const ProfileName = styled.span`
-  font-size: 14px;
-  font-weight: 500;
-  color: ${colors.text};
-
-  @media (max-width: 768px) {
-    display: none;
-  }
-`;
-
-const DropdownArrow = styled.span`
-  font-size: 12px;
-  color: ${colors.accent1};
-`;
-
-const DropdownMenu = styled.div`
-  position: absolute;
-  top: 100%;
-  right: 0;
-  margin-top: 8px;
-  background: ${colors.background};
-  backdrop-filter: blur(20px);
-  border: 1px solid ${colors.border};
-  border-radius: 12px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-  min-width: 160px;
-  z-index: 1000;
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(-10px);
-  transition: all 0.3s ease;
-
-  ${ProfileDropdown}:hover & {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
-  }
-`;
-
-const DropdownItem = styled.button`
-  width: 100%;
-  padding: 12px 16px;
-  background: none;
-  border: none;
-  text-align: left;
-  font-size: 14px;
-  color: ${colors.text};
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-
-  &:hover {
-    background: ${colors.accent1};
-  }
-
-  &:first-child {
-    border-radius: 12px 12px 0 0;
-  }
-
-  &:last-child {
-    border-radius: 0 0 12px 12px;
-  }
-`;
 
 const DashboardContainer = styled.div`
   padding: 32px;
@@ -630,8 +300,8 @@ const HeaderRight = styled.div`
 `;
 
 const NewAccountButton = styled.button`
-  background: ${colors.accent1};
-  border: none;
+  background: ${colors.primary};
+  border: 2px solid ${colors.primary};
   color: ${colors.background};
   padding: 16px 32px;
   border-radius: 12px;
@@ -648,13 +318,13 @@ const NewAccountButton = styled.button`
 const WelcomeMessage = styled.h1`
   font-size: 2.5rem;
   font-weight: 700;
-  color: ${colors.background};
+  color: ${colors.text};
   margin-bottom: 8px;
 `;
 
 const DashboardSubtitle = styled.p`
   font-size: 1.25rem;
-  color: ${colors.accent5};
+  color: ${colors.textLight};
   margin: 0;
 `;
 
@@ -670,21 +340,26 @@ const WidgetGrid = styled.div`
 `;
 
 const Widget = styled.div`
-  background: ${colors.background};
+  background: ${colors.surface};
   border-radius: 16px;
   padding: 24px;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.08);
-  border: 1px solid ${colors.border};
+  box-shadow: 0 8px 32px ${colors.shadow};
+  border: 2px solid ${colors.border};
   grid-column: ${props => props.fullWidth ? '1 / -1' : 'auto'};
   transition: all 0.3s ease;
   color: ${colors.text};
+  margin-bottom: 32px;
+  &:last-child {
+    margin-bottom: 0;
+  }
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0 12px 40px rgba(0,0,0,0.12);
-    border-color: ${colors.accent5};
+    box-shadow: 0 12px 40px ${colors.shadow};
+    border-color: ${colors.accent3};
   }
   @media (max-width: 768px) {
     padding: 20px;
+    margin-bottom: 20px;
   }
 `;
 
@@ -707,7 +382,7 @@ const WidgetAction = styled.button`
   border: none;
   font-size: 1.25rem;
   font-weight: 500;
-  color: ${colors.accent1};
+  color: ${colors.primary};
   cursor: pointer;
   transition: all 0.3s ease;
   &:hover {
@@ -730,13 +405,13 @@ const TaskItem = styled.div`
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.3s ease;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: ${colors.accent5};
+  border: 1px solid ${colors.accent6};
 
   &:hover {
-    background: rgba(255, 255, 255, 0.1);
+    background: ${colors.surfaceHover};
     transform: translateX(4px);
-    border-color: rgba(255, 255, 255, 0.2);
+    border-color: ${colors.primary};
   }
 `;
 
@@ -757,7 +432,7 @@ const TaskName = styled.div`
 
 const TaskCount = styled.div`
   font-size: 12px;
-  color: ${colors.accent5};
+  color: ${colors.textLight};
 `;
 
 const SystemHealthList = styled.div`
@@ -772,8 +447,8 @@ const SystemHealthItem = styled.div`
   gap: 12px;
   padding: 12px;
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: ${colors.accent5};
+  border: 1px solid ${colors.accent6};
 `;
 
 const ProcessIcon = styled.span`
@@ -800,7 +475,7 @@ const ProcessStatus = styled.div`
 
 const ProcessTime = styled.div`
   font-size: 12px;
-  color: ${colors.accent5};
+  color: ${colors.textLight};
 `;
 
 const ActivityList = styled.div`
@@ -818,13 +493,13 @@ const ActivityItem = styled.div`
   padding: 12px;
   border-radius: 8px;
   transition: all 0.3s ease;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: ${colors.accent5};
+  border: 1px solid ${colors.accent6};
 
   &:hover {
-    background: rgba(255, 255, 255, 0.1);
+    background: ${colors.surfaceHover};
     transform: translateX(4px);
-    border-color: rgba(255, 255, 255, 0.2);
+    border-color: ${colors.primary};
   }
 `;
 
@@ -846,13 +521,12 @@ const ActivityText = styled.div`
 
 const ActivityUser = styled.span`
   font-weight: 600;
-  color: ${colors.accent1};
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  color: ${colors.primary};
 `;
 
 const ActivityTime = styled.div`
   font-size: 12px;
-  color: ${colors.accent5};
+  color: ${colors.textLight};
 `;
 
 export default HomePage; 
