@@ -31,7 +31,8 @@ import {
   ListItem,
   ListItemText,
   ListItemIcon,
-  InputAdornment
+  InputAdornment,
+  Container
 } from '@mui/material';
 import {
   Search as SearchIcon,
@@ -426,7 +427,7 @@ const ManagerDashboard = ({ onLogout, onNavigate }) => {
         </Toolbar>
       </AppBar>
 
-      <Box className="manager-dashboard-content">
+      <Container maxWidth="xl" className="manager-dashboard-content">
         <Box className="manager-dashboard-header">
           <Typography variant="h4" className="manager-dashboard-title">
             Manager Dashboard
@@ -706,7 +707,7 @@ const ManagerDashboard = ({ onLogout, onNavigate }) => {
             </Card>
           </Box>
         )}
-      </Box>
+      </Container>
 
       {/* Profile Menu */}
       <Menu

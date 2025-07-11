@@ -167,10 +167,7 @@ const SystemHealthDashboard = ({ onLogout, onNavigate }) => {
     { name: 'API Response Time', value: 1.2, unit: 's', color: 'primary' }
   ];
 
-  const handleSearch = (e) => {
-    e.preventDefault();
-    console.log('Searching for:', searchQuery);
-  };
+
 
   const handleNavigation = (page) => {
     console.log('Navigating to:', page);
@@ -205,17 +202,7 @@ const SystemHealthDashboard = ({ onLogout, onNavigate }) => {
     }
   };
 
-  const StyledAppBar = styled(AppBar)(({ theme }) => ({
-    background: 'linear-gradient(135deg, #1976d2 0%, #1565c0 100%)',
-    boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-  }));
 
-  const LogoImage = styled('img')({
-    width: 40,
-    height: 40,
-    marginRight: 12,
-    borderRadius: 8,
-  });
 
   const DashboardCard = styled(Card)(({ theme }) => ({
     height: '100%',
@@ -237,69 +224,167 @@ const SystemHealthDashboard = ({ onLogout, onNavigate }) => {
 
   return (
     <Box sx={{ minHeight: '100vh', bgcolor: 'background.default' }}>
-      <StyledAppBar position="static">
-        <Toolbar>
+      <AppBar position="static" className="system-health-app-bar">
+        <Toolbar sx={{
+          minHeight: 72,
+          padding: '0 24px',
+          '@media (max-width: 1200px)': {
+            flexWrap: 'wrap',
+            minHeight: 80
+          }
+        }}>
+          {/* Logo Section */}
           <Box sx={{ display: 'flex', alignItems: 'center', flexGrow: 1 }}>
             <Box
               sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}
               onClick={() => handleNavigation('home')}
             >
-              <LogoImage src={kilowattImage} alt="Kilowatt" />
+              <img
+                src={kilowattImage}
+                alt="Kilowatt"
+                className="system-health-logo"
+                style={{
+                  width: '44px',
+                  height: '44px',
+                  marginRight: '14px',
+                  borderRadius: '9px'
+                }}
+              />
               <Typography variant="h6" component="div" sx={{ fontWeight: 700 }}>
                 Kilowatt
               </Typography>
             </Box>
           </Box>
 
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            <Button color="inherit" onClick={() => handleNavigation('home')}>
-              Home
+          {/* Navigation Buttons */}
+          <Box sx={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 1,
+            mr: 2,
+            '@media (max-width: 900px)': {
+              '& .MuiButton-root': {
+                fontSize: '0.75rem',
+                padding: '4px 8px',
+                '& .MuiButton-startIcon': {
+                  marginRight: '4px'
+                }
+              }
+            },
+            '@media (max-width: 768px)': {
+              '& .MuiButton-root': {
+                '& .MuiButton-startIcon': {
+                  marginRight: 0
+                },
+                '& span:not(.MuiButton-startIcon)': {
+                  display: 'none'
+                }
+              }
+            }
+          }}>
+            <Button
+              color="inherit"
+              startIcon={<DashboardIcon />}
+              onClick={() => handleNavigation('manager')}
+              size="small"
+            >
+              Manager
             </Button>
-            <Button color="inherit" onClick={() => handleNavigation('task-queue')}>
-              Task Queue
-            </Button>
-            <Button color="inherit" onClick={() => handleNavigation('accounts')}>
-              Accounts
-            </Button>
-            <Button color="inherit" onClick={() => handleNavigation('managers')}>
-              Managers
-            </Button>
-            <Button color="inherit" onClick={() => handleNavigation('email-drafts')}>
+            <Button
+              color="inherit"
+              startIcon={<EmailIcon />}
+              onClick={() => handleNavigation('email-draft')}
+              size="small"
+            >
               Email Drafts
             </Button>
-            <Button color="inherit" onClick={() => handleNavigation('commissions')}>
-              Commissions
+            <Button
+              color="inherit"
+              startIcon={<MoneyIcon />}
+              onClick={() => handleNavigation('commission')}
+              size="small"
+            >
+              Commission
             </Button>
-            <Button color="inherit" onClick={() => handleNavigation('providers')}>
+            <Button
+              color="inherit"
+              startIcon={<BusinessIcon />}
+              onClick={() => handleNavigation('provider')}
+              size="small"
+            >
               Providers
             </Button>
-            <Button color="inherit" variant="contained" sx={{ bgcolor: 'rgba(255,255,255,0.2)' }}>
+            <Button
+              color="inherit"
+              variant="contained"
+              startIcon={<HealthIcon />}
+              onClick={() => handleNavigation('system-health')}
+              size="small"
+              sx={{ bgcolor: 'rgba(255,255,255,0.2)', color: 'white' }}
+            >
               System Health
+            </Button>
+            <Button
+              color="inherit"
+              startIcon={<TaskIcon />}
+              onClick={() => handleNavigation('task-queue')}
+              size="small"
+            >
+              Task Queue
+            </Button>
+            <Button
+              color="inherit"
+              startIcon={<BusinessIcon />}
+              onClick={() => handleNavigation('accounts')}
+              size="small"
+            >
+              Accounts
             </Button>
           </Box>
 
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, ml: 2 }}>
-            <Paper component="form" onSubmit={handleSearch} sx={{ display: 'flex', alignItems: 'center', px: 2 }}>
-              <TextField
-                size="small"
-                placeholder="Search automations, logs..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                variant="standard"
-                sx={{ minWidth: 200 }}
-                InputProps={{ disableUnderline: true }}
-              />
-              <IconButton type="submit" size="small">
-                <SearchIcon />
-              </IconButton>
-            </Paper>
-
-            <IconButton onClick={onLogout} sx={{ color: 'inherit' }}>
-              <LogoutIcon />
-            </IconButton>
+          {/* Search Bar */}
+          <Box sx={{ mr: 2 }}>
+            <TextField
+              placeholder="Search system health..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              variant="outlined"
+              size="small"
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  backgroundColor: 'rgba(255,255,255,0.1)',
+                  '& fieldset': {
+                    borderColor: 'rgba(255,255,255,0.3)',
+                  },
+                  '&:hover fieldset': {
+                    borderColor: 'rgba(255,255,255,0.5)',
+                  },
+                  '&.Mui-focused fieldset': {
+                    borderColor: 'rgba(255,255,255,0.7)',
+                  },
+                  '& input': {
+                    color: 'white',
+                    '&::placeholder': {
+                      color: 'rgba(255,255,255,0.7)',
+                      opacity: 1,
+                    },
+                  },
+                },
+              }}
+              InputProps={{
+                startAdornment: (
+                  <SearchIcon sx={{ color: 'rgba(255,255,255,0.7)', mr: 1 }} />
+                ),
+              }}
+            />
           </Box>
+
+          {/* Profile Button */}
+          <IconButton onClick={onLogout} sx={{ color: 'inherit' }}>
+            <LogoutIcon />
+          </IconButton>
         </Toolbar>
-      </StyledAppBar>
+      </AppBar>
 
       <Container maxWidth="xl" sx={{ py: 4 }}>
         <Box sx={{ mb: 4 }}>

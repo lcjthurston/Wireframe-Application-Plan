@@ -31,7 +31,8 @@ import {
   ListItem,
   ListItemText,
   ListItemIcon,
-  InputAdornment
+  InputAdornment,
+  Container
 } from '@mui/material';
 import {
   Search as SearchIcon,
@@ -345,7 +346,7 @@ const ProviderDashboard = ({ onLogout, onNavigate }) => {
           </Button>
         </Toolbar>
       </AppBar>
-      <Box className="provider-dashboard-content">
+      <Container maxWidth="xl" className="provider-dashboard-content">
         <Box className="provider-dashboard-header">
           <Typography variant="h4" className="provider-dashboard-title">
             Provider Dashboard
@@ -484,7 +485,7 @@ const ProviderDashboard = ({ onLogout, onNavigate }) => {
             </Typography>
           </Box>
         )}
-      </Box>
+      </Container>
       {/* Profile Menu */}
       <Menu
         anchorEl={profileAnchorEl}

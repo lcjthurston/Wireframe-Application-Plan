@@ -24,7 +24,8 @@ import {
   Grid,
   Card,
   CardContent,
-  InputAdornment
+  InputAdornment,
+  Container
 } from '@mui/material';
 import {
   Search as SearchIcon,
@@ -39,7 +40,13 @@ import {
   FilterList,
   Download,
   Person,
-  Business
+  Business,
+  Dashboard as DashboardIcon,
+  Email as EmailIcon,
+  AttachMoney as MoneyIcon,
+  Business as BusinessIcon,
+  HealthAndSafety as HealthIcon,
+  Assignment as TaskIcon
 } from '@mui/icons-material';
 import kilowattImage from '../../assets/image.png';
 import './TaskQueue.scss';
@@ -216,36 +223,151 @@ const TaskQueue = ({ onLogout, onNavigate }) => {
   return (
     <div className="task-queue-dashboard">
       <AppBar position="static" className="task-queue-app-bar">
-        <Toolbar className="task-queue-toolbar">
-          <Box display="flex" alignItems="center" flexGrow={1}>
+        <Toolbar sx={{
+          minHeight: 72,
+          padding: '0 24px',
+          '@media (max-width: 1200px)': {
+            flexWrap: 'wrap',
+            minHeight: 80
+          }
+        }}>
+          {/* Logo Section */}
+          <Box sx={{ display: 'flex', alignItems: 'center', flexGrow: 1 }}>
             <Box
               sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}
               onClick={() => handleNavigation('home')}
             >
               <img src={kilowattImage} alt="Kilowatt" className="task-queue-logo" />
-              <Typography variant="h5" className="task-queue-brand">
+              <Typography variant="h6" component="div" sx={{ fontWeight: 700 }}>
                 Kilowatt
               </Typography>
             </Box>
           </Box>
 
-          <Box className="task-queue-search-container">
+          {/* Navigation Buttons */}
+          <Box sx={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 1,
+            mr: 2,
+            '@media (max-width: 900px)': {
+              '& .MuiButton-root': {
+                fontSize: '0.75rem',
+                padding: '4px 8px',
+                '& .MuiButton-startIcon': {
+                  marginRight: '4px'
+                }
+              }
+            },
+            '@media (max-width: 768px)': {
+              '& .MuiButton-root': {
+                '& .MuiButton-startIcon': {
+                  marginRight: 0
+                },
+                '& span:not(.MuiButton-startIcon)': {
+                  display: 'none'
+                }
+              }
+            }
+          }}>
+            <Button
+              color="inherit"
+              startIcon={<DashboardIcon />}
+              onClick={() => handleNavigation('manager')}
+              size="small"
+            >
+              Manager
+            </Button>
+            <Button
+              color="inherit"
+              startIcon={<EmailIcon />}
+              onClick={() => handleNavigation('email-draft')}
+              size="small"
+            >
+              Email Drafts
+            </Button>
+            <Button
+              color="inherit"
+              startIcon={<MoneyIcon />}
+              onClick={() => handleNavigation('commission')}
+              size="small"
+            >
+              Commission
+            </Button>
+            <Button
+              color="inherit"
+              startIcon={<BusinessIcon />}
+              onClick={() => handleNavigation('provider')}
+              size="small"
+            >
+              Providers
+            </Button>
+            <Button
+              color="inherit"
+              startIcon={<HealthIcon />}
+              onClick={() => handleNavigation('system-health')}
+              size="small"
+            >
+              System Health
+            </Button>
+            <Button
+              color="inherit"
+              variant="contained"
+              startIcon={<TaskIcon />}
+              onClick={() => handleNavigation('task-queue')}
+              size="small"
+              sx={{ bgcolor: 'rgba(255,255,255,0.2)', color: 'white' }}
+            >
+              Task Queue
+            </Button>
+            <Button
+              color="inherit"
+              startIcon={<Business />}
+              onClick={() => handleNavigation('accounts')}
+              size="small"
+            >
+              Accounts
+            </Button>
+          </Box>
+
+          {/* Search Bar */}
+          <Box sx={{ mr: 2 }}>
             <TextField
-              placeholder="Search tasks, accounts, etc..."
+              placeholder="Search tasks..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="task-queue-search-field"
+              variant="outlined"
+              size="small"
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  backgroundColor: 'rgba(255,255,255,0.1)',
+                  '& fieldset': {
+                    borderColor: 'rgba(255,255,255,0.3)',
+                  },
+                  '&:hover fieldset': {
+                    borderColor: 'rgba(255,255,255,0.5)',
+                  },
+                  '&.Mui-focused fieldset': {
+                    borderColor: 'rgba(255,255,255,0.7)',
+                  },
+                  '& input': {
+                    color: 'white',
+                    '&::placeholder': {
+                      color: 'rgba(255,255,255,0.7)',
+                      opacity: 1,
+                    },
+                  },
+                },
+              }}
               InputProps={{
                 startAdornment: (
-                  <InputAdornment position="start">
-                    <SearchIcon />
-                  </InputAdornment>
+                  <SearchIcon sx={{ color: 'rgba(255,255,255,0.7)', mr: 1 }} />
                 ),
               }}
-              size="small"
             />
           </Box>
 
+          {/* Profile Button */}
           <Button
             color="inherit"
             className="task-queue-profile-button"
@@ -257,7 +379,7 @@ const TaskQueue = ({ onLogout, onNavigate }) => {
         </Toolbar>
       </AppBar>
 
-      <Box className="task-queue-content">
+      <Container maxWidth="xl" className="task-queue-content">
         <Box className="task-queue-header">
           <Typography variant="h4" className="task-queue-title">
             Master Task & Action Queue
@@ -480,7 +602,7 @@ const TaskQueue = ({ onLogout, onNavigate }) => {
             </Typography>
           </Box>
         )}
-      </Box>
+      </Container>
 
       {/* Profile Menu */}
       <Menu
