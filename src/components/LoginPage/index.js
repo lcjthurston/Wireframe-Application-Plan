@@ -30,7 +30,7 @@ import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 // import kilowattImage from '../../assets/image.png';
 import { LottieWithStates, LottieIcon } from '../lottie';
-import loginWelcomeAnimation from '../../assets/lottie/ui/login-welcome.json';
+import serverAnimation from '../../assets/lottie/ui/serverAnimation.json';
 import buttonSpinnerAnimation from '../../assets/lottie/loading/button-spinner.json';
 import './LoginPage.scss';
 
@@ -360,7 +360,7 @@ const LoginPage = ({ onLogin }) => {
               >
                 <Box sx={{ width: '300px', height: '300px', mb: 2 }}>
                   <LottieWithStates
-                    animationData={loginWelcomeAnimation}
+                    animationData={serverAnimation}
                     loop={true}
                     autoplay={true}
                     speed={0.8}

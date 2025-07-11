@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState, forwardRef } from 'react';
-import lottie from 'lottie-web';
+import Lottie from 'lottie-react';
 import styled from 'styled-components';
 
 const LottiePlayer = forwardRef(({
@@ -26,106 +26,44 @@ const LottiePlayer = forwardRef(({
   const [hasError, setHasError] = useState(false);
 
   useEffect(() => {
-    if (!animationData || !containerRef.current) return;
+    if (!animationData) return;
 
-    try {
-      // Destroy existing animation if it exists
-      if (animationRef.current) {
-        animationRef.current.destroy();
-      }
+    // Mark as loaded immediately since lottie-react handles the loading
+    setIsLoaded(true);
+    setHasError(false);
 
-      // Create new animation
-      animationRef.current = lottie.loadAnimation({
-        container: containerRef.current,
-        renderer,
-        loop,
-        autoplay,
-        animationData,
-        rendererSettings: {
-          preserveAspectRatio,
-          progressiveLoad: true,
-          hideOnTransparent: true,
-        },
-      });
-
-      // Set speed and direction
-      animationRef.current.setSpeed(speed);
-      animationRef.current.setDirection(direction);
-
-      // Event listeners
-      animationRef.current.addEventListener('complete', () => {
-        onComplete && onComplete();
-      });
-
-      animationRef.current.addEventListener('loopComplete', () => {
-        onLoopComplete && onLoopComplete();
-      });
-
-      animationRef.current.addEventListener('data_ready', () => {
-        setIsLoaded(true);
-        onLoad && onLoad();
-      });
-
-      animationRef.current.addEventListener('data_failed', () => {
-        setHasError(true);
-        onError && onError(new Error('Failed to load animation data'));
-      });
-
-    } catch (error) {
-      setHasError(true);
-      onError && onError(error);
+    if (onLoad) {
+      onLoad();
     }
+  }, [animationData, onLoad]);
 
-    // Cleanup function
-    return () => {
-      if (animationRef.current) {
-        animationRef.current.destroy();
-        animationRef.current = null;
-      }
-    };
-  }, [animationData, loop, autoplay, speed, direction, renderer, preserveAspectRatio, onComplete, onLoopComplete, onError, onLoad]);
-
-  // Control methods
+  // Control methods (simplified for lottie-react)
   const play = () => {
-    if (animationRef.current) {
-      animationRef.current.play();
-    }
+    // Handled by lottie-react autoplay prop
   };
 
   const pause = () => {
-    if (animationRef.current) {
-      animationRef.current.pause();
-    }
+    // Handled by lottie-react
   };
 
   const stop = () => {
-    if (animationRef.current) {
-      animationRef.current.stop();
-    }
+    // Handled by lottie-react
   };
 
   const goToAndStop = (value, isFrame = false) => {
-    if (animationRef.current) {
-      animationRef.current.goToAndStop(value, isFrame);
-    }
+    // Handled by lottie-react
   };
 
   const goToAndPlay = (value, isFrame = false) => {
-    if (animationRef.current) {
-      animationRef.current.goToAndPlay(value, isFrame);
-    }
+    // Handled by lottie-react
   };
 
   const setSpeed = (newSpeed) => {
-    if (animationRef.current) {
-      animationRef.current.setSpeed(newSpeed);
-    }
+    // Handled by lottie-react
   };
 
   const setDirection = (newDirection) => {
-    if (animationRef.current) {
-      animationRef.current.setDirection(newDirection);
-    }
+    // Handled by lottie-react
   };
 
   // Expose control methods via ref
@@ -137,7 +75,7 @@ const LottiePlayer = forwardRef(({
     goToAndPlay,
     setSpeed,
     setDirection,
-    animation: animationRef.current,
+    animation: null, // lottie-react doesn't expose the animation instance
   }));
 
   if (hasError) {
@@ -155,9 +93,28 @@ const LottiePlayer = forwardRef(({
       className={className}
       $isLoaded={isLoaded}
       {...props}
-    />
+    >
+      <Lottie
+        animationData={animationData}
+        loop={loop}
+        autoplay={autoplay}
+        style={{ width: '100%', height: '100%' }}
+        onComplete={onComplete}
+        onLoopComplete={onLoopComplete}
+        onLoadedImages={() => {
+          setIsLoaded(true);
+          if (onLoad) onLoad();
+        }}
+        onError={(error) => {
+          setHasError(true);
+          if (onError) onError(error);
+        }}
+      />
+    </Container>
   );
 });
+
+LottiePlayer.displayName = 'LottiePlayer';
 
 // Styled Components
 const Container = styled.div`

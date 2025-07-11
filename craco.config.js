@@ -40,6 +40,14 @@ module.exports = {
     // Suppress webpack dev server logs for cleaner output
     client: {
       logging: 'warn',
+      webSocketURL: 'auto://0.0.0.0:0/ws',
     },
+    // Use modern setupMiddlewares instead of deprecated options
+    setupMiddlewares: (middlewares, devServer) => {
+      return middlewares;
+    },
+    // Disable deprecated options
+    onBeforeSetupMiddleware: undefined,
+    onAfterSetupMiddleware: undefined,
   },
 };

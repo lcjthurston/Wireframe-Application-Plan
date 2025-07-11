@@ -85,6 +85,35 @@ export const useLottie = (config = {}) => {
     }
   }, [src, preload, animationData, loadAnimation]);
 
+  // Handle directly passed animation data
+  useEffect(() => {
+    if (initialAnimationData && !src) {
+      try {
+        // Validate the animation data
+        const validation = validateAnimation(initialAnimationData);
+        if (validation.isValid) {
+          setAnimationData(initialAnimationData);
+          setIsLoaded(true);
+          setIsLoading(false);
+          setError(null);
+          if (onLoad) {
+            onLoad(initialAnimationData);
+          }
+        } else {
+          throw new Error(`Invalid animation data: ${validation.errors.join(', ')}`);
+        }
+      } catch (err) {
+        console.error('Error validating animation data:', err);
+        setError(err);
+        setIsLoaded(false);
+        setIsLoading(false);
+        if (onError) {
+          onError(err);
+        }
+      }
+    }
+  }, [initialAnimationData, src, onLoad, onError]);
+
   // Register animation with performance monitor
   useEffect(() => {
     if (animationRef.current) {

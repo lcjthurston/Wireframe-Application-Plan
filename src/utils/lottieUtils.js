@@ -176,7 +176,8 @@ export const validateAnimation = (animationData) => {
     warnings.push('Missing frame rate information');
   }
 
-  if (!animationData.ip || !animationData.op) {
+  if (animationData.ip === undefined || animationData.ip === null ||
+      animationData.op === undefined || animationData.op === null) {
     errors.push('Missing in-point or out-point');
   }
 
