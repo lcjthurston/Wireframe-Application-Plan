@@ -29,6 +29,9 @@ import {
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 // import kilowattImage from '../../assets/image.png';
+import { LottieWithStates, LottieIcon } from '../lottie';
+import loginWelcomeAnimation from '../../assets/lottie/ui/login-welcome.json';
+import buttonSpinnerAnimation from '../../assets/lottie/loading/button-spinner.json';
 import './LoginPage.scss';
 
 const LoginPage = ({ onLogin }) => {
@@ -307,7 +310,14 @@ const LoginPage = ({ onLogin }) => {
                   >
                     {isLoading ? (
                       <>
-                        <CircularProgress size={24} sx={{ mr: 2, color: 'white' }} />
+                        <LottieIcon
+                          animationData={buttonSpinnerAnimation}
+                          size={24}
+                          loop={true}
+                          autoplay={true}
+                          speed={1.5}
+                          style={{ marginRight: '8px' }}
+                        />
                         {mode === 'signin' ? 'Signing In...' : 'Creating Account...'}
                       </>
                     ) : (
@@ -335,20 +345,37 @@ const LoginPage = ({ onLogin }) => {
           <Box className="login-animation-container">
             <div className="login-animation">
               <div
-                style={{ 
-                  width: '100%', 
+                style={{
+                  width: '100%',
                   height: '100%',
                   display: 'flex',
+                  flexDirection: 'column',
                   alignItems: 'center',
                   justifyContent: 'center',
                   background: 'rgba(255, 255, 255, 0.1)',
                   borderRadius: '16px',
-                  backdropFilter: 'blur(10px)'
+                  backdropFilter: 'blur(10px)',
+                  padding: '20px'
                 }}
               >
-                <Typography variant="h4" color="white" sx={{ textAlign: 'center' }}>
+                <Box sx={{ width: '300px', height: '300px', mb: 2 }}>
+                  <LottieWithStates
+                    animationData={loginWelcomeAnimation}
+                    loop={true}
+                    autoplay={true}
+                    speed={0.8}
+                    width="100%"
+                    height="100%"
+                    showLoading={true}
+                    loadingType="pulse"
+                    loadingMessage="Loading animation..."
+                  />
+                </Box>
+                <Typography variant="h5" color="white" sx={{ textAlign: 'center', fontWeight: 600 }}>
                   Welcome to<br />
-                  <strong>Kilowatt</strong><br />
+                  <strong>Kilowatt</strong>
+                </Typography>
+                <Typography variant="body1" color="rgba(255,255,255,0.8)" sx={{ textAlign: 'center', mt: 1 }}>
                   Business Intelligence Platform
                 </Typography>
               </div>

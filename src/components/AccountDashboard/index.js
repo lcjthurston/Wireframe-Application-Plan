@@ -48,7 +48,7 @@ import {
 } from '@mui/icons-material';
 import kilowattImage from '../../assets/image.png';
 import './AccountDashboard.scss';
-import { styled } from '@mui/material/styles';
+import styled from 'styled-components';
 import colors from '../../assets/colors';
 
 const AccountDashboard = ({ onLogout, onNavigate }) => {

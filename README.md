@@ -4,12 +4,14 @@ A React-based business intelligence application for managing accounts, tasks, co
 
 ## Features
 
-- **Modern UI**: Material-UI components with professional styling
+- **Modern UI**: Material-UI components with professional styling and Lottie animations
 - **Responsive Design**: Mobile-first approach with MUI's responsive system
 - **Dashboard Components**: Multiple specialized dashboards for different business functions
-- **Authentication**: Secure login system with form validation
+- **Authentication**: Secure login system with form validation and animated feedback
 - **Data Management**: Comprehensive data entry and management capabilities
 - **System Monitoring**: Real-time system health and automation monitoring
+- **Lottie Animations**: Integrated Lottie animations for enhanced user experience
+- **Performance Optimized**: Efficient animation loading with caching and error handling
 
 ## Getting Started
 
@@ -97,6 +99,79 @@ src/
 - **Forms**: Professional input fields with validation
 - **Tables**: Sortable data tables with actions
 - **Navigation**: Modern AppBar with responsive design
+
+## Lottie Animations
+
+This project integrates Lottie animations for enhanced user experience and modern interactions.
+
+### Animation Components
+
+#### LottiePlayer
+Base component for rendering Lottie animations with full control:
+```javascript
+import { LottiePlayer } from './components/lottie';
+import animationData from './assets/lottie/my-animation.json';
+
+<LottiePlayer
+  animationData={animationData}
+  loop={true}
+  autoplay={true}
+  speed={1}
+  width="200px"
+  height="200px"
+/>
+```
+
+#### LottieIcon
+Optimized for small icon animations:
+```javascript
+import { LottieIcon } from './components/lottie';
+
+<LottieIcon
+  animationData={iconAnimation}
+  size={24}
+  hover={true}
+  onClick={handleClick}
+/>
+```
+
+#### LottieWithStates
+Complete component with loading and error handling:
+```javascript
+import { LottieWithStates } from './components/lottie';
+
+<LottieWithStates
+  src="/path/to/animation.json"
+  showLoading={true}
+  showErrorBoundary={true}
+  cacheKey="my-animation"
+  preload={true}
+/>
+```
+
+### Animation Assets
+
+Animations are organized in `src/assets/lottie/`:
+- **`icons/`** - Small icon animations (24-48px)
+- **`loading/`** - Loading spinners and progress indicators
+- **`ui/`** - UI interaction animations
+- **`backgrounds/`** - Background and decorative animations
+
+### Performance Features
+
+- **Caching**: Automatic animation caching for improved performance
+- **Preloading**: Optional preloading for critical animations
+- **Error Handling**: Graceful fallbacks when animations fail to load
+- **Lazy Loading**: Animations load only when needed
+- **Memory Management**: Automatic cleanup to prevent memory leaks
+
+### Usage Examples
+
+Current integrations include:
+- **Login Page**: Welcome animation and loading spinner
+- **Dashboard**: Animated stat card icons
+- **Navigation**: Interactive button states
+- **Loading States**: Custom loading animations throughout the app
 
 ## Dashboard Components
 

@@ -40,6 +40,11 @@ import {
   Error as ErrorIcon
 } from '@mui/icons-material';
 import kilowattImage from '../../assets/image.png';
+import { LottieIcon } from '../lottie';
+import dashboardPulseAnimation from '../../assets/lottie/icons/dashboard-pulse.json';
+import taskBounceAnimation from '../../assets/lottie/icons/task-bounce.json';
+import emailPulseAnimation from '../../assets/lottie/icons/email-pulse.json';
+import warningFlashAnimation from '../../assets/lottie/icons/warning-flash.json';
 import './HomePage.scss';
 
 const HomePage = ({ onLogout, onNavigate, onOpenDataEntry }) => {
@@ -226,9 +231,16 @@ const HomePage = ({ onLogout, onNavigate, onOpenDataEntry }) => {
                 <Typography variant="body2" className="home-stat-label">
                   Provider Selections
                 </Typography>
-                <Typography variant="h2" className="home-stat-icon">
-                  🏢
-                </Typography>
+                <Box className="home-stat-icon" sx={{ display: 'flex', justifyContent: 'center', mt: 1 }}>
+                  <LottieIcon
+                    animationData={dashboardPulseAnimation}
+                    size={48}
+                    loop={true}
+                    autoplay={true}
+                    speed={0.8}
+                    hover={true}
+                  />
+                </Box>
               </CardContent>
             </Card>
           </Grid>
@@ -242,9 +254,16 @@ const HomePage = ({ onLogout, onNavigate, onOpenDataEntry }) => {
                 <Typography variant="body2" className="home-stat-label">
                   Super Flagged
                 </Typography>
-                <Typography variant="h2" className="home-stat-icon">
-                  ⚠️
-                </Typography>
+                <Box className="home-stat-icon" sx={{ display: 'flex', justifyContent: 'center', mt: 1 }}>
+                  <LottieIcon
+                    animationData={warningFlashAnimation}
+                    size={48}
+                    loop={true}
+                    autoplay={true}
+                    speed={1.2}
+                    hover={true}
+                  />
+                </Box>
               </CardContent>
             </Card>
           </Grid>
@@ -258,9 +277,16 @@ const HomePage = ({ onLogout, onNavigate, onOpenDataEntry }) => {
                 <Typography variant="body2" className="home-stat-label">
                   Drafted Emails
                 </Typography>
-                <Typography variant="h2" className="home-stat-icon">
-                  📧
-                </Typography>
+                <Box className="home-stat-icon" sx={{ display: 'flex', justifyContent: 'center', mt: 1 }}>
+                  <LottieIcon
+                    animationData={emailPulseAnimation}
+                    size={48}
+                    loop={true}
+                    autoplay={true}
+                    speed={1.0}
+                    hover={true}
+                  />
+                </Box>
               </CardContent>
             </Card>
           </Grid>
@@ -274,9 +300,16 @@ const HomePage = ({ onLogout, onNavigate, onOpenDataEntry }) => {
                 <Typography variant="body2" className="home-stat-label">
                   New Accounts
                 </Typography>
-                <Typography variant="h2" className="home-stat-icon">
-                  🆕
-                </Typography>
+                <Box className="home-stat-icon" sx={{ display: 'flex', justifyContent: 'center', mt: 1 }}>
+                  <LottieIcon
+                    animationData={taskBounceAnimation}
+                    size={48}
+                    loop={true}
+                    autoplay={true}
+                    speed={0.6}
+                    hover={true}
+                  />
+                </Box>
               </CardContent>
             </Card>
           </Grid>
