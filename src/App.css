@@ -34,4 +34,15 @@ body {
 
 ::-webkit-scrollbar-thumb:hover {
   background: #a8a8a8;
-} 
+}
+
+/* Clickable logo hover effects */
+.MuiBox-root[style*="cursor: pointer"]:hover {
+  opacity: 0.8;
+  transform: scale(1.02);
+  transition: all 0.2s ease-in-out;
+}
+
+.MuiBox-root[style*="cursor: pointer"] {
+  transition: all 0.2s ease-in-out;
+}

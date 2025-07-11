@@ -10,8 +10,8 @@ import ManagerDashboard from './components/ManagerDashboard';
 import EmailDraftDashboard from './components/EmailDraftDashboard';
 import CommissionDashboard from './components/CommissionDashboard';
 import ProviderDashboard from './components/ProviderDashboard';
-import DataEntryModal from './components/DataEntryModal';
 import SystemHealthDashboard from './components/SystemHealthDashboard';
+import DataEntryModal from './components/DataEntryModal';
 import './App.css';
 
 function App() {
@@ -54,18 +54,18 @@ function App() {
         return <TaskQueue onLogout={handleLogout} onNavigate={handleNavigation} />;
       case 'accounts':
         return <AccountDashboard onLogout={handleLogout} onNavigate={handleNavigation} />;
-      case 'managers':
+      case 'manager':
         return <ManagerDashboard onLogout={handleLogout} onNavigate={handleNavigation} />;
-      case 'email-drafts':
+      case 'email-draft':
         return <EmailDraftDashboard onLogout={handleLogout} onNavigate={handleNavigation} />;
-      case 'commissions':
+      case 'commission':
         return <CommissionDashboard onLogout={handleLogout} onNavigate={handleNavigation} />;
-      case 'providers':
+      case 'provider':
         return <ProviderDashboard onLogout={handleLogout} onNavigate={handleNavigation} />;
       case 'system-health':
         return <SystemHealthDashboard onLogout={handleLogout} onNavigate={handleNavigation} />;
       default:
-        return <HomePage onLogout={handleLogout} onNavigate={handleNavigation} />;
+        return <HomePage onLogout={handleLogout} onNavigate={handleNavigation} onOpenDataEntry={handleOpenDataEntry} />;
     }
   };
 

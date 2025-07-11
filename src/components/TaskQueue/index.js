@@ -218,10 +218,15 @@ const TaskQueue = ({ onLogout, onNavigate }) => {
       <AppBar position="static" className="task-queue-app-bar">
         <Toolbar className="task-queue-toolbar">
           <Box display="flex" alignItems="center" flexGrow={1}>
-            <img src={kilowattImage} alt="Kilowatt" className="task-queue-logo" />
-            <Typography variant="h5" className="task-queue-brand">
-              Kilowatt
-            </Typography>
+            <Box
+              sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}
+              onClick={() => handleNavigation('home')}
+            >
+              <img src={kilowattImage} alt="Kilowatt" className="task-queue-logo" />
+              <Typography variant="h5" className="task-queue-brand">
+                Kilowatt
+              </Typography>
+            </Box>
           </Box>
 
           <Box className="task-queue-search-container">

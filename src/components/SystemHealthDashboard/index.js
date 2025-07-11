@@ -240,10 +240,15 @@ const SystemHealthDashboard = ({ onLogout, onNavigate }) => {
       <StyledAppBar position="static">
         <Toolbar>
           <Box sx={{ display: 'flex', alignItems: 'center', flexGrow: 1 }}>
-            <LogoImage src={kilowattImage} alt="Kilowatt" />
-            <Typography variant="h6" component="div" sx={{ fontWeight: 700 }}>
-              Kilowatt
-            </Typography>
+            <Box
+              sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}
+              onClick={() => handleNavigation('home')}
+            >
+              <LogoImage src={kilowattImage} alt="Kilowatt" />
+              <Typography variant="h6" component="div" sx={{ fontWeight: 700 }}>
+                Kilowatt
+              </Typography>
+            </Box>
           </Box>
 
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>

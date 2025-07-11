@@ -12,6 +12,37 @@
 
 .home-toolbar {
   min-height: 72px;
+  padding: 0 24px;
+
+  // Responsive navbar layout
+  @media (max-width: 1200px) {
+    flex-wrap: wrap;
+    min-height: 80px;
+  }
+
+  // Adjust navigation buttons on smaller screens
+  @media (max-width: 900px) {
+    .MuiButton-root {
+      font-size: 0.75rem;
+      padding: 4px 8px;
+
+      .MuiButton-startIcon {
+        margin-right: 4px;
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    .MuiButton-root {
+      .MuiButton-startIcon {
+        margin-right: 0;
+      }
+
+      span:not(.MuiButton-startIcon) {
+        display: none; // Hide text, show only icons
+      }
+    }
+  }
 }
 
 .home-logo {
@@ -188,18 +219,7 @@
   color: #1976d2;
 }
 
-.home-quick-actions {
-  margin-top: 24px;
-}
 
-.home-action-button {
-  margin-right: 12px;
-  margin-bottom: 12px;
-  text-transform: none;
-  font-weight: 600;
-  border-radius: 24px;
-  padding: 12px 24px;
-}
 
 .home-status-chip {
   font-weight: 500;

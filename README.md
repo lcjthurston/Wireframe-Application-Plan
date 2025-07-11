@@ -189,7 +189,16 @@ Current integrations include:
 - System health summary
 - Recent activity feed
 - Task statistics
-- Responsive navigation
+- **Consistent Top Navigation Bar**: All dashboard buttons in header for easy access
+  - Manager Dashboard
+  - Email Drafts
+  - Commission
+  - Providers
+  - System Health
+  - Task Queue
+  - Accounts
+- Responsive navigation with mobile-friendly design
+- Clickable Kilowatt logo for home navigation
 
 #### SystemHealthDashboard
 - Automation system monitoring

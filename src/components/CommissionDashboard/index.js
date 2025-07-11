@@ -286,30 +286,151 @@ const CommissionDashboard = ({ onLogout, onNavigate }) => {
   return (
     <Box className="commission-dashboard">
       <AppBar position="static" className="commission-app-bar">
-        <Toolbar className="commission-toolbar">
+        <Toolbar sx={{
+          minHeight: 72,
+          padding: '0 24px',
+          '@media (max-width: 1200px)': {
+            flexWrap: 'wrap',
+            minHeight: 80
+          }
+        }}>
+          {/* Logo Section */}
           <Box sx={{ display: 'flex', alignItems: 'center', flexGrow: 1 }}>
-            <img src={kilowattImage} alt="Kilowatt" className="commission-logo" />
-            <Typography variant="h6" component="div" className="commission-brand">
-              Kilowatt
-            </Typography>
+            <Box
+              sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}
+              onClick={() => handleNavigation('home')}
+            >
+              <img src={kilowattImage} alt="Kilowatt" className="commission-logo" />
+              <Typography variant="h6" component="div" sx={{ fontWeight: 700 }}>
+                Kilowatt
+              </Typography>
+            </Box>
           </Box>
 
-          <Box className="commission-search-container">
+          {/* Navigation Buttons */}
+          <Box sx={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 1,
+            mr: 2,
+            '@media (max-width: 900px)': {
+              '& .MuiButton-root': {
+                fontSize: '0.75rem',
+                padding: '4px 8px',
+                '& .MuiButton-startIcon': {
+                  marginRight: '4px'
+                }
+              }
+            },
+            '@media (max-width: 768px)': {
+              '& .MuiButton-root': {
+                '& .MuiButton-startIcon': {
+                  marginRight: 0
+                },
+                '& span:not(.MuiButton-startIcon)': {
+                  display: 'none'
+                }
+              }
+            }
+          }}>
+            <Button
+              color="inherit"
+              startIcon={<DashboardIcon />}
+              onClick={() => handleNavigation('manager')}
+              size="small"
+            >
+              Manager
+            </Button>
+            <Button
+              color="inherit"
+              startIcon={<EmailIcon />}
+              onClick={() => handleNavigation('email-draft')}
+              size="small"
+            >
+              Email Drafts
+            </Button>
+            <Button
+              color="inherit"
+              variant="contained"
+              startIcon={<MoneyIcon />}
+              onClick={() => handleNavigation('commission')}
+              size="small"
+              sx={{ bgcolor: 'rgba(255,255,255,0.2)', color: 'white' }}
+            >
+              Commission
+            </Button>
+            <Button
+              color="inherit"
+              startIcon={<BusinessIcon />}
+              onClick={() => handleNavigation('provider')}
+              size="small"
+            >
+              Providers
+            </Button>
+            <Button
+              color="inherit"
+              startIcon={<HealthIcon />}
+              onClick={() => handleNavigation('system-health')}
+              size="small"
+            >
+              System Health
+            </Button>
+            <Button
+              color="inherit"
+              startIcon={<TaskIcon />}
+              onClick={() => handleNavigation('task-queue')}
+              size="small"
+            >
+              Task Queue
+            </Button>
+            <Button
+              color="inherit"
+              startIcon={<BusinessIcon />}
+              onClick={() => handleNavigation('accounts')}
+              size="small"
+            >
+              Accounts
+            </Button>
+          </Box>
+
+          {/* Search Bar */}
+          <Box sx={{ mr: 2 }}>
             <TextField
               placeholder="Search commissions..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               variant="outlined"
               size="small"
-              className="commission-search-field"
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  backgroundColor: 'rgba(255,255,255,0.1)',
+                  '& fieldset': {
+                    borderColor: 'rgba(255,255,255,0.3)',
+                  },
+                  '&:hover fieldset': {
+                    borderColor: 'rgba(255,255,255,0.5)',
+                  },
+                  '&.Mui-focused fieldset': {
+                    borderColor: 'rgba(255,255,255,0.7)',
+                  },
+                  '& input': {
+                    color: 'white',
+                    '&::placeholder': {
+                      color: 'rgba(255,255,255,0.7)',
+                      opacity: 1,
+                    },
+                  },
+                },
+              }}
               InputProps={{
                 startAdornment: (
-                  <SearchIcon sx={{ color: 'text.secondary', mr: 1 }} />
+                  <SearchIcon sx={{ color: 'rgba(255,255,255,0.7)', mr: 1 }} />
                 ),
               }}
             />
           </Box>
 
+          {/* Profile Button */}
           <Button
             color="inherit"
             onClick={() => handleNavigation('home')}

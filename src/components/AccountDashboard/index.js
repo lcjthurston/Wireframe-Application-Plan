@@ -204,10 +204,15 @@ const AccountDashboard = ({ onLogout, onNavigate }) => {
       <AppBar position="static" className="account-dashboard-app-bar">
         <Toolbar className="account-dashboard-toolbar">
           <Box display="flex" alignItems="center" flexGrow={1}>
-            <img src={kilowattImage} alt="Kilowatt" className="account-dashboard-logo" />
-            <Typography variant="h5" className="account-dashboard-brand">
-              Kilowatt
-            </Typography>
+            <Box
+              sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}
+              onClick={() => handleNavigation('home')}
+            >
+              <img src={kilowattImage} alt="Kilowatt" className="account-dashboard-logo" />
+              <Typography variant="h5" className="account-dashboard-brand">
+                Kilowatt
+              </Typography>
+            </Box>
             {/* Navigation Links */}
             <Box ml={4} display="flex" alignItems="center" gap={2}>
               <Button color="inherit" onClick={() => handleNavigation('home')}>Home</Button>

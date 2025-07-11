@@ -178,10 +178,67 @@ const HomePage = ({ onLogout, onNavigate, onOpenDataEntry }) => {
       <AppBar position="static" className="home-app-bar">
         <Toolbar className="home-toolbar">
           <Box sx={{ display: 'flex', alignItems: 'center', flexGrow: 1 }}>
-            <img src={kilowattImage} alt="Kilowatt" className="home-logo" />
-            <Typography variant="h6" component="div" className="home-brand">
-              Kilowatt
-            </Typography>
+            <Box
+              sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}
+              onClick={() => handleNavigation('home')}
+            >
+              <img src={kilowattImage} alt="Kilowatt" className="home-logo" />
+              <Typography variant="h6" component="div" className="home-brand">
+                Kilowatt
+              </Typography>
+            </Box>
+          </Box>
+
+          {/* Navigation Buttons */}
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mr: 2 }}>
+            <Button
+              color="inherit"
+              startIcon={<DashboardIcon />}
+              onClick={() => handleNavigation('manager')}
+              size="small"
+            >
+              Manager
+            </Button>
+            <Button
+              color="inherit"
+              startIcon={<EmailIcon />}
+              onClick={() => handleNavigation('email-draft')}
+              size="small"
+            >
+              Email Drafts
+            </Button>
+            <Button
+              color="inherit"
+              startIcon={<MoneyIcon />}
+              onClick={() => handleNavigation('commission')}
+              size="small"
+            >
+              Commission
+            </Button>
+            <Button
+              color="inherit"
+              startIcon={<BusinessIcon />}
+              onClick={() => handleNavigation('provider')}
+              size="small"
+            >
+              Providers
+            </Button>
+            <Button
+              color="inherit"
+              startIcon={<HealthIcon />}
+              onClick={() => handleNavigation('system-health')}
+              size="small"
+            >
+              System Health
+            </Button>
+            <Button
+              color="inherit"
+              startIcon={<TaskIcon />}
+              onClick={() => handleNavigation('task-queue')}
+              size="small"
+            >
+              Task Queue
+            </Button>
           </Box>
 
           <Box className="home-search-container">
@@ -377,59 +434,7 @@ const HomePage = ({ onLogout, onNavigate, onOpenDataEntry }) => {
           </Grid>
         </Grid>
 
-        <Box className="home-quick-actions">
-          <Typography variant="h6" className="home-section-title">
-            Quick Actions
-          </Typography>
-          <Button
-            variant="contained"
-            startIcon={<DashboardIcon />}
-            onClick={() => handleNavigation('manager')}
-            className="home-action-button"
-          >
-            Manager Dashboard
-          </Button>
-          <Button
-            variant="outlined"
-            startIcon={<EmailIcon />}
-            onClick={() => handleNavigation('email-draft')}
-            className="home-action-button"
-          >
-            Email Drafts
-          </Button>
-          <Button
-            variant="outlined"
-            startIcon={<MoneyIcon />}
-            onClick={() => handleNavigation('commission')}
-            className="home-action-button"
-          >
-            Commission Dashboard
-          </Button>
-          <Button
-            variant="outlined"
-            startIcon={<BusinessIcon />}
-            onClick={() => handleNavigation('provider')}
-            className="home-action-button"
-          >
-            Provider Management
-          </Button>
-          <Button
-            variant="outlined"
-            startIcon={<HealthIcon />}
-            onClick={() => handleNavigation('system-health')}
-            className="home-action-button"
-          >
-            System Health
-          </Button>
-          <Button
-            variant="outlined"
-            startIcon={<TaskIcon />}
-            onClick={() => handleNavigation('task-queue')}
-            className="home-action-button"
-          >
-            Task Queue
-          </Button>
-        </Box>
+
       </Container>
 
       <Menu
