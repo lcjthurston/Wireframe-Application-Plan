@@ -1,25 +1,26 @@
 import { createTheme } from '@mui/material/styles';
+import colors from './assets/colors';
 
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#1976d2',
-      light: '#42a5f5',
-      dark: '#1565c0',
+      main: colors.primary,        // '#C82828' - Deep red
+      light: '#E57373',            // Lighter red
+      dark: '#B71C1C',             // Darker red
       contrastText: '#ffffff',
     },
     secondary: {
-      main: '#424242',
-      light: '#6d6d6d',
-      dark: '#1b1b1b',
+      main: colors.accent1,        // '#E68228' - Orange
+      light: colors.accent5,       // '#F0A078' - Peach
+      dark: colors.accent4,        // '#DC5028' - Red-orange
       contrastText: '#ffffff',
     },
     background: {
       default: '#fafafa',
-      paper: '#ffffff',
+      paper: colors.background,    // '#FFFFFF'
     },
     text: {
-      primary: '#212121',
+      primary: colors.text,        // '#222222'
       secondary: '#757575',
     },
     success: {
@@ -28,19 +29,19 @@ const theme = createTheme({
       dark: '#1b5e20',
     },
     warning: {
-      main: '#ed6c02',
-      light: '#ff9800',
-      dark: '#e65100',
+      main: colors.accent6,        // '#F0A028' - Golden orange
+      light: colors.accent1,       // '#E68228' - Orange
+      dark: colors.accent3,        // '#E65A28' - Deep orange
     },
     error: {
-      main: '#d32f2f',
-      light: '#ef5350',
-      dark: '#c62828',
+      main: colors.primary,        // '#C82828' - Deep red
+      light: '#E57373',
+      dark: '#B71C1C',
     },
     info: {
-      main: '#0288d1',
-      light: '#03a9f4',
-      dark: '#01579b',
+      main: colors.accent2,        // '#E66E28' - Orange-brown
+      light: colors.accent5,       // '#F0A078' - Peach
+      dark: colors.accent4,        // '#DC5028' - Red-orange
     },
     grey: {
       50: '#fafafa',
@@ -129,10 +130,10 @@ const theme = createTheme({
           fontSize: '0.875rem',
           fontWeight: 600,
           textTransform: 'none',
-          boxShadow: '0 2px 8px rgba(25, 118, 210, 0.15)',
+          boxShadow: `0 2px 8px rgba(200, 40, 40, 0.15)`, // Red shadow
           transition: 'all 0.2s ease-in-out',
           '&:hover': {
-            boxShadow: '0 4px 16px rgba(25, 118, 210, 0.25)',
+            boxShadow: `0 4px 16px rgba(200, 40, 40, 0.25)`, // Red shadow
             transform: 'translateY(-1px)',
           },
           '&:active': {
@@ -140,9 +141,9 @@ const theme = createTheme({
           },
         },
         contained: {
-          background: 'linear-gradient(135deg, #1976d2 0%, #1565c0 100%)',
+          background: `linear-gradient(135deg, ${colors.primary} 0%, #B71C1C 100%)`, // Red gradient
           '&:hover': {
-            background: 'linear-gradient(135deg, #1565c0 0%, #0d47a1 100%)',
+            background: `linear-gradient(135deg, #B71C1C 0%, #8B0000 100%)`, // Darker red gradient
           },
         },
         outlined: {
@@ -153,7 +154,7 @@ const theme = createTheme({
         },
         text: {
           '&:hover': {
-            backgroundColor: 'rgba(25, 118, 210, 0.04)',
+            backgroundColor: 'rgba(200, 40, 40, 0.04)', // Red hover background
           },
         },
         sizeLarge: {
@@ -172,10 +173,10 @@ const theme = createTheme({
           '& .MuiOutlinedInput-root': {
             borderRadius: 12,
             '&:hover fieldset': {
-              borderColor: '#1976d2',
+              borderColor: colors.primary, // Red border on hover
             },
             '&.Mui-focused fieldset': {
-              borderColor: '#1976d2',
+              borderColor: colors.primary, // Red border when focused
               borderWidth: 2,
             },
           },
@@ -213,7 +214,7 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           '& .MuiTabs-indicator': {
-            backgroundColor: '#1976d2',
+            backgroundColor: colors.primary, // Red indicator
             height: 3,
             borderRadius: 2,
           },
@@ -228,7 +229,7 @@ const theme = createTheme({
           fontSize: '0.875rem',
           minWidth: 120,
           '&.Mui-selected': {
-            color: '#1976d2',
+            color: colors.primary, // Red text when selected
           },
         },
       },
@@ -246,7 +247,7 @@ const theme = createTheme({
         root: {
           borderRadius: 12,
           '&:hover': {
-            backgroundColor: 'rgba(25, 118, 210, 0.04)',
+            backgroundColor: 'rgba(200, 40, 40, 0.04)', // Red hover background
           },
         },
       },

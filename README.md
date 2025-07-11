@@ -81,12 +81,12 @@ src/
 ## Design System
 
 ### MUI Theme Configuration
-- **Primary**: Blue (`#1976d2`) - Main brand color
-- **Secondary**: Red (`#dc004e`) - Accent color
+- **Primary**: Deep Red (`#C82828`) - Main brand color
+- **Secondary**: Orange (`#E68228`) - Accent color
 - **Success**: Green (`#4caf50`) - Positive states
-- **Warning**: Orange (`#ff9800`) - Warning states
-- **Error**: Red (`#f44336`) - Error states
-- **Info**: Blue (`#2196f3`) - Information states
+- **Warning**: Golden Orange (`#F0A028`) - Warning states
+- **Error**: Deep Red (`#C82828`) - Error states
+- **Info**: Orange-Brown (`#E66E28`) - Information states
 
 ### Typography
 - **Font Family**: Inter, Roboto, system fonts
