@@ -14,6 +14,7 @@ import EmailDraftDashboard from './components/EmailDraftDashboard';
 import CommissionDashboard from './components/CommissionDashboard';
 import ProviderDashboard from './components/ProviderDashboard';
 import DataEntryModal from './components/DataEntryModal';
+import AccountDetail from './components/AccountDetail';
 
 function App() {
   // App component logic remains the same
@@ -87,7 +88,7 @@ const AppContent = () => {
       case 'accounts':
         return <AccountsList onLogout={logout} onNavigate={handleNavigation} />;
       case 'account-detail':
-        return <AccountDashboard onLogout={logout} onNavigate={handleNavigation} accountId={selectedAccountId} />;
+        return <AccountDetail onLogout={logout} onNavigate={handleNavigation} accountId={selectedAccountId} />;
       case 'manager':
         return <ManagerDashboard onLogout={logout} onNavigate={handleNavigation} />;
       case 'email-draft':

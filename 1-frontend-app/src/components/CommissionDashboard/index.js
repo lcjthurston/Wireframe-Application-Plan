@@ -1,61 +1,32 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
-  AppBar,
-  Toolbar,
-  Typography,
-  Button,
-  TextField,
   Card,
   CardContent,
-  Grid,
-  Avatar,
-  Menu,
-  MenuItem,
-  IconButton,
-  Chip,
-  Container,
-  Paper,
-  Divider,
-  List,
-  ListItem,
-  ListItemText,
-  ListItemIcon,
-  Badge,
-  Tabs,
-  Tab,
+  Typography,
+  Button,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
-  Select,
+  Paper,
+  Chip,
+  Grid,
+  Tabs,
+  Tab,
   FormControl,
   InputLabel,
-  InputAdornment
+  Select,
+  MenuItem
 } from '@mui/material';
 import {
-  Search as SearchIcon,
-  Dashboard as DashboardIcon,
-  Assignment as TaskIcon,
-  AccountCircle as AccountIcon,
-  Email as EmailIcon,
-  AttachMoney as MoneyIcon,
-  Business as BusinessIcon,
-  HealthAndSafety as HealthIcon,
-  Settings as SettingsIcon,
-  Logout as LogoutIcon,
   TrendingUp as TrendingUpIcon,
-  Warning as WarningIcon,
-  CheckCircle as CheckCircleIcon,
-  Error as ErrorIcon,
-  FilterList as FilterIcon,
-  Sort as SortIcon,
   Download as DownloadIcon,
+  Sort as SortIcon,
   Visibility as VisibilityIcon,
-  Edit as EditIcon,
-  Delete as DeleteIcon
+  Edit as EditIcon
 } from '@mui/icons-material';
 import kilowattImage from '../../assets/image.png';
 import './CommissionDashboard.scss';
@@ -66,6 +37,8 @@ const CommissionDashboard = ({ onLogout, onNavigate }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [sortField, setSortField] = useState('accountName');
   const [sortDirection, setSortDirection] = useState('asc');
+  const [selectedRep, setSelectedRep] = useState('all');
+  const [dateRange, setDateRange] = useState('current-month');
 
   // Mock commission data
   const commissionStats = {
@@ -75,6 +48,41 @@ const CommissionDashboard = ({ onLogout, onNavigate }) => {
     averageCommission: 5200,
     totalAccounts: 24,
     activeAccounts: 20
+  };
+
+  // Energy Rep Overview data
+  const energyRepData = [
+    {
+      id: 1,
+      name: 'Sarah Johnson',
+      projectedCommissions: 45000,
+      receivedCommissions: 42000,
+      variance: -3000,
+      performance: 93
+    },
+    {
+      id: 2,
+      name: 'Mike Wilson',
+      projectedCommissions: 38000,
+      receivedCommissions: 41000,
+      variance: 3000,
+      performance: 108
+    },
+    {
+      id: 3,
+      name: 'John Smith',
+      projectedCommissions: 32000,
+      receivedCommissions: 28000,
+      variance: -4000,
+      performance: 88
+    }
+  ];
+
+  // Projected vs Received summary
+  const projectedVsReceived = {
+    totalProjected: 115000,
+    totalReceived: 111000,
+    variance: -4000
   };
 
   const commissionHistory = [
@@ -538,9 +546,9 @@ const CommissionDashboard = ({ onLogout, onNavigate }) => {
           onChange={(e, newValue) => setActiveTab(newValue)}
           className="commission-tabs"
         >
-          <Tab label="Commission History" />
-          <Tab label="Payment History" />
-          <Tab label="Analytics" />
+          <Tab label="Account Overview" />
+          <Tab label="Energy Rep Overview" />
+          <Tab label="Projected vs Received Report" />
         </Tabs>
 
         {activeTab === 0 && (
@@ -565,10 +573,10 @@ const CommissionDashboard = ({ onLogout, onNavigate }) => {
                 <Button
                   variant="outlined"
                   startIcon={<SortIcon />}
-                  onClick={() => handleSort('paymentStatus')}
+                  onClick={() => handleSort('contractExpiration')}
                   className="commission-sort-button"
                 >
-                  Sort by Status
+                  Sort by Expiration
                 </Button>
               </Box>
             </Paper>
@@ -577,12 +585,13 @@ const CommissionDashboard = ({ onLogout, onNavigate }) => {
               <Table className="commission-table">
                 <TableHead>
                   <TableRow>
-                    <TableCell>Account</TableCell>
+                    <TableCell>Account Name</TableCell>
                     <TableCell>Manager</TableCell>
+                    <TableCell>Rep</TableCell>
                     <TableCell>Commission Amount</TableCell>
-                    <TableCell>Status</TableCell>
-                    <TableCell>Payment Date</TableCell>
-                    <TableCell>Contract Type</TableCell>
+                    <TableCell>Contract Expiration</TableCell>
+                    <TableCell>ESIID Count</TableCell>
+                    <TableCell>Usage (kWh)</TableCell>
                     <TableCell>Actions</TableCell>
                   </TableRow>
                 </TableHead>
@@ -591,23 +600,15 @@ const CommissionDashboard = ({ onLogout, onNavigate }) => {
                     <TableRow key={commission.id}>
                       <TableCell>{commission.accountName}</TableCell>
                       <TableCell>{commission.manager}</TableCell>
+                      <TableCell>{commission.rep || 'Sarah Johnson'}</TableCell>
                       <TableCell>
                         <Typography className="commission-amount">
                           ${commission.commissionAmount.toLocaleString()}
                         </Typography>
                       </TableCell>
-                      <TableCell>
-                        <Chip
-                          label={commission.paymentStatus}
-                          color={getStatusColor(commission.paymentStatus)}
-                          size="small"
-                          className={`commission-status-chip ${getStatusClass(commission.paymentStatus)}`}
-                        />
-                      </TableCell>
-                      <TableCell>
-                        {commission.paymentDate || 'Pending'}
-                      </TableCell>
-                      <TableCell>{commission.contractType}</TableCell>
+                      <TableCell>{commission.contractExpiration || '12/31/2024'}</TableCell>
+                      <TableCell>{commission.esiidCount}</TableCell>
+                      <TableCell>{commission.usageKwh.toLocaleString()}</TableCell>
                       <TableCell>
                         <Button
                           size="small"
@@ -639,44 +640,56 @@ const CommissionDashboard = ({ onLogout, onNavigate }) => {
             <Table className="commission-table">
               <TableHead>
                 <TableRow>
-                  <TableCell>Payment Date</TableCell>
-                  <TableCell>Amount</TableCell>
-                  <TableCell>Account</TableCell>
-                  <TableCell>Method</TableCell>
-                  <TableCell>Status</TableCell>
-                  <TableCell>Reference</TableCell>
+                  <TableCell>Rep Name</TableCell>
+                  <TableCell>Projected Commissions</TableCell>
+                  <TableCell>Received Commissions</TableCell>
+                  <TableCell>Variance</TableCell>
+                  <TableCell>Performance</TableCell>
                   <TableCell>Actions</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {paymentHistory.map((payment) => (
-                  <TableRow key={payment.id}>
-                    <TableCell>{payment.paymentDate}</TableCell>
+                {energyRepData.map((rep) => (
+                  <TableRow key={rep.id}>
+                    <TableCell>
+                      <Typography variant="subtitle2" fontWeight="medium">
+                        {rep.name}
+                      </Typography>
+                    </TableCell>
                     <TableCell>
                       <Typography className="commission-amount">
-                        ${payment.amount.toLocaleString()}
-                      </Typography>
-                    </TableCell>
-                    <TableCell>{payment.account}</TableCell>
-                    <TableCell>
-                      <Typography className="commission-payment-method">
-                        {payment.method}
+                        ${rep.projectedCommissions.toLocaleString()}
                       </Typography>
                     </TableCell>
                     <TableCell>
-                      <Typography className={`commission-payment-status ${getPaymentStatusClass(payment.status)}`}>
-                        {payment.status}
+                      <Typography className="commission-amount">
+                        ${rep.receivedCommissions.toLocaleString()}
                       </Typography>
                     </TableCell>
-                    <TableCell>{payment.reference}</TableCell>
+                    <TableCell>
+                      <Typography 
+                        color={rep.variance >= 0 ? 'success.main' : 'error.main'}
+                        fontWeight="medium"
+                      >
+                        ${Math.abs(rep.variance).toLocaleString()} 
+                        {rep.variance >= 0 ? ' over' : ' under'}
+                      </Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Chip
+                        label={`${rep.performance}%`}
+                        color={rep.performance >= 100 ? 'success' : rep.performance >= 80 ? 'warning' : 'error'}
+                        size="small"
+                      />
+                    </TableCell>
                     <TableCell>
                       <Button
                         size="small"
                         startIcon={<VisibilityIcon />}
-                        onClick={() => handlePaymentAction('view', payment.id)}
+                        onClick={() => console.log('View rep details', rep.id)}
                         className="commission-action-button"
                       >
-                        View
+                        Details
                       </Button>
                     </TableCell>
                   </TableRow>
@@ -687,14 +700,102 @@ const CommissionDashboard = ({ onLogout, onNavigate }) => {
         )}
 
         {activeTab === 2 && (
-          <Box className="commission-chart-container">
-            <Typography variant="h6" className="commission-chart-title">
-              Commission Analytics
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Charts and analytics will be displayed here
-            </Typography>
-          </Box>
+          <>
+            <Paper className="commission-filters">
+              <Box className="commission-filter-row">
+                <FormControl className="commission-filter-item">
+                  <InputLabel>Filter by Rep</InputLabel>
+                  <Select
+                    value={selectedRep}
+                    onChange={(e) => setSelectedRep(e.target.value)}
+                    label="Filter by Rep"
+                  >
+                    <MenuItem value="all">All Reps</MenuItem>
+                    <MenuItem value="sarah">Sarah Johnson</MenuItem>
+                    <MenuItem value="mike">Mike Wilson</MenuItem>
+                    <MenuItem value="john">John Smith</MenuItem>
+                  </Select>
+                </FormControl>
+                
+                <FormControl className="commission-filter-item">
+                  <InputLabel>Date Range</InputLabel>
+                  <Select
+                    value={dateRange}
+                    onChange={(e) => setDateRange(e.target.value)}
+                    label="Date Range"
+                  >
+                    <MenuItem value="current-month">Current Month</MenuItem>
+                    <MenuItem value="last-month">Last Month</MenuItem>
+                    <MenuItem value="quarter">This Quarter</MenuItem>
+                    <MenuItem value="year">This Year</MenuItem>
+                  </Select>
+                </FormControl>
+
+                <Button
+                  variant="outlined"
+                  startIcon={<DownloadIcon />}
+                  className="commission-export-button"
+                >
+                  Export Report
+                </Button>
+              </Box>
+            </Paper>
+
+            <Box className="commission-chart-container">
+              <Typography variant="h6" className="commission-chart-title">
+                Projected vs Received Commission Analysis
+              </Typography>
+              
+              <Grid container spacing={3} sx={{ mt: 2 }}>
+                <Grid item xs={12} md={4}>
+                  <Card className="commission-summary-card">
+                    <CardContent sx={{ textAlign: 'center' }}>
+                      <Typography variant="h4" color="primary.main" sx={{ fontWeight: 700 }}>
+                        ${projectedVsReceived.totalProjected.toLocaleString()}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Total Projected
+                      </Typography>
+                    </CardContent>
+                  </Card>
+                </Grid>
+                
+                <Grid item xs={12} md={4}>
+                  <Card className="commission-summary-card">
+                    <CardContent sx={{ textAlign: 'center' }}>
+                      <Typography variant="h4" color="success.main" sx={{ fontWeight: 700 }}>
+                        ${projectedVsReceived.totalReceived.toLocaleString()}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Total Received
+                      </Typography>
+                    </CardContent>
+                  </Card>
+                </Grid>
+                
+                <Grid item xs={12} md={4}>
+                  <Card className="commission-summary-card">
+                    <CardContent sx={{ textAlign: 'center' }}>
+                      <Typography 
+                        variant="h4" 
+                        color={projectedVsReceived.variance >= 0 ? 'success.main' : 'error.main'}
+                        sx={{ fontWeight: 700 }}
+                      >
+                        {projectedVsReceived.variance >= 0 ? '+' : ''}${projectedVsReceived.variance.toLocaleString()}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Variance
+                      </Typography>
+                    </CardContent>
+                  </Card>
+                </Grid>
+              </Grid>
+
+              <Typography variant="body1" color="text.secondary" sx={{ mt: 3, textAlign: 'center' }}>
+                Detailed charts and analytics will be displayed here
+              </Typography>
+            </Box>
+          </>
         )}
 
         {filteredCommissions.length === 0 && activeTab === 0 && (

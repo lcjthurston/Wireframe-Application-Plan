@@ -54,7 +54,11 @@ const HomePage = ({ onLogout, onNavigate }) => {
     { name: 'Email Monitoring', status: 'OK', time: '2 minutes ago', icon: <Email /> },
     { name: 'Centerpoint Usage Retrieval', status: 'OK', time: '5 minutes ago', icon: <TrendingUp /> },
     { name: 'Daily Pricing Imports', status: 'ERROR', time: '1 hour ago', icon: <Warning /> },
-    { name: 'Contract Follow-up Bot', status: 'OK', time: '10 minutes ago', icon: <Assignment /> }
+    { name: 'Contract Follow-up Bot', status: 'OK', time: '10 minutes ago', icon: <Assignment /> },
+    { name: 'Database Connectivity', status: 'OK', time: '1 minute ago', icon: <AccountBalance /> },
+    { name: 'API Gateway', status: 'OK', time: '3 minutes ago', icon: <Business /> },
+    { name: 'Backup System', status: 'WARNING', time: '30 minutes ago', icon: <HealthAndSafety /> },
+    { name: 'User Authentication', status: 'OK', time: '5 minutes ago', icon: <Person /> }
   ];
 
   const recentActivity = [
@@ -111,7 +115,7 @@ const HomePage = ({ onLogout, onNavigate }) => {
       <AppBar 
         position="static" 
         sx={{ 
-          background: 'linear-gradient(135deg, #C82828 0%, #B71C1C 100%)',
+          background: 'linear-gradient(135deg, #D64545 0%, #C82828 100%)',
           boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
         }}
       >
@@ -130,42 +134,42 @@ const HomePage = ({ onLogout, onNavigate }) => {
           <Box sx={{ display: 'flex', gap: 2, mr: 4 }}>
             <Button
               startIcon={<SupervisedUserCircle />}
-              onClick={() => onNavigate('managers')}
+              onClick={() => onNavigate('manager')}
               sx={{ color: 'white', textTransform: 'none', fontWeight: 500 }}
             >
               Manager
             </Button>
             <Button
               startIcon={<Drafts />}
-              onClick={() => onNavigate('emailDrafts')}
+              onClick={() => onNavigate('email-draft')}
               sx={{ color: 'white', textTransform: 'none', fontWeight: 500 }}
             >
               Email Drafts
             </Button>
             <Button
               startIcon={<AccountBalance />}
-              onClick={() => onNavigate('commissions')}
+              onClick={() => onNavigate('commission')}
               sx={{ color: 'white', textTransform: 'none', fontWeight: 500 }}
             >
               Commission
             </Button>
             <Button
               startIcon={<Business />}
-              onClick={() => onNavigate('providers')}
+              onClick={() => onNavigate('provider')}
               sx={{ color: 'white', textTransform: 'none', fontWeight: 500 }}
             >
               Providers
             </Button>
             <Button
               startIcon={<HealthAndSafety />}
-              onClick={() => onNavigate('systemHealth')}
+              onClick={() => onNavigate('system-health')}
               sx={{ color: 'white', textTransform: 'none', fontWeight: 500 }}
             >
               System Health
             </Button>
             <Button
               startIcon={<QueueMusic />}
-              onClick={() => onNavigate('taskQueue')}
+              onClick={() => onNavigate('task-queue')}
               sx={{ color: 'white', textTransform: 'none', fontWeight: 500 }}
             >
               Task Queue
@@ -336,7 +340,7 @@ const HomePage = ({ onLogout, onNavigate }) => {
 
         {/* System Health and Recent Activity */}
         <Grid container spacing={3}>
-          <Grid item xs={12} md={6}>
+          <Grid item xs={12} md={9}>
             <Card sx={{ borderRadius: 3, boxShadow: '0 4px 12px rgba(0,0,0,0.1)', height: '100%' }}>
               <CardContent>
                 <Typography variant="h6" sx={{ fontWeight: 600, mb: 3, display: 'flex', alignItems: 'center' }}>
@@ -354,22 +358,23 @@ const HomePage = ({ onLogout, onNavigate }) => {
                         </ListItemAvatar>
                         <ListItemText
                           primary={
-                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                              <Typography variant="subtitle2" sx={{ fontWeight: 500 }}>
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+                              <Typography variant="subtitle2" sx={{ fontWeight: 500, minWidth: '200px' }}>
                                 {item.name}
                               </Typography>
-                              <Chip 
-                                icon={getStatusIcon(item.status)}
-                                label={item.status} 
-                                color={getStatusColor(item.status)}
-                                size="small"
-                              />
+                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                                <Typography variant="body2" color="text.secondary" sx={{ minWidth: '120px', textAlign: 'right' }}>
+                                  {item.time}
+                                </Typography>
+                                <Chip 
+                                  icon={getStatusIcon(item.status)}
+                                  label={item.status} 
+                                  color={getStatusColor(item.status)}
+                                  size="small"
+                                  sx={{ minWidth: '80px' }}
+                                />
+                              </Box>
                             </Box>
-                          }
-                          secondary={
-                            <Typography variant="body2" color="text.secondary">
-                              {item.time}
-                            </Typography>
                           }
                         />
                       </ListItem>
@@ -381,7 +386,7 @@ const HomePage = ({ onLogout, onNavigate }) => {
             </Card>
           </Grid>
 
-          <Grid item xs={12} md={6}>
+          <Grid item xs={12} md={3}>
             <Card sx={{ borderRadius: 3, boxShadow: '0 4px 12px rgba(0,0,0,0.1)', height: '100%' }}>
               <CardContent>
                 <Typography variant="h6" sx={{ fontWeight: 600, mb: 3, display: 'flex', alignItems: 'center' }}>

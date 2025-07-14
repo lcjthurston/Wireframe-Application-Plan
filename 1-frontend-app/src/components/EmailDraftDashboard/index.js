@@ -71,6 +71,7 @@ import './EmailDraftDashboard.scss';
 const EmailDraftDashboard = ({ onLogout, onNavigate }) => {
   const [selectedEmail, setSelectedEmail] = useState(null);
   const [filterType, setFilterType] = useState('all');
+  const [statusFilter, setStatusFilter] = useState('all');
   const [sortBy, setSortBy] = useState('date');
   const [searchQuery, setSearchQuery] = useState('');
   const [emailDialogOpen, setEmailDialogOpen] = useState(false);
@@ -240,12 +241,20 @@ Kilowatt Team`,
       filtered = filtered.filter(email => email.emailType === typeMap[filterType]);
     }
 
+    // Filter by status
+    if (statusFilter !== 'all') {
+      filtered = filtered.filter(email => 
+        (email.status || 'draft').toLowerCase() === statusFilter.toLowerCase()
+      );
+    }
+
     // Filter by search query
     if (searchQuery) {
       filtered = filtered.filter(email =>
         email.recipient.toLowerCase().includes(searchQuery.toLowerCase()) ||
         email.account.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        email.subject.toLowerCase().includes(searchQuery.toLowerCase())
+        email.subject.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        email.body.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
 
@@ -509,6 +518,20 @@ Kilowatt Team`,
 
         <Paper className="email-draft-filters">
           <Box className="email-draft-filter-row">
+            <TextField
+              placeholder="Search emails by recipient, account, or subject..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              variant="outlined"
+              size="small"
+              sx={{ minWidth: 300, mr: 2 }}
+              InputProps={{
+                startAdornment: (
+                  <SearchIcon sx={{ color: 'rgba(0,0,0,0.5)', mr: 1 }} />
+                ),
+              }}
+            />
+
             <FormControl className="email-draft-filter-item">
               <InputLabel>Filter by Type</InputLabel>
               <Select
@@ -538,6 +561,29 @@ Kilowatt Team`,
                 ))}
               </Select>
             </FormControl>
+
+            <FormControl className="email-draft-filter-item">
+              <InputLabel>Status</InputLabel>
+              <Select
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+                label="Status"
+              >
+                <MenuItem value="all">All Status</MenuItem>
+                <MenuItem value="draft">Draft</MenuItem>
+                <MenuItem value="scheduled">Scheduled</MenuItem>
+                <MenuItem value="sent">Sent</MenuItem>
+              </Select>
+            </FormControl>
+
+            <Button
+              variant="outlined"
+              startIcon={<FilterIcon />}
+              onClick={() => console.log('Advanced filters')}
+              sx={{ ml: 1 }}
+            >
+              Advanced
+            </Button>
           </Box>
         </Paper>
 

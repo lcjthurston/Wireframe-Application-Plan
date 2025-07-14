@@ -23,9 +23,11 @@ import {
   Login,
   PersonAdd
 } from '@mui/icons-material';
+import { useAuth } from '../../contexts/AuthContext';
 import kilowattImage from '../../assets/image.png';
 
-const LoginPage = ({ onLogin }) => {
+const LoginPage = () => {
+  const { login } = useAuth();
   const [activeTab, setActiveTab] = useState(0);
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
@@ -58,15 +60,7 @@ const LoginPage = ({ onLogin }) => {
     try {
       if (activeTab === 0) {
         // Sign In
-        if (formData.username === 'admin' && formData.password === 'password') {
-          setTimeout(() => {
-            onLogin();
-            setLoading(false);
-          }, 1000);
-        } else {
-          setError('Invalid username or password');
-          setLoading(false);
-        }
+        await login(formData.username, formData.password);
       } else {
         // Sign Up
         if (!formData.email || !formData.password || !formData.confirmPassword) {
@@ -88,7 +82,7 @@ const LoginPage = ({ onLogin }) => {
         }, 1000);
       }
     } catch (err) {
-      setError('An error occurred. Please try again.');
+      setError(err.message || 'An error occurred. Please try again.');
       setLoading(false);
     }
   };
@@ -129,11 +123,11 @@ const LoginPage = ({ onLogin }) => {
                 style={{ width: 60, height: 60, marginRight: 16, borderRadius: 12 }}
               />
               <Typography variant="h3" sx={{ fontWeight: 700 }}>
-                kiloWatt
+                Welcome to Your
               </Typography>
             </Box>
             <Typography variant="h4" sx={{ fontWeight: 600, mb: 3 }}>
-              Welcome to Your
+              Future
             </Typography>
             <Typography variant="h6" sx={{ opacity: 0.9, maxWidth: 400 }}>
               Business Intelligence Platform
