@@ -1,321 +1,263 @@
-# Kilowatt Business Intelligence Application
+# Kilowatt Business Intelligence Frontend
 
 A React-based business intelligence application for managing accounts, tasks, commissions, and system automation. Built with Material-UI (MUI) for a modern, professional interface.
 
-## Features
+## 🚀 Quick Start
+
+```bash
+# Install dependencies
+npm install
+
+# Start development server
+npm start
+
+# Build for production
+npm run build
+
+# Run tests
+npm test
+```
+
+## 🎯 Features
 
 - **Modern UI**: Material-UI components with professional styling and Lottie animations
 - **Responsive Design**: Mobile-first approach with MUI's responsive system
-- **Dashboard Components**: Multiple specialized dashboards for different business functions
-- **Authentication**: Secure login system with form validation and animated feedback
-- **Data Management**: Comprehensive data entry and management capabilities
-- **System Monitoring**: Real-time system health and automation monitoring
-- **Lottie Animations**: Integrated Lottie animations for enhanced user experience
-- **Performance Optimized**: Efficient animation loading with caching and error handling
+- **Persistent Authentication**: Secure login with automatic session restoration
+- **Dashboard Management**: Multiple specialized dashboards for different business functions
+- **Real-time Data**: Live updates and synchronization
+- **Performance Optimized**: Efficient loading with caching and error handling
 
-## Getting Started
-
-### Prerequisites
-
-- Node.js (version 16 or higher)
-- npm or yarn
-
-### Installation
-
-1. Clone the repository:
-```bash
-git clone <repository-url>
-cd kilowatt-wireframe-app
-```
-
-2. Install dependencies:
-```bash
-npm install
-```
-
-3. Start the development server:
-```bash
-npm start
-```
-
-4. Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-## Project Structure
+## 📁 Project Structure
 
 ```
 src/
 ├── components/
-│   ├── LoginPage.js              # MUI-styled login component
-│   ├── HomePage.js               # MUI-styled main dashboard
-│   ├── SystemHealthDashboard.js  # MUI-styled system monitoring
-│   ├── CommissionDashboard.js    # MUI-styled commission tracking
-│   ├── EmailDraftDashboard.js    # MUI-styled email management
-│   ├── AccountDashboard.js       # Account management (styled-components)
-│   ├── ManagerDashboard.js       # Manager management (styled-components)
-│   ├── TaskQueue.js              # Task queue management (styled-components)
-│   ├── ProviderDashboard.js      # Provider management (styled-components)
-│   └── DataEntryModal.js         # Data entry modal (styled-components)
+│   ├── LoginPage/              # Authentication interface
+│   ├── HomePage/               # Main dashboard
+│   ├── AccountDashboard/       # Account management
+│   ├── ManagerDashboard/       # Manager profiles
+│   ├── TaskQueue/              # Task management
+│   ├── CommissionDashboard/    # Commission tracking
+│   ├── EmailDraftDashboard/    # Email management
+│   ├── ProviderDashboard/      # Provider management
+│   ├── SystemHealthDashboard/  # System monitoring
+│   └── lottie/                 # Animation components
+├── contexts/
+│   └── AuthContext.js          # Authentication state management
+├── utils/
+│   └── auth.js                 # Authentication utilities
 ├── assets/
-│   ├── colors.js                 # Color definitions
-│   └── image.png                 # Application logo
-├── theme.js                      # MUI theme configuration
-├── App.js                        # Main app component with MUI ThemeProvider
-├── App.css                       # Global styles
-└── index.js                      # Application entry point
+│   ├── lottie/                 # Animation files
+│   └── colors.js               # Design system colors
+├── theme.js                    # MUI theme configuration
+└── App.js                      # Main application component
 ```
 
-## Technology Stack
-
-### Frontend
-- **React 18**: Modern React with hooks
-- **Material-UI (MUI)**: Professional UI component library
-- **Styled-Components**: CSS-in-JS styling (legacy components)
-- **React Router**: Navigation (planned)
-
-### Styling
-- **MUI Theme**: Custom theme with professional color palette
-- **Responsive Design**: Mobile-first approach
-- **Typography**: Inter font family with consistent hierarchy
-- **Animations**: Smooth transitions and hover effects
-
-## Design System
+## 🎨 Design System
 
 ### MUI Theme Configuration
 - **Primary**: Deep Red (`#C82828`) - Main brand color
 - **Secondary**: Orange (`#E68228`) - Accent color
-- **Success**: Green (`#4caf50`) - Positive states
-- **Warning**: Golden Orange (`#F0A028`) - Warning states
-- **Error**: Deep Red (`#C82828`) - Error states
-- **Info**: Orange-Brown (`#E66E28`) - Information states
+- **Typography**: Inter font family with consistent hierarchy
+- **Responsive**: Mobile-first breakpoints
 
-### Typography
-- **Font Family**: Inter, Roboto, system fonts
-- **Font Weights**: 400, 500, 600, 700
-- **Responsive**: Scales appropriately on all devices
+### Component Status
+- ✅ **MUI Converted**: LoginPage, HomePage, SystemHealthDashboard, CommissionDashboard, EmailDraftDashboard
+- 🔄 **Legacy (Styled-Components)**: AccountDashboard, ManagerDashboard, TaskQueue, ProviderDashboard
+
+## 🔐 Authentication
+
+### Features
+- **Persistent Login**: Users remain logged in after page refresh
+- **Automatic Token Refresh**: Seamless token renewal
+- **Secure Storage**: JWT tokens in localStorage
+- **Mock Authentication**: For development and testing
+
+### Usage
+```javascript
+import { useAuth } from './contexts/AuthContext';
+
+function MyComponent() {
+  const { isAuthenticated, user, login, logout } = useAuth();
+  // Component logic
+}
+```
+
+### Mock Credentials
+- **Username**: admin
+- **Password**: password
+
+## 🎬 Lottie Animations
 
 ### Components
-- **Cards**: Elevated with hover effects
-- **Buttons**: Consistent styling with proper states
-- **Forms**: Professional input fields with validation
-- **Tables**: Sortable data tables with actions
-- **Navigation**: Modern AppBar with responsive design
+- **LottiePlayer**: Full-featured animation player
+- **LottieIcon**: Optimized for small icons
+- **LottieWithStates**: Complete with loading/error handling
 
-## Lottie Animations
-
-This project integrates Lottie animations for enhanced user experience and modern interactions.
-
-### Animation Components
-
-#### LottiePlayer
-Base component for rendering Lottie animations with full control:
-```javascript
-import { LottiePlayer } from './components/lottie';
-import animationData from './assets/lottie/my-animation.json';
-
-<LottiePlayer
-  animationData={animationData}
-  loop={true}
-  autoplay={true}
-  speed={1}
-  width="200px"
-  height="200px"
-/>
-```
-
-#### LottieIcon
-Optimized for small icon animations:
+### Usage
 ```javascript
 import { LottieIcon } from './components/lottie';
+import animationData from './assets/lottie/icons/my-icon.json';
 
 <LottieIcon
-  animationData={iconAnimation}
-  size={24}
+  animationData={animationData}
+  size={32}
   hover={true}
-  onClick={handleClick}
 />
 ```
 
-#### LottieWithStates
-Complete component with loading and error handling:
-```javascript
-import { LottieWithStates } from './components/lottie';
+## 📊 Dashboard Components
 
-<LottieWithStates
-  src="/path/to/animation.json"
-  showLoading={true}
-  showErrorBoundary={true}
-  cacheKey="my-animation"
-  preload={true}
-/>
-```
-
-### Animation Assets
-
-Animations are organized in `src/assets/lottie/`:
-- **`icons/`** - Small icon animations (24-48px)
-- **`loading/`** - Loading spinners and progress indicators
-- **`ui/`** - UI interaction animations
-- **`backgrounds/`** - Background and decorative animations
-
-### Performance Features
-
-- **Caching**: Automatic animation caching for improved performance
-- **Preloading**: Optional preloading for critical animations
-- **Error Handling**: Graceful fallbacks when animations fail to load
-- **Lazy Loading**: Animations load only when needed
-- **Memory Management**: Automatic cleanup to prevent memory leaks
-
-### Usage Examples
-
-Current integrations include:
-- **Login Page**: Welcome animation and loading spinner
-- **Dashboard**: Animated stat card icons
-- **Navigation**: Interactive button states
-- **Loading States**: Custom loading animations throughout the app
-
-## Dashboard Components
-
-### ✅ MUI-Converted Components
-
-#### LoginPage
-- Modern authentication form
-- Gradient background
-- Form validation with error states
-- Loading spinner
-- Professional styling
-
-#### HomePage
-- Dashboard overview with widgets
-- System health summary
+### HomePage
+- System overview with key metrics
+- Navigation to all dashboard sections
 - Recent activity feed
-- Task statistics
-- **Consistent Top Navigation Bar**: All dashboard buttons in header for easy access
-  - Manager Dashboard
-  - Email Drafts
-  - Commission
-  - Providers
-  - System Health
-  - Task Queue
-  - Accounts
-- Responsive navigation with mobile-friendly design
-- Clickable Kilowatt logo for home navigation
+- **Persistent Navigation**: Maintains current page on refresh
 
-#### SystemHealthDashboard
-- Automation system monitoring
-- Performance metrics
-- System logs table
-- Status indicators
-- Tabbed interface
-
-#### CommissionDashboard
-- Commission tracking
-- Payment history
-- Financial reports
-- Sortable data tables
-- Status chips
-
-#### EmailDraftDashboard
-- Email queue management
-- Draft previews
-- Bulk actions
-- Filter and sort options
-- Modal dialogs
-
-### 🔄 Legacy Components (Styled-Components)
-
-#### AccountDashboard
-- Account management
-- Account details
-- Usage tracking
+### Account Management
+- Account CRUD operations
+- Usage tracking and analytics
 - Contract management
+- Pricing generation
 
-#### ManagerDashboard
-- Manager profiles
-- Account assignments
-- Performance metrics
-- Contact information
+### Manager Dashboard
+- Manager profiles and contact information
+- Account assignments and performance metrics
+- Searchable manager directory
 
-#### TaskQueue
-- Task management
-- Priority sorting
-- Status tracking
-- Assignment handling
+### Task Queue
+- Task creation and assignment
+- Priority and status tracking
+- Progress monitoring
 
-#### ProviderDashboard
-- Energy provider management
-- Pricing sheets
-- Contract management
-- Provider analytics
+### Commission Tracking
+- Commission calculations and payments
+- Financial reporting and analytics
+- Payment processing
 
-#### DataEntryModal
-- Multi-step forms
-- Data validation
-- Account creation
-- Commission entry
+### Email Management
+- Email draft creation and editing
+- Bulk email operations
+- Template management
 
-## Available Scripts
+### Provider Management
+- Energy provider information
+- Pricing and contract management
+- Performance analytics
 
-- `npm start` - Runs the app in development mode
-- `npm build` - Builds the app for production
-- `npm test` - Launches the test runner
-- `npm eject` - Ejects from Create React App
+### System Health
+- Real-time system monitoring
+- Performance metrics and alerts
+- Automation status tracking
 
-## Development Status
+## 🛠️ Development
 
-### ✅ Completed
-- MUI theme integration
-- Login page with MUI
-- Home dashboard with MUI
-- System health dashboard with MUI
-- Commission dashboard with MUI
-- Email draft dashboard with MUI
+### Environment Variables
+```env
+REACT_APP_API_URL=http://localhost:8000
+REACT_APP_USE_MOCK_AUTH=true
+```
 
-### 🔄 In Progress
-- Converting remaining components to MUI
-- Enhancing responsive design
-- Adding more interactive features
+### Available Scripts
+- `npm start` - Development server
+- `npm build` - Production build
+- `npm test` - Run tests
+- `npm run lint` - Code linting
+- `npm run format` - Code formatting
 
-### 📋 Planned
-- Complete MUI conversion for all components
-- Advanced data visualization
-- Real-time updates
-- Enhanced accessibility
-- Performance optimizations
+### Code Quality
+```bash
+# Linting
+npm run lint
 
-## Key Features
+# Formatting
+npm run format
 
-### Authentication
-- Secure login system
-- Form validation
-- Error handling
-- Loading states
+# Type checking (if TypeScript)
+npm run type-check
+```
 
-### Dashboard Management
-- Multiple specialized dashboards
-- Real-time data display
-- Interactive charts and tables
-- Status monitoring
+## 🚀 Deployment
 
-### Data Management
-- Comprehensive data entry
-- Bulk operations
-- Search and filtering
-- Export capabilities
+### Build for Production
+```bash
+npm run build
+```
 
-### System Monitoring
-- Automation health tracking
-- Performance metrics
-- Error logging
-- Status alerts
+### Heroku Deployment
+The app includes Heroku configuration:
+- `Procfile` - Deployment commands
+- `static.json` - Static file serving
 
-## Contributing
+### Docker Deployment
+```bash
+docker build -t kilowatt-frontend .
+docker run -p 3000:3000 kilowatt-frontend
+```
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests if applicable
-5. Submit a pull request
+## 🔧 Configuration
 
-## License
+### API Integration
+Configure the backend API URL in environment variables or `src/utils/auth.js`:
 
+```javascript
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+```
+
+### Theme Customization
+Modify `src/theme.js` to customize the MUI theme:
+
+```javascript
+const theme = createTheme({
+  palette: {
+    primary: { main: '#C82828' },
+    secondary: { main: '#E68228' }
+  }
+});
+```
+
+## 📱 Responsive Design
+
+- **Mobile-first**: Optimized for mobile devices
+- **Breakpoints**: xs, sm, md, lg, xl
+- **Flexible Layouts**: Grid system and flexible components
+- **Touch-friendly**: Appropriate touch targets and interactions
+
+## 🧪 Testing
+
+### Test Structure
+```bash
+src/
+├── __tests__/
+│   ├── components/
+│   ├── utils/
+│   └── contexts/
+```
+
+### Running Tests
+```bash
+# Run all tests
+npm test
+
+# Run with coverage
+npm test -- --coverage
+
+# Run specific test file
+npm test LoginPage.test.js
+```
+
+## 🤝 Contributing
+
+1. Follow the existing code style and patterns
+2. Use MUI components for new features
+3. Add tests for new functionality
+4. Update documentation as needed
+5. Ensure responsive design principles
+
+## 📚 Resources
+
+- [Material-UI Documentation](https://mui.com/)
+- [React Documentation](https://reactjs.org/)
+- [Lottie React Documentation](https://github.com/chenqingspring/react-lottie)
+- [Authentication Guide](./AUTHENTICATION.md)
 This project is proprietary to Kilowatt. 
