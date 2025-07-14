@@ -1,370 +1,337 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
+  AppBar,
+  Toolbar,
   Typography,
-  Paper,
+  Button,
+  Card,
+  CardContent,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
-  Chip,
-  Button,
-  IconButton,
+  Paper,
+  Container,
   Grid,
-  Card,
-  CardContent,
-  TextField,
-  MenuItem,
+  Chip,
   Avatar,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  LinearProgress
+  IconButton,
+  Rating
 } from '@mui/material';
 import {
-  Edit,
-  Delete,
   Add,
-  Visibility,
+  ArrowBack,
   Business,
   TrendingUp,
-  ElectricBolt,
+  Bolt,
   AttachMoney,
-  Phone,
-  Email,
-  LocationOn,
-  Star
+  Visibility,
+  Edit,
+  Delete
 } from '@mui/icons-material';
+import kilowattImage from '../../assets/image.png';
 
-const ProviderDashboard = ({ onNavigate }) => {
+const ProviderDashboard = ({ onLogout, onNavigate }) => {
   const [providers, setProviders] = useState([]);
-  const [selectedProvider, setSelectedProvider] = useState(null);
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [filter, setFilter] = useState('all');
 
-  // Mock provider data
-  const mockProviders = [
-    {
-      id: 1,
-      name: 'Green Energy Solutions',
-      type: 'Renewable',
-      status: 'Active',
-      rating: 4.8,
-      customersCount: 1250,
-      totalCapacity: 500000,
-      avgRate: 0.085,
-      contactPerson: 'John Smith',
-      phone: '(555) 123-4567',
-      email: 'john@greenenergy.com',
-      address: '123 Solar Ave, Austin, TX',
-      contractStart: '2023-01-01',
-      contractEnd: '2025-12-31',
-      performance: 95
-    },
-    {
-      id: 2,
-      name: 'PowerCorp Utilities',
-      type: 'Traditional',
-      status: 'Active',
-      rating: 4.2,
-      customersCount: 2100,
-      totalCapacity: 750000,
-      avgRate: 0.092,
-      contactPerson: 'Sarah Johnson',
-      phone: '(555) 987-6543',
-      email: 'sarah@powercorp.com',
-      address: '456 Power St, Dallas, TX',
-      contractStart: '2022-06-01',
-      contractEnd: '2024-06-01',
-      performance: 88
-    },
-    {
-      id: 3,
-      name: 'Solar Dynamics',
-      type: 'Solar',
-      status: 'Active',
-      rating: 4.6,
-      customersCount: 850,
-      totalCapacity: 300000,
-      avgRate: 0.078,
-      contactPerson: 'Mike Wilson',
-      phone: '(555) 456-7890',
-      email: 'mike@solardynamics.com',
-      address: '789 Sun Blvd, Houston, TX',
-      contractStart: '2023-03-15',
-      contractEnd: '2026-03-15',
-      performance: 92
-    },
-    {
-      id: 4,
-      name: 'Wind Power Inc',
-      type: 'Wind',
-      status: 'Pending',
-      rating: 4.0,
-      customersCount: 0,
-      totalCapacity: 200000,
-      avgRate: 0.088,
-      contactPerson: 'Lisa Brown',
-      phone: '(555) 321-6543',
-      email: 'lisa@windpower.com',
-      address: '321 Windy Way, Denver, CO',
-      contractStart: '2023-06-01',
-      contractEnd: '2025-06-01',
-      performance: 85
-    }
-  ];
-
-  React.useEffect(() => {
+  useEffect(() => {
+    const mockProviders = [
+      {
+        id: 1,
+        name: 'Green Energy Solutions',
+        contact: 'John Smith',
+        type: 'Renewable',
+        status: 'Active',
+        capacity: 500000,
+        avgRate: 0.085,
+        revenue: 42500,
+        rating: 4.8
+      },
+      {
+        id: 2,
+        name: 'PowerCorp Utilities',
+        contact: 'Sarah Johnson',
+        type: 'Traditional',
+        status: 'Active',
+        capacity: 750000,
+        avgRate: 0.092,
+        revenue: 69000,
+        rating: 4.2
+      },
+      {
+        id: 3,
+        name: 'Solar Dynamics',
+        contact: 'Mike Wilson',
+        type: 'Solar',
+        status: 'Active',
+        capacity: 300000,
+        avgRate: 0.078,
+        revenue: 23400,
+        rating: 4.6
+      },
+      {
+        id: 4,
+        name: 'Wind Power Inc',
+        contact: 'Lisa Brown',
+        type: 'Wind',
+        status: 'Pending',
+        capacity: 200000,
+        avgRate: 0.088,
+        revenue: 17600,
+        rating: 4.0
+      }
+    ];
     setProviders(mockProviders);
   }, []);
 
-  const getStatusChip = (status) => {
-    const statusConfig = {
-      'Active': { color: 'success', label: 'Active' },
-      'Pending': { color: 'warning', label: 'Pending' },
-      'Inactive': { color: 'error', label: 'Inactive' },
-      'Suspended': { color: 'default', label: 'Suspended' }
-    };
-
-    const config = statusConfig[status] || statusConfig['Pending'];
-    
-    return (
-      <Chip
-        label={config.label}
-        color={config.color}
-        size="small"
-        sx={{ fontWeight: 500 }}
-      />
-    );
+  const getTypeColor = (type) => {
+    switch (type) {
+      case 'Renewable': return 'success';
+      case 'Traditional': return 'default';
+      case 'Solar': return 'warning';
+      case 'Wind': return 'info';
+      default: return 'default';
+    }
   };
 
-  const getTypeChip = (type) => {
-    const typeConfig = {
-      'Renewable': { color: 'success', label: 'Renewable' },
-      'Solar': { color: 'warning', label: 'Solar' },
-      'Traditional': { color: 'primary', label: 'Traditional' },
-      'Wind': { color: 'info', label: 'Wind' }
-    };
-
-    const config = typeConfig[type] || typeConfig['Traditional'];
-    
-    return (
-      <Chip
-        label={config.label}
-        color={config.color}
-        variant="outlined"
-        size="small"
-      />
-    );
+  const getStatusColor = (status) => {
+    switch (status) {
+      case 'Active': return 'success';
+      case 'Pending': return 'warning';
+      case 'Inactive': return 'error';
+      default: return 'default';
+    }
   };
 
-  const handleViewProvider = (provider) => {
-    setSelectedProvider(provider);
-    setDialogOpen(true);
-  };
-
-  const providerStats = {
-    total: providers.length,
-    active: providers.filter(p => p.status === 'Active').length,
-    totalCapacity: providers.reduce((sum, p) => sum + p.totalCapacity, 0),
-    totalRevenue: providers.reduce((sum, p) => sum + p.totalCapacity * p.avgRate, 0),
-    avgRate: providers.reduce((sum, p) => sum + p.avgRate, 0) / providers.length || 0
-  };
+  const totalProviders = providers.length;
+  const activeProviders = providers.filter(p => p.status === 'Active').length;
+  const totalCapacity = providers.reduce((sum, p) => sum + p.capacity, 0);
+  const totalRevenue = providers.reduce((sum, p) => sum + p.revenue, 0);
 
   return (
-    <Box sx={{ p: 3, maxWidth: '1200px', margin: '0 auto' }}>
-      {/* Header */}
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-        <Typography variant="h4" sx={{ fontWeight: 600 }}>
-          Energy Provider Dashboard
-        </Typography>
-        <Button
-          variant="contained"
-          startIcon={<Add />}
-          onClick={() => {/* handle add provider */}}
-        >
-          Add Provider
-        </Button>
-      </Box>
+    <Box sx={{ minHeight: '100vh', backgroundColor: '#fafafa' }}>
+      <AppBar 
+        position="static" 
+        sx={{ 
+          background: 'linear-gradient(135deg, #C82828 0%, #B71C1C 100%)',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+        }}
+      >
+        <Toolbar sx={{ minHeight: 72 }}>
+          <Button
+            startIcon={<ArrowBack />}
+            onClick={() => onNavigate('home')}
+            sx={{ color: 'white', mr: 2 }}
+          >
+            Back
+          </Button>
+          
+          <Box sx={{ display: 'flex', alignItems: 'center', mr: 2 }}>
+            <img 
+              src={kilowattImage} 
+              alt="Kilowatt Logo" 
+              style={{ width: 44, height: 44, marginRight: 14, borderRadius: 9 }}
+            />
+            <Typography variant="h6" sx={{ fontWeight: 700, color: 'white' }}>
+              Kilowatt
+            </Typography>
+          </Box>
 
-      {/* Stats Cards */}
-      <Grid container spacing={3} sx={{ mb: 4 }}>
-        <Grid item xs={12} md={3}>
-          <Card sx={{ height: '100%', textAlign: 'center' }}>
-            <CardContent>
-              <Business sx={{ fontSize: 40, color: 'primary.main', mb: 1 }} />
-              <Typography variant="h4" sx={{ fontWeight: 600 }}>
-                {providerStats.total}
-              </Typography>
-              <Typography color="textSecondary">Total Providers</Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={12} md={3}>
-          <Card sx={{ height: '100%', textAlign: 'center' }}>
-            <CardContent>
-              <TrendingUp sx={{ fontSize: 40, color: 'success.main', mb: 1 }} />
-              <Typography variant="h4" sx={{ fontWeight: 600, color: 'success.main' }}>
-                {providerStats.active}
-              </Typography>
-              <Typography color="textSecondary">Active Providers</Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={12} md={3}>
-          <Card sx={{ height: '100%', textAlign: 'center' }}>
-            <CardContent>
-              <ElectricBolt sx={{ fontSize: 40, color: 'warning.main', mb: 1 }} />
-              <Typography variant="h4" sx={{ fontWeight: 600 }}>
-                {providerStats.totalCapacity.toLocaleString()}
-              </Typography>
-              <Typography color="textSecondary">Total Capacity (kW)</Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={12} md={3}>
-          <Card sx={{ height: '100%', textAlign: 'center' }}>
-            <CardContent>
-              <AttachMoney sx={{ fontSize: 40, color: 'info.main', mb: 1 }} />
-              <Typography variant="h4" sx={{ fontWeight: 600 }}>
-                ${providerStats.totalRevenue.toLocaleString()}
-              </Typography>
-              <Typography color="textSecondary">Total Revenue</Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
+          <Box sx={{ flexGrow: 1 }} />
 
-      {/* Providers Table */}
-      <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-        <TableContainer>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>Provider</TableCell>
-                <TableCell>Type</TableCell>
-                <TableCell>Status</TableCell>
-                <TableCell>Capacity (kW)</TableCell>
-                <TableCell>Avg Rate</TableCell>
-                <TableCell>Revenue</TableCell>
-                <TableCell>Rating</TableCell>
-                <TableCell>Actions</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {providers.map((provider) => (
-                <TableRow key={provider.id} hover>
-                  <TableCell>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                      <Avatar sx={{ bgcolor: 'primary.main' }}>
-                        {provider.name.charAt(0)}
-                      </Avatar>
-                      <Box>
-                        <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
-                          {provider.name}
-                        </Typography>
-                        <Typography variant="body2" color="textSecondary">
-                          {provider.contactPerson}
-                        </Typography>
-                      </Box>
-                    </Box>
-                  </TableCell>
-                  <TableCell>
-                    {getTypeChip(provider.type)}
-                  </TableCell>
-                  <TableCell>
-                    {getStatusChip(provider.status)}
-                  </TableCell>
-                  <TableCell>
-                    <Typography variant="body2" sx={{ fontWeight: 600 }}>
-                      {provider.totalCapacity.toLocaleString()}
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography variant="body2">
-                      ${provider.avgRate.toFixed(3)}/kWh
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography variant="body2" sx={{ fontWeight: 600 }}>
-                      ${provider.totalCapacity * provider.avgRate.toLocaleString()}
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                      <Typography variant="body2">⭐</Typography>
-                      <Typography variant="body2">{provider.rating}</Typography>
-                    </Box>
-                  </TableCell>
-                  <TableCell>
-                    <Box sx={{ display: 'flex', gap: 0.5 }}>
-                      <IconButton size="small" onClick={() => handleViewProvider(provider)}>
-                        <Visibility fontSize="small" />
-                      </IconButton>
-                      <IconButton size="small">
-                        <Edit fontSize="small" />
-                      </IconButton>
-                      <IconButton size="small">
-                        <Delete fontSize="small" />
-                      </IconButton>
-                    </Box>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Paper>
+          <Button
+            onClick={onLogout}
+            sx={{ color: 'white', textTransform: 'none', fontWeight: 600 }}
+          >
+            Logout
+          </Button>
+        </Toolbar>
+      </AppBar>
 
-      {/* Provider Details Dialog */}
-      <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} maxWidth="md" fullWidth>
-        <DialogTitle>
-          Provider Details: {selectedProvider?.name}
-        </DialogTitle>
-        <DialogContent>
-          {selectedProvider && (
-            <Grid container spacing={3} sx={{ mt: 1 }}>
-              <Grid item xs={12} md={6}>
-                <Card>
-                  <CardContent>
-                    <Typography variant="h6" gutterBottom>Contact Information</Typography>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-                      <Phone fontSize="small" />
-                      <Typography>{selectedProvider.phone}</Typography>
-                    </Box>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-                      <Email fontSize="small" />
-                      <Typography>{selectedProvider.email}</Typography>
-                    </Box>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      <LocationOn fontSize="small" />
-                      <Typography>{selectedProvider.address}</Typography>
-                    </Box>
-                  </CardContent>
-                </Card>
-              </Grid>
-              <Grid item xs={12} md={6}>
-                <Card>
-                  <CardContent>
-                    <Typography variant="h6" gutterBottom>Performance Metrics</Typography>
-                    <Typography>Capacity: {selectedProvider.totalCapacity.toLocaleString()} kW</Typography>
-                    <Typography>Average Rate: ${selectedProvider.avgRate.toFixed(3)}/kWh</Typography>
-                    <Typography>Revenue: ${selectedProvider.totalCapacity * selectedProvider.avgRate.toLocaleString()}</Typography>
-                    <Typography>Rating: ⭐ {selectedProvider.rating}</Typography>
-                  </CardContent>
-                </Card>
-              </Grid>
-            </Grid>
-          )}
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setDialogOpen(false)}>Close</Button>
-          <Button variant="contained">Edit Provider</Button>
-        </DialogActions>
-      </Dialog>
+      <Container maxWidth="xl" sx={{ py: 4 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
+          <Typography variant="h4" component="h1" sx={{ fontWeight: 700 }}>
+            Energy Provider Dashboard
+          </Typography>
+          <Button
+            variant="contained"
+            startIcon={<Add />}
+            onClick={() => onNavigate('addProvider')}
+            size="large"
+            sx={{ 
+              background: 'linear-gradient(135deg, #C82828 0%, #B71C1C 100%)',
+              '&:hover': {
+                background: 'linear-gradient(135deg, #B71C1C 0%, #A01818 100%)'
+              }
+            }}
+          >
+            Add Provider
+          </Button>
+        </Box>
+
+        {/* Stats Cards */}
+        <Grid container spacing={3} sx={{ mb: 4 }}>
+          <Grid item xs={12} sm={6} md={3}>
+            <Card sx={{ borderRadius: 2, boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
+              <CardContent sx={{ textAlign: 'center', py: 3 }}>
+                <Business sx={{ fontSize: 40, color: '#C82828', mb: 1 }} />
+                <Typography variant="h4" sx={{ fontWeight: 700, mb: 1 }}>
+                  {totalProviders}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Total Providers
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item xs={12} sm={6} md={3}>
+            <Card sx={{ borderRadius: 2, boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
+              <CardContent sx={{ textAlign: 'center', py: 3 }}>
+                <TrendingUp sx={{ fontSize: 40, color: '#4CAF50', mb: 1 }} />
+                <Typography variant="h4" sx={{ fontWeight: 700, mb: 1 }}>
+                  {activeProviders}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Active Providers
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item xs={12} sm={6} md={3}>
+            <Card sx={{ borderRadius: 2, boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
+              <CardContent sx={{ textAlign: 'center', py: 3 }}>
+                <Bolt sx={{ fontSize: 40, color: '#FF9800', mb: 1 }} />
+                <Typography variant="h4" sx={{ fontWeight: 700, mb: 1 }}>
+                  {totalCapacity.toLocaleString()}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Total Capacity (kW)
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item xs={12} sm={6} md={3}>
+            <Card sx={{ borderRadius: 2, boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
+              <CardContent sx={{ textAlign: 'center', py: 3 }}>
+                <AttachMoney sx={{ fontSize: 40, color: '#4CAF50', mb: 1 }} />
+                <Typography variant="h4" sx={{ fontWeight: 700, mb: 1 }}>
+                  ${totalRevenue.toLocaleString()}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Total Revenue
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+        </Grid>
+
+        {/* Providers Table */}
+        <Card sx={{ borderRadius: 2, boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
+          <CardContent>
+            <TableContainer 
+              component={Paper} 
+              variant="outlined"
+              sx={{ 
+                borderRadius: 2,
+                overflow: 'hidden',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.08)'
+              }}
+            >
+              <Table>
+                <TableHead sx={{ backgroundColor: '#f8f9fa' }}>
+                  <TableRow>
+                    <TableCell sx={{ fontWeight: 600, color: '#333' }}>Provider</TableCell>
+                    <TableCell sx={{ fontWeight: 600, color: '#333' }}>Type</TableCell>
+                    <TableCell sx={{ fontWeight: 600, color: '#333' }}>Status</TableCell>
+                    <TableCell sx={{ fontWeight: 600, color: '#333' }}>Capacity (kW)</TableCell>
+                    <TableCell sx={{ fontWeight: 600, color: '#333' }}>Avg Rate</TableCell>
+                    <TableCell sx={{ fontWeight: 600, color: '#333' }}>Revenue</TableCell>
+                    <TableCell sx={{ fontWeight: 600, color: '#333' }}>Rating</TableCell>
+                    <TableCell sx={{ fontWeight: 600, color: '#333' }}>Actions</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {providers.map((provider) => (
+                    <TableRow 
+                      key={provider.id}
+                      hover
+                      sx={{ 
+                        '&:hover': {
+                          backgroundColor: '#f8f9fa'
+                        }
+                      }}
+                    >
+                      <TableCell>
+                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                          <Avatar 
+                            sx={{ 
+                              mr: 2, 
+                              bgcolor: '#C82828',
+                              width: 40,
+                              height: 40
+                            }}
+                          >
+                            {provider.name.charAt(0)}
+                          </Avatar>
+                          <Box>
+                            <Typography variant="subtitle2" fontWeight="medium">
+                              {provider.name}
+                            </Typography>
+                            <Typography variant="body2" color="text.secondary">
+                              {provider.contact}
+                            </Typography>
+                          </Box>
+                        </Box>
+                      </TableCell>
+                      <TableCell>
+                        <Chip 
+                          label={provider.type} 
+                          color={getTypeColor(provider.type)}
+                          size="small"
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <Chip 
+                          label={provider.status} 
+                          color={getStatusColor(provider.status)}
+                          size="small"
+                        />
+                      </TableCell>
+                      <TableCell>{provider.capacity.toLocaleString()}</TableCell>
+                      <TableCell>${provider.avgRate}/kWh</TableCell>
+                      <TableCell>${provider.revenue.toLocaleString()}</TableCell>
+                      <TableCell>
+                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                          <Rating value={provider.rating} readOnly size="small" />
+                          <Typography variant="body2" sx={{ ml: 1 }}>
+                            {provider.rating}
+                          </Typography>
+                        </Box>
+                      </TableCell>
+                      <TableCell>
+                        <Box sx={{ display: 'flex', gap: 1 }}>
+                          <IconButton size="small" color="primary">
+                            <Visibility />
+                          </IconButton>
+                          <IconButton size="small" color="primary">
+                            <Edit />
+                          </IconButton>
+                          <IconButton size="small" color="error">
+                            <Delete />
+                          </IconButton>
+                        </Box>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </CardContent>
+        </Card>
+      </Container>
     </Box>
   );
 };
