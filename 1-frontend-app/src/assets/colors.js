@@ -3,7 +3,16 @@
 // NOTE: App is optimized for larger text for accessibility.
 
 const colors = {
-  primary: '#C82828',      // Dominant deep red
+  primary: {
+    main: '#C82828',       // Dominant deep red
+    light: '#E85555',      // Lighter red
+    dark: '#A01729',       // Darker red
+  },
+  secondary: {
+    main: '#E68228',       // Orange
+    light: '#F0A078',      // Light orange/peach
+    dark: '#DC5028',       // Dark orange
+  },
   background: '#FFFFFF',   // Light background (white)
   accent1: '#E68228',      // Orange
   accent2: '#E66E28',      // Orange-brown

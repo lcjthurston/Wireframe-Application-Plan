@@ -4,15 +4,15 @@ import colors from './assets/colors';
 const theme = createTheme({
   palette: {
     primary: {
-      main: colors.primary,        // '#C82828' - Deep red
-      light: '#E57373',            // Lighter red
-      dark: '#B71C1C',             // Darker red
+      main: colors.primary.main,   // '#C82828' - Deep red
+      light: colors.primary.light, // '#E85555' - Lighter red
+      dark: colors.primary.dark,   // '#A01729' - Darker red
       contrastText: '#ffffff',
     },
     secondary: {
-      main: colors.accent1,        // '#E68228' - Orange
-      light: colors.accent5,       // '#F0A078' - Peach
-      dark: colors.accent4,        // '#DC5028' - Red-orange
+      main: colors.secondary.main, // '#E68228' - Orange
+      light: colors.secondary.light, // '#F0A078' - Peach
+      dark: colors.secondary.dark, // '#DC5028' - Red-orange
       contrastText: '#ffffff',
     },
     background: {
@@ -34,9 +34,9 @@ const theme = createTheme({
       dark: colors.accent3,        // '#E65A28' - Deep orange
     },
     error: {
-      main: colors.primary,        // '#C82828' - Deep red
-      light: '#E57373',
-      dark: '#B71C1C',
+      main: colors.primary.main,   // '#C82828' - Deep red
+      light: colors.primary.light, // '#E85555' - Lighter red
+      dark: colors.primary.dark,   // '#A01729' - Darker red
     },
     info: {
       main: colors.accent2,        // '#E66E28' - Orange-brown
@@ -141,9 +141,9 @@ const theme = createTheme({
           },
         },
         contained: {
-          background: `linear-gradient(135deg, ${colors.primary} 0%, #B71C1C 100%)`, // Red gradient
+          background: `linear-gradient(135deg, ${colors.primary.main} 0%, ${colors.primary.dark} 100%)`, // Red gradient
           '&:hover': {
-            background: `linear-gradient(135deg, #B71C1C 0%, #8B0000 100%)`, // Darker red gradient
+            background: `linear-gradient(135deg, ${colors.primary.dark} 0%, #8B0000 100%)`, // Darker red gradient
           },
         },
         outlined: {
@@ -173,10 +173,10 @@ const theme = createTheme({
           '& .MuiOutlinedInput-root': {
             borderRadius: 12,
             '&:hover fieldset': {
-              borderColor: colors.primary, // Red border on hover
+              borderColor: colors.primary.main, // Red border on hover
             },
             '&.Mui-focused fieldset': {
-              borderColor: colors.primary, // Red border when focused
+              borderColor: colors.primary.main, // Red border when focused
               borderWidth: 2,
             },
           },
@@ -214,7 +214,7 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           '& .MuiTabs-indicator': {
-            backgroundColor: colors.primary, // Red indicator
+            backgroundColor: colors.primary.main, // Red indicator
             height: 3,
             borderRadius: 2,
           },
@@ -229,7 +229,7 @@ const theme = createTheme({
           fontSize: '0.875rem',
           minWidth: 120,
           '&.Mui-selected': {
-            color: colors.primary, // Red text when selected
+            color: colors.primary.main, // Red text when selected
           },
         },
       },

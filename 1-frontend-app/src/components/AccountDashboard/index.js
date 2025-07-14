@@ -44,7 +44,8 @@ import {
   CheckCircle,
   Warning,
   Error,
-  Info
+  Info,
+  ArrowBack
 } from '@mui/icons-material';
 import kilowattImage from '../../assets/image.png';
 import './AccountDashboard.scss';
@@ -52,12 +53,13 @@ import styled from 'styled-components';
 import colors from '../../assets/colors';
 import DataEntryModal from '../DataEntryModal';
 
-const AccountDashboard = ({ onLogout, onNavigate }) => {
+const AccountDashboard = ({ onLogout, onNavigate, accountId }) => {
   const [activeTab, setActiveTab] = useState('overview');
   const [showManagerModal, setShowManagerModal] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef();
   const [showDataEntryModal, setShowDataEntryModal] = useState(false);
+  const [refreshStatus, setRefreshStatus] = useState('idle'); // 'idle', 'pending', 'success', 'error'
 
   // Mock account data
   const account = {
@@ -93,15 +95,24 @@ const AccountDashboard = ({ onLogout, onNavigate }) => {
   const esiids = [
     {
       number: '1234567890123456',
-      zone: 'ERCOT',
+      rep: 'TXU Energy',
       loadProfile: 'Commercial',
-      lastUpdate: '2024-01-15 14:30'
+      kwhPerMonth: 12500,
+      kwhPerYear: 150000
     },
     {
-      number: '1234567890123457',
-      zone: 'ERCOT',
-      loadProfile: 'Commercial',
-      lastUpdate: '2024-01-15 14:30'
+      number: '9876543210987654',
+      rep: 'Reliant Energy',
+      loadProfile: 'Industrial',
+      kwhPerMonth: 45000,
+      kwhPerYear: 540000
+    },
+    {
+      number: '5555666677778888',
+      rep: 'Direct Energy',
+      loadProfile: 'Small Commercial',
+      kwhPerMonth: 8200,
+      kwhPerYear: 98400
     }
   ];
 
@@ -157,8 +168,17 @@ const AccountDashboard = ({ onLogout, onNavigate }) => {
   };
 
   const handleRefreshUsage = () => {
-    console.log('Refreshing usage data from Centerpoint');
-    // TODO: Implement usage refresh
+    console.log('Running refresh usage automation');
+    setRefreshStatus('pending');
+
+    // Simulate API call
+    setTimeout(() => {
+      setRefreshStatus('success');
+      // Reset to idle after 3 seconds
+      setTimeout(() => {
+        setRefreshStatus('idle');
+      }, 3000);
+    }, 2000);
   };
 
   const handleGeneratePricing = () => {
@@ -181,6 +201,11 @@ const AccountDashboard = ({ onLogout, onNavigate }) => {
     // TODO: Implement actual save logic
     console.log('New Account Data:', data);
     setShowDataEntryModal(false);
+  };
+
+  const handleAddMeter = () => {
+    console.log('Adding new meter');
+    // TODO: Implement add meter functionality
   };
 
   const tabs = [
@@ -229,9 +254,16 @@ const AccountDashboard = ({ onLogout, onNavigate }) => {
             </Box>
             {/* Navigation Links */}
             <Box ml={4} display="flex" alignItems="center" gap={2}>
+              <Button
+                color="inherit"
+                onClick={() => handleNavigation('accounts')}
+                startIcon={<ArrowBack />}
+                variant="outlined"
+              >
+                Back to Accounts
+              </Button>
               <Button color="inherit" onClick={() => handleNavigation('home')}>Home</Button>
               <Button color="inherit" onClick={() => handleNavigation('task-queue')}>Task Queue</Button>
-              <Button color="inherit" onClick={() => handleNavigation('accounts')} variant="outlined">Accounts</Button>
               <Button
                 color="primary"
                 variant="contained"
@@ -374,9 +406,9 @@ const AccountDashboard = ({ onLogout, onNavigate }) => {
                   <DetailRow>
                     <DetailLabel>Current Manager:</DetailLabel>
                     <DetailValue>{account.manager}</DetailValue>
-                    <ActionButton onClick={() => setShowManagerModal(true)}>
+                    <OverviewActionButton onClick={() => setShowManagerModal(true)}>
                       Change Manager
-                    </ActionButton>
+                    </OverviewActionButton>
                   </DetailRow>
                   <DetailRow>
                     <DetailLabel>Management Company:</DetailLabel>
@@ -458,26 +490,43 @@ const AccountDashboard = ({ onLogout, onNavigate }) => {
               <Section>
                 <SectionHeader>
                   <SectionTitle>ESIIDs & Usage</SectionTitle>
-                  <RefreshButton onClick={handleRefreshUsage}>
-                    🔄 Manually Refresh Usage Data
-                  </RefreshButton>
+                  <Box display="flex" gap={2}>
+                    <RefreshButton
+                      onClick={handleRefreshUsage}
+                      disabled={refreshStatus === 'pending'}
+                      status={refreshStatus}
+                    >
+                      {refreshStatus === 'pending' ? (
+                        <>🔄 Pending Refresh...</>
+                      ) : refreshStatus === 'success' ? (
+                        <>✅ Successfully Refreshed</>
+                      ) : (
+                        <>🔄 Run Refresh Usage Automation</>
+                      )}
+                    </RefreshButton>
+                    <AddMeterButton onClick={handleAddMeter}>
+                      ➕ Add Meter
+                    </AddMeterButton>
+                  </Box>
                 </SectionHeader>
                 <EsiidsTable>
                   <TableHeader>
                     <TableRow>
-                      <TableHeaderCell>ESIID Number</TableHeaderCell>
-                      <TableHeaderCell>Zone</TableHeaderCell>
+                      <TableHeaderCell>ESIID</TableHeaderCell>
+                      <TableHeaderCell>Rep</TableHeaderCell>
                       <TableHeaderCell>Load Profile</TableHeaderCell>
-                      <TableHeaderCell>Last Update</TableHeaderCell>
+                      <TableHeaderCell>kWh per Month</TableHeaderCell>
+                      <TableHeaderCell>kWh Per Year</TableHeaderCell>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {esiids.map((esiid, index) => (
                       <TableRow key={index}>
                         <TableCell>{esiid.number}</TableCell>
-                        <TableCell>{esiid.zone}</TableCell>
+                        <TableCell>{esiid.rep}</TableCell>
                         <TableCell>{esiid.loadProfile}</TableCell>
-                        <TableCell>{esiid.lastUpdate}</TableCell>
+                        <TableCell>{esiid.kwhPerMonth?.toLocaleString()}</TableCell>
+                        <TableCell>{esiid.kwhPerYear?.toLocaleString()}</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
@@ -583,7 +632,7 @@ const PageContainer = styled.div`
   min-height: 100vh;
   position: relative;
   overflow: hidden;
-  background: ${colors.primary};
+  background: ${colors.primary.main};
 `;
 
 const BackgroundGradient = styled.div`
@@ -604,7 +653,7 @@ const NavigationBar = styled.nav`
   align-items: center;
   padding: 0 40px;
   height: 100px;
-  background: ${colors.primary};
+  background: ${colors.primary.main};
   border-bottom: 1px solid ${colors.border};
   position: sticky;
   top: 0;
@@ -1081,7 +1130,7 @@ const DetailRow = styled.div`
   gap: 16px;
 `;
 
-const ActionButton = styled.button`
+const OverviewActionButton = styled.button`
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
   color: white;
@@ -1220,9 +1269,44 @@ const StatusBadge = styled.span`
 `;
 
 const RefreshButton = styled.button`
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: white;
+  background: ${props => {
+    if (props.status === 'pending') return 'rgba(255, 193, 7, 0.2)';
+    if (props.status === 'success') return 'rgba(34, 197, 94, 0.2)';
+    return 'rgba(255, 255, 255, 0.1)';
+  }};
+  border: 1px solid ${props => {
+    if (props.status === 'pending') return 'rgba(255, 193, 7, 0.3)';
+    if (props.status === 'success') return 'rgba(34, 197, 94, 0.3)';
+    return 'rgba(255, 255, 255, 0.2)';
+  }};
+  color: ${props => {
+    if (props.status === 'pending') return '#fbbf24';
+    if (props.status === 'success') return '#86efac';
+    return 'white';
+  }};
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: ${props => props.disabled ? 'not-allowed' : 'pointer'};
+  transition: all 0.2s ease;
+  opacity: ${props => props.disabled ? 0.7 : 1};
+
+  &:hover {
+    background: ${props => {
+      if (props.disabled) return 'inherit';
+      if (props.status === 'pending') return 'rgba(255, 193, 7, 0.3)';
+      if (props.status === 'success') return 'rgba(34, 197, 94, 0.3)';
+      return 'rgba(255, 255, 255, 0.2)';
+    }};
+    transform: ${props => props.disabled ? 'none' : 'translateY(-1px)'};
+  }
+`;
+
+const AddMeterButton = styled.button`
+  background: rgba(34, 197, 94, 0.2);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  color: #86efac;
   padding: 8px 16px;
   border-radius: 8px;
   font-size: 12px;
@@ -1231,7 +1315,7 @@ const RefreshButton = styled.button`
   transition: all 0.2s ease;
 
   &:hover {
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(34, 197, 94, 0.3);
     transform: translateY(-1px);
   }
 `;
@@ -1383,7 +1467,7 @@ const NavDropdownMenu = styled.div`
   position: absolute;
   top: 100%;
   left: 0;
-  background: ${colors.primary};
+  background: ${colors.primary.main};
   border: 1px solid ${colors.border};
   border-radius: 8px;
   box-shadow: 0 4px 16px rgba(0,0,0,0.12);

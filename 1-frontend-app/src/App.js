@@ -6,6 +6,7 @@ import LoginPage from './components/LoginPage';
 import HomePage from './components/HomePage';
 import TaskQueue from './components/TaskQueue';
 import AccountDashboard from './components/AccountDashboard';
+import AccountsList from './components/AccountsList';
 import ManagerDashboard from './components/ManagerDashboard';
 import EmailDraftDashboard from './components/EmailDraftDashboard';
 import CommissionDashboard from './components/CommissionDashboard';
@@ -18,6 +19,7 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [currentPage, setCurrentPage] = useState('home');
   const [isDataEntryModalOpen, setIsDataEntryModalOpen] = useState(false);
+  const [selectedAccountId, setSelectedAccountId] = useState(null);
 
   const handleLogin = () => {
     setIsLoggedIn(true);
@@ -29,8 +31,11 @@ function App() {
     setCurrentPage('home');
   };
 
-  const handleNavigation = (page) => {
+  const handleNavigation = (page, params = {}) => {
     setCurrentPage(page);
+    if (params.accountId) {
+      setSelectedAccountId(params.accountId);
+    }
   };
 
   const handleOpenDataEntry = () => {
@@ -53,7 +58,9 @@ function App() {
       case 'task-queue':
         return <TaskQueue onLogout={handleLogout} onNavigate={handleNavigation} />;
       case 'accounts':
-        return <AccountDashboard onLogout={handleLogout} onNavigate={handleNavigation} />;
+        return <AccountsList onLogout={handleLogout} onNavigate={handleNavigation} />;
+      case 'account-detail':
+        return <AccountDashboard onLogout={handleLogout} onNavigate={handleNavigation} accountId={selectedAccountId} />;
       case 'manager':
         return <ManagerDashboard onLogout={handleLogout} onNavigate={handleNavigation} />;
       case 'email-draft':
