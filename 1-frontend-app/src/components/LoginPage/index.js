@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   Box,
   Card,
@@ -6,446 +6,376 @@ import {
   TextField,
   Button,
   Typography,
-  Alert,
-  CircularProgress,
   Container,
-  Paper,
-  Link,
-  Tabs,
   Tab,
-  Divider,
-  IconButton,
+  Tabs,
   InputAdornment,
-  Fade,
-  Slide
+  IconButton,
+  Link,
+  Alert,
+  Fade
 } from '@mui/material';
 import {
+  Person,
+  Email,
   Visibility,
   VisibilityOff,
-  Email,
-  Lock,
-  Person
+  Login,
+  PersonAdd
 } from '@mui/icons-material';
-import { useTheme } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
-// import kilowattImage from '../../assets/image.png';
-import { LottieWithStates, LottieIcon } from '../lottie';
-import serverAnimation from '../../assets/lottie/ui/serverAnimation.json';
-import buttonSpinnerAnimation from '../../assets/lottie/loading/button-spinner.json';
-import { useAuth } from '../../contexts/AuthContext';
-import './LoginPage.scss';
+import kilowattImage from '../../assets/image.png';
 
-const LoginPage = () => {
-  const { login, loading: authLoading, error: authError } = useAuth();
+const LoginPage = ({ onLogin }) => {
+  const [activeTab, setActiveTab] = useState(0);
+  const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
-    username: '',
+    username: 'admin',
+    password: 'password',
     email: '',
-    password: '',
     confirmPassword: ''
   });
-  const [errors, setErrors] = useState({});
-  const [isLoading, setIsLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [mode, setMode] = useState('signin'); // 'signin' or 'signup'
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-    if (errors[name]) {
-      setErrors(prev => ({
-        ...prev,
-        [name]: ''
-      }));
-    }
+  const handleTabChange = (event, newValue) => {
+    setActiveTab(newValue);
+    setError('');
   };
 
-  const validateForm = () => {
-    const newErrors = {};
-    
-    if (mode === 'signin') {
-      if (!formData.username) {
-        newErrors.username = 'Username or email is required';
-      }
-      if (!formData.password) {
-        newErrors.password = 'Password is required';
-      }
-    } else {
-      if (!formData.username) {
-        newErrors.username = 'Username is required';
-      }
-      if (!formData.email) {
-        newErrors.email = 'Email is required';
-      } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-        newErrors.email = 'Please enter a valid email address';
-      }
-      if (!formData.password) {
-        newErrors.password = 'Password is required';
-      } else if (formData.password.length < 6) {
-        newErrors.password = 'Password must be at least 6 characters';
-      }
-      if (!formData.confirmPassword) {
-        newErrors.confirmPassword = 'Please confirm your password';
-      } else if (formData.password !== formData.confirmPassword) {
-        newErrors.confirmPassword = 'Passwords do not match';
-      }
-    }
-
-    return newErrors;
+  const handleInputChange = (field) => (event) => {
+    setFormData({
+      ...formData,
+      [field]: event.target.value
+    });
+    setError('');
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsLoading(true);
-    setErrors({});
-
-    const newErrors = validateForm();
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      setIsLoading(false);
-      return;
-    }
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setLoading(true);
+    setError('');
 
     try {
-      if (mode === 'signin') {
-        // Use the real login function from auth context
-        await login(formData.username, formData.password);
-        // Login successful - the auth context will handle the state update
+      if (activeTab === 0) {
+        // Sign In
+        if (formData.username === 'admin' && formData.password === 'password') {
+          setTimeout(() => {
+            onLogin();
+            setLoading(false);
+          }, 1000);
+        } else {
+          setError('Invalid username or password');
+          setLoading(false);
+        }
       } else {
-        // TODO: Implement signup functionality
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        console.log('Sign up attempt:', formData);
-        setErrors({ general: 'Sign up functionality not yet implemented.' });
+        // Sign Up
+        if (!formData.email || !formData.password || !formData.confirmPassword) {
+          setError('Please fill in all fields');
+          setLoading(false);
+          return;
+        }
+        if (formData.password !== formData.confirmPassword) {
+          setError('Passwords do not match');
+          setLoading(false);
+          return;
+        }
+        // Mock successful signup
+        setTimeout(() => {
+          setActiveTab(0);
+          setError('');
+          setLoading(false);
+          setFormData({ ...formData, username: formData.email, password: '', confirmPassword: '' });
+        }, 1000);
       }
-    } catch (error) {
-      console.error(`${mode === 'signin' ? 'Sign in' : 'Sign up'} error:`, error);
-      setErrors({ general: error.message || `${mode === 'signin' ? 'Sign in' : 'Sign up'} failed. Please try again.` });
-    } finally {
-      setIsLoading(false);
+    } catch (err) {
+      setError('An error occurred. Please try again.');
+      setLoading(false);
     }
-  };
-
-  const handleForgotPassword = () => {
-    console.log('Forgot password clicked');
-  };
-
-  const handleModeChange = (event, newMode) => {
-    setMode(newMode);
-    setErrors({});
-    setFormData({
-      username: '',
-      email: '',
-      password: '',
-      confirmPassword: ''
-    });
   };
 
   return (
-    <Box className="login-page">
+    <Box
+      sx={{
+        minHeight: '100vh',
+        background: 'linear-gradient(135deg, #C82828 0%, #B71C1C 100%)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        p: 2
+      }}
+    >
       <Container maxWidth="lg">
-        <Box className="login-container">
-          <Card className="login-card">
-            <CardContent className="login-card-content">
-              <Box className="login-header">
-                {/* <img src={kilowattImage} alt="Kilowatt Logo" className="login-logo" /> */}
-                <Typography 
-                  variant="h2" 
-                  component="h1" 
-                  className="login-title"
-                  sx={{ 
-                    mb: 0.5,
-                    display: 'inline-block',
-                    position: 'relative',
-                    fontWeight: 600,
-                    color: '#1976d2',
-                    fontSize: { xs: '2rem', sm: '2.75rem' },
-                    letterSpacing: '-0.02em',
-                    '&::after': {
-                      content: '""',
-                      position: 'absolute',
-                      bottom: '-4px',
-                      left: '0',
-                      width: '0%',
-                      height: '3px',
-                      background: 'linear-gradient(90deg, #1976d2 0%, #1565c0 100%)',
-                      borderRadius: '2px',
-                      animation: 'underlineExpand 1.5s ease-in-out 0.5s forwards'
-                    },
-                    '@keyframes underlineExpand': {
-                      '0%': {
-                        width: '0%'
-                      },
-                      '100%': {
-                        width: '100%'
-                      }
-                    }
-                  }}
-                >
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 8,
+            flexDirection: { xs: 'column', md: 'row' }
+          }}
+        >
+          {/* Welcome Section */}
+          <Box
+            sx={{
+              color: 'white',
+              textAlign: { xs: 'center', md: 'left' },
+              mb: { xs: 4, md: 0 }
+            }}
+          >
+            <Box sx={{ display: 'flex', alignItems: 'center', mb: 3, justifyContent: { xs: 'center', md: 'flex-start' } }}>
+              <img 
+                src={kilowattImage} 
+                alt="Kilowatt Logo" 
+                style={{ width: 60, height: 60, marginRight: 16, borderRadius: 12 }}
+              />
+              <Typography variant="h3" sx={{ fontWeight: 700 }}>
+                Kilowatt
+              </Typography>
+            </Box>
+            <Typography variant="h4" sx={{ fontWeight: 600, mb: 2 }}>
+              Welcome to
+            </Typography>
+            <Typography variant="h4" sx={{ fontWeight: 700, mb: 3 }}>
+              Kilowatt
+            </Typography>
+            <Typography variant="h6" sx={{ opacity: 0.9, maxWidth: 400 }}>
+              Business Intelligence Platform
+            </Typography>
+            <Typography variant="body1" sx={{ opacity: 0.8, mt: 2, maxWidth: 400 }}>
+              Streamline your energy business operations with our comprehensive management platform.
+            </Typography>
+          </Box>
+
+          {/* Login Card */}
+          <Card
+            sx={{
+              maxWidth: 450,
+              width: '100%',
+              borderRadius: 4,
+              boxShadow: '0 20px 40px rgba(0,0,0,0.1)',
+              overflow: 'hidden'
+            }}
+          >
+            <CardContent sx={{ p: 4 }}>
+              <Box sx={{ textAlign: 'center', mb: 4 }}>
+                <Typography variant="h4" sx={{ fontWeight: 700, color: '#C82828', mb: 1 }}>
                   Kilowatt
                 </Typography>
-                <Typography 
-                  variant="h6" 
-                  color="text.secondary"
-                  className="login-subtitle"
-                  sx={{ mt: 1.5 }}
-                >
+                <Typography variant="body1" color="text.secondary">
                   Business Intelligence Platform
                 </Typography>
               </Box>
 
               <Tabs
-                value={mode}
-                onChange={handleModeChange}
-                centered
-                sx={{ 
-                  mb: 4,
-                  minHeight: 100,
+                value={activeTab}
+                onChange={handleTabChange}
+                variant="fullWidth"
+                sx={{
+                  mb: 3,
                   '& .MuiTab-root': {
-                    minHeight: '100px !important',
-                    fontSize: '1.1rem !important',
-                    fontWeight: '600 !important',
-                    textTransform: 'none !important',
-                    color: 'rgba(0, 0, 0, 0.7) !important',
-                    padding: '16px 32px !important',
-                    display: 'flex !important',
-                    flexDirection: 'column !important',
-                    alignItems: 'center !important',
-                    justifyContent: 'center !important',
-                    '&.Mui-selected': {
-                      color: '#1976d2 !important'
-                    }
+                    textTransform: 'none',
+                    fontWeight: 600,
+                    fontSize: '1rem'
                   },
                   '& .MuiTabs-indicator': {
-                    height: '3px !important',
-                    borderRadius: '2px !important',
-                    backgroundColor: '#1976d2 !important'
-                  },
-                  '& .MuiTab-iconWrapper': {
-                    marginBottom: '8px !important'
+                    backgroundColor: '#C82828',
+                    height: 3,
+                    borderRadius: 2
                   }
                 }}
               >
-                <Tab 
-                  label="Sign In" 
-                  value="signin"
-                  icon={<Person fontSize="medium" />}
-                  iconPosition="top"
+                <Tab
+                  icon={<Person />}
+                  label="Sign In"
+                  iconPosition="start"
+                  sx={{ color: activeTab === 0 ? '#C82828' : 'text.secondary' }}
                 />
-                <Tab 
-                  label="Sign Up" 
-                  value="signup"
-                  icon={<Email fontSize="medium" />}
-                  iconPosition="top"
+                <Tab
+                  icon={<Email />}
+                  label="Sign Up"
+                  iconPosition="start"
+                  sx={{ color: activeTab === 1 ? '#C82828' : 'text.secondary' }}
                 />
               </Tabs>
 
-              {errors.general && (
-                <Alert severity="error" className="login-alert">
-                  {errors.general}
-                </Alert>
+              {error && (
+                <Fade in={!!error}>
+                  <Alert severity="error" sx={{ mb: 3, borderRadius: 2 }}>
+                    {error}
+                  </Alert>
+                </Fade>
               )}
 
-              <Fade in={true} timeout={500}>
-                <Box component="form" onSubmit={handleSubmit} className="login-form">
-                  <TextField
-                    fullWidth
-                    label="Username"
-                    name="username"
-                    value={formData.username}
-                    onChange={handleInputChange}
-                    error={!!errors.username}
-                    helperText={errors.username}
-                    margin="normal"
-                    autoComplete="username"
-                    className="login-text-field"
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <Person color="action" />
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
+              <Box component="form" onSubmit={handleSubmit}>
+                {activeTab === 0 ? (
+                  // Sign In Form
+                  <>
+                    <TextField
+                      fullWidth
+                      label="Username"
+                      value={formData.username}
+                      onChange={handleInputChange('username')}
+                      margin="normal"
+                      required
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <Person color="action" />
+                          </InputAdornment>
+                        ),
+                      }}
+                      sx={{
+                        '& .MuiOutlinedInput-root': {
+                          borderRadius: 3
+                        }
+                      }}
+                    />
+                    <TextField
+                      fullWidth
+                      label="Password"
+                      type={showPassword ? 'text' : 'password'}
+                      value={formData.password}
+                      onChange={handleInputChange('password')}
+                      margin="normal"
+                      required
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <Person color="action" />
+                          </InputAdornment>
+                        ),
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <IconButton
+                              onClick={() => setShowPassword(!showPassword)}
+                              edge="end"
+                            >
+                              {showPassword ? <VisibilityOff /> : <Visibility />}
+                            </IconButton>
+                          </InputAdornment>
+                        ),
+                      }}
+                      sx={{
+                        '& .MuiOutlinedInput-root': {
+                          borderRadius: 3
+                        }
+                      }}
+                    />
+                  </>
+                ) : (
+                  // Sign Up Form
+                  <>
+                    <TextField
+                      fullWidth
+                      label="Email"
+                      type="email"
+                      value={formData.email}
+                      onChange={handleInputChange('email')}
+                      margin="normal"
+                      required
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <Email color="action" />
+                          </InputAdornment>
+                        ),
+                      }}
+                      sx={{
+                        '& .MuiOutlinedInput-root': {
+                          borderRadius: 3
+                        }
+                      }}
+                    />
+                    <TextField
+                      fullWidth
+                      label="Password"
+                      type={showPassword ? 'text' : 'password'}
+                      value={formData.password}
+                      onChange={handleInputChange('password')}
+                      margin="normal"
+                      required
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <IconButton
+                              onClick={() => setShowPassword(!showPassword)}
+                              edge="end"
+                            >
+                              {showPassword ? <VisibilityOff /> : <Visibility />}
+                            </IconButton>
+                          </InputAdornment>
+                        ),
+                      }}
+                      sx={{
+                        '& .MuiOutlinedInput-root': {
+                          borderRadius: 3
+                        }
+                      }}
+                    />
+                    <TextField
+                      fullWidth
+                      label="Confirm Password"
+                      type={showPassword ? 'text' : 'password'}
+                      value={formData.confirmPassword}
+                      onChange={handleInputChange('confirmPassword')}
+                      margin="normal"
+                      required
+                      sx={{
+                        '& .MuiOutlinedInput-root': {
+                          borderRadius: 3
+                        }
+                      }}
+                    />
+                  </>
+                )}
 
-                  {mode === 'signup' && (
-                    <Slide direction="up" in={mode === 'signup'} timeout={300}>
-                      <TextField
-                        fullWidth
-                        label="Email"
-                        name="email"
-                        type="email"
-                        value={formData.email}
-                        onChange={handleInputChange}
-                        error={!!errors.email}
-                        helperText={errors.email}
-                        margin="normal"
-                        autoComplete="email"
-                        className="login-text-field"
-                        InputProps={{
-                          startAdornment: (
-                            <InputAdornment position="start">
-                              <Email color="action" />
-                            </InputAdornment>
-                          ),
-                        }}
-                      />
-                    </Slide>
-                  )}
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  size="large"
+                  disabled={loading}
+                  startIcon={activeTab === 0 ? <Login /> : <PersonAdd />}
+                  sx={{
+                    mt: 3,
+                    mb: 2,
+                    py: 1.5,
+                    borderRadius: 3,
+                    background: 'linear-gradient(135deg, #C82828 0%, #B71C1C 100%)',
+                    fontWeight: 600,
+                    fontSize: '1.1rem',
+                    textTransform: 'none',
+                    '&:hover': {
+                      background: 'linear-gradient(135deg, #B71C1C 0%, #A01818 100%)',
+                    },
+                    '&:disabled': {
+                      background: '#ccc'
+                    }
+                  }}
+                >
+                  {loading ? 'Please wait...' : (activeTab === 0 ? 'Sign In' : 'Sign Up')}
+                </Button>
 
-                  <TextField
-                    fullWidth
-                    label="Password"
-                    name="password"
-                    type={showPassword ? 'text' : 'password'}
-                    value={formData.password}
-                    onChange={handleInputChange}
-                    error={!!errors.password}
-                    helperText={errors.password}
-                    margin="normal"
-                    autoComplete={mode === 'signin' ? 'current-password' : 'new-password'}
-                    sx={{ mb: mode === 'signup' ? 3 : 4 }}
-                    className="login-text-field"
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <Lock color="action" />
-                        </InputAdornment>
-                      ),
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <IconButton
-                            onClick={() => setShowPassword(!showPassword)}
-                            edge="end"
-                          >
-                            {showPassword ? <VisibilityOff /> : <Visibility />}
-                          </IconButton>
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
-
-                  {mode === 'signup' && (
-                    <Slide direction="up" in={mode === 'signup'} timeout={400}>
-                      <TextField
-                        fullWidth
-                        label="Confirm Password"
-                        name="confirmPassword"
-                        type={showConfirmPassword ? 'text' : 'password'}
-                        value={formData.confirmPassword}
-                        onChange={handleInputChange}
-                        error={!!errors.confirmPassword}
-                        helperText={errors.confirmPassword}
-                        margin="normal"
-                        autoComplete="new-password"
-                        sx={{ mb: 4 }}
-                        className="login-text-field"
-                        InputProps={{
-                          startAdornment: (
-                            <InputAdornment position="start">
-                              <Lock color="action" />
-                            </InputAdornment>
-                          ),
-                          endAdornment: (
-                            <InputAdornment position="end">
-                              <IconButton
-                                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                                edge="end"
-                              >
-                                {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
-                              </IconButton>
-                            </InputAdornment>
-                          ),
-                        }}
-                      />
-                    </Slide>
-                  )}
-
-                  <Button
-                    type="submit"
-                    fullWidth
-                    variant="contained"
-                    size="large"
-                    disabled={isLoading}
-                    className="login-button"
-                  >
-                    {isLoading ? (
-                      <>
-                        <LottieIcon
-                          animationData={buttonSpinnerAnimation}
-                          size={24}
-                          loop={true}
-                          autoplay={true}
-                          speed={1.5}
-                          style={{ marginRight: '8px' }}
-                        />
-                        {mode === 'signin' ? 'Signing In...' : 'Creating Account...'}
-                      </>
-                    ) : (
-                      mode === 'signin' ? 'Sign In' : 'Create Account'
-                    )}
-                  </Button>
-
-                  {mode === 'signin' && (
-                    <Box sx={{ textAlign: 'center' }}>
-                      <Link
-                        component="button"
-                        variant="body1"
-                        onClick={handleForgotPassword}
-                        className="login-forgot-password"
-                      >
-                        Forgot Password?
-                      </Link>
-                    </Box>
-                  )}
-                </Box>
-              </Fade>
+                {activeTab === 0 && (
+                  <Box sx={{ textAlign: 'center' }}>
+                    <Link
+                      href="#"
+                      color="primary"
+                      sx={{
+                        textDecoration: 'none',
+                        fontWeight: 500,
+                        '&:hover': {
+                          textDecoration: 'underline'
+                        }
+                      }}
+                    >
+                      Forgot Password?
+                    </Link>
+                  </Box>
+                )}
+              </Box>
             </CardContent>
           </Card>
-          
-          <Box className="login-animation-container">
-            <div className="login-animation">
-              <div
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  background: 'rgba(255, 255, 255, 0.1)',
-                  borderRadius: '16px',
-                  backdropFilter: 'blur(10px)',
-                  padding: '20px'
-                }}
-              >
-                <Box sx={{ width: '300px', height: '300px', mb: 2 }}>
-                  <LottieWithStates
-                    animationData={serverAnimation}
-                    loop={true}
-                    autoplay={true}
-                    speed={0.8}
-                    width="100%"
-                    height="100%"
-                    showLoading={true}
-                    loadingType="pulse"
-                    loadingMessage="Loading animation..."
-                  />
-                </Box>
-                <Typography variant="h5" color="white" sx={{ textAlign: 'center', fontWeight: 600 }}>
-                  Welcome to<br />
-                  <strong>Kilowatt</strong>
-                </Typography>
-                <Typography variant="body1" color="rgba(255,255,255,0.8)" sx={{ textAlign: 'center', mt: 1 }}>
-                  Business Intelligence Platform
-                </Typography>
-              </div>
-            </div>
-          </Box>
         </Box>
       </Container>
     </Box>
