@@ -23,7 +23,8 @@ import {
   Chip,
   Alert,
   CircularProgress,
-  Divider
+  Divider,
+  Menu
 } from '@mui/material';
 import {
   Close as CloseIcon,
@@ -37,9 +38,13 @@ import {
   Remove as RemoveIcon,
   NavigateNext,
   NavigateBefore,
-  Save
+  Save,
+  Menu as MenuIcon,
+  Store,
+  Apartment
 } from '@mui/icons-material';
 import './DataEntryModal.scss';
+import kilowattLogo from '../../assets/image.png';
 
 const DataEntryModal = ({ isOpen, onClose, onSave, onNavigate }) => {
   const [currentStep, setCurrentStep] = useState(1);
@@ -79,6 +84,7 @@ const DataEntryModal = ({ isOpen, onClose, onSave, onNavigate }) => {
 
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [accountTypeAnchorEl, setAccountTypeAnchorEl] = useState(null);
 
   const steps = [
     { id: 1, title: 'Account Information', icon: <Business /> },
@@ -243,50 +249,63 @@ const DataEntryModal = ({ isOpen, onClose, onSave, onNavigate }) => {
             <Typography variant="h6" className="data-entry-modal-section-title">
               <Business /> Account Information
             </Typography>
-            <Grid container spacing={3} className="data-entry-modal-form-grid">
-              <Grid item xs={12} md={6}>
-                <TextField
-                  fullWidth
-                  label="Account Name *"
-                  value={formData.accountName}
-                  onChange={(e) => handleInputChange('accountName', e.target.value)}
-                  error={!!errors.accountName}
-                  helperText={errors.accountName}
-                  className="data-entry-modal-input"
-                />
-              </Grid>
-              <Grid item xs={12} md={6}>
-                <FormControl fullWidth error={!!errors.accountType}>
-                  <InputLabel>Account Type *</InputLabel>
-                  <Select
-                    value={formData.accountType}
-                    onChange={(e) => handleInputChange('accountType', e.target.value)}
-                    label="Account Type *"
+            <Box className="data-entry-modal-account-row">
+              <TextField
+                fullWidth
+                label="Account Name *"
+                value={formData.accountName}
+                onChange={(e) => handleInputChange('accountName', e.target.value)}
+                className="data-entry-modal-input"
+                sx={{ flex: 2 }}
+                InputProps={{ style: { background: '#f5f8fd', borderRadius: 12, border: '1.5px solid #e3eaf3' } }}
+              />
+              <IconButton
+                className="data-entry-modal-account-type-btn"
+                onClick={(e) => setAccountTypeAnchorEl(e.currentTarget)}
+              >
+                {formData.accountType ? (
+                  formData.accountType === 'Commercial' ? <Business /> :
+                  formData.accountType === 'Industrial' ? <Factory /> :
+                  formData.accountType === 'Retail' ? <Store /> :
+                  formData.accountType === 'Office' ? <Business /> :
+                  formData.accountType === 'Multi-Family' ? <Apartment /> :
+                  <MenuIcon />
+                ) : <MenuIcon />}
+              </IconButton>
+              <Menu
+                anchorEl={accountTypeAnchorEl}
+                open={Boolean(accountTypeAnchorEl)}
+                onClose={() => setAccountTypeAnchorEl(null)}
+              >
+                {accountTypes.map(type => (
+                  <MenuItem
+                    key={type}
+                    selected={formData.accountType === type}
+                    onClick={() => { handleInputChange('accountType', type); setAccountTypeAnchorEl(null); }}
                   >
-                    {accountTypes.map(type => (
-                      <MenuItem key={type} value={type}>{type}</MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  label="Address *"
-                  value={formData.address}
-                  onChange={(e) => handleInputChange('address', e.target.value)}
-                  error={!!errors.address}
-                  helperText={errors.address}
-                />
-              </Grid>
+                    {type}
+                  </MenuItem>
+                ))}
+              </Menu>
+              <TextField
+                fullWidth
+                label="Address *"
+                value={formData.address}
+                onChange={(e) => handleInputChange('address', e.target.value)}
+                className="data-entry-modal-input"
+                sx={{ flex: 3 }}
+                InputProps={{ style: { background: '#f5f8fd', borderRadius: 12, border: '1.5px solid #e3eaf3' } }}
+              />
+            </Box>
+            <Grid container spacing={0} className="data-entry-modal-form-grid">
               <Grid item xs={12} md={4}>
                 <TextField
                   fullWidth
                   label="City *"
                   value={formData.city}
                   onChange={(e) => handleInputChange('city', e.target.value)}
-                  error={!!errors.city}
-                  helperText={errors.city}
+                  className="data-entry-modal-input"
+                  InputProps={{ style: { background: '#f5f8fd', borderRadius: 12, border: '1.5px solid #e3eaf3' } }}
                 />
               </Grid>
               <Grid item xs={12} md={4}>
@@ -295,8 +314,8 @@ const DataEntryModal = ({ isOpen, onClose, onSave, onNavigate }) => {
                   label="State *"
                   value={formData.state}
                   onChange={(e) => handleInputChange('state', e.target.value)}
-                  error={!!errors.state}
-                  helperText={errors.state}
+                  className="data-entry-modal-input"
+                  InputProps={{ style: { background: '#f5f8fd', borderRadius: 12, border: '1.5px solid #e3eaf3' } }}
                 />
               </Grid>
               <Grid item xs={12} md={4}>
@@ -305,8 +324,8 @@ const DataEntryModal = ({ isOpen, onClose, onSave, onNavigate }) => {
                   label="ZIP Code *"
                   value={formData.zipCode}
                   onChange={(e) => handleInputChange('zipCode', e.target.value)}
-                  error={!!errors.zipCode}
-                  helperText={errors.zipCode}
+                  className="data-entry-modal-input"
+                  InputProps={{ style: { background: '#f5f8fd', borderRadius: 12, border: '1.5px solid #e3eaf3' } }}
                 />
               </Grid>
               <Grid item xs={12} md={6}>
@@ -315,6 +334,8 @@ const DataEntryModal = ({ isOpen, onClose, onSave, onNavigate }) => {
                   label="Phone"
                   value={formData.phone}
                   onChange={(e) => handleInputChange('phone', e.target.value)}
+                  className="data-entry-modal-input"
+                  InputProps={{ style: { background: '#f5f8fd', borderRadius: 12, border: '1.5px solid #e3eaf3' } }}
                 />
               </Grid>
               <Grid item xs={12} md={6}>
@@ -324,6 +345,8 @@ const DataEntryModal = ({ isOpen, onClose, onSave, onNavigate }) => {
                   type="email"
                   value={formData.email}
                   onChange={(e) => handleInputChange('email', e.target.value)}
+                  className="data-entry-modal-input"
+                  InputProps={{ style: { background: '#f5f8fd', borderRadius: 12, border: '1.5px solid #e3eaf3' } }}
                 />
               </Grid>
             </Grid>
@@ -631,35 +654,34 @@ const DataEntryModal = ({ isOpen, onClose, onSave, onNavigate }) => {
     >
       <Box className="data-entry-modal-container">
         <Box className="data-entry-modal-header">
+          <img src={kilowattLogo} alt="Kilowatt Logo" className="data-entry-modal-logo" />
           <Typography variant="h5" className="data-entry-modal-title">
-            Data Entry Form
+            New Account & Commission Entry
           </Typography>
+          <Box sx={{ flex: 1 }} />
           <IconButton
             onClick={handleClose}
             className="data-entry-modal-close-button"
             color="inherit"
+            sx={{ color: '#7a8ca7' }}
           >
             <CloseIcon />
           </IconButton>
         </Box>
 
         <DialogContent className="data-entry-modal-content">
-          <Stepper activeStep={currentStep - 1} className="data-entry-modal-steps">
+          <Box className="data-entry-modal-steps">
             {steps.map((step, index) => (
-              <Step key={step.id}>
-                <StepLabel
-                  icon={step.icon}
-                  className={`data-entry-modal-step-title ${
-                    currentStep > index + 1 ? 'completed' : 
-                    currentStep === index + 1 ? 'active' : ''
-                  }`}
-                >
-                  {step.title}
-                </StepLabel>
-              </Step>
+              <Box
+                key={step.id}
+                className={`data-entry-modal-step${currentStep === index + 1 ? ' active' : ''}${currentStep > index + 1 ? ' completed' : ''}`}
+                style={{ zIndex: 2, position: 'relative', flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center' }}
+              >
+                <Box className="data-entry-modal-step-icon">{step.icon}</Box>
+                <div className="data-entry-modal-step-title">{step.title}</div>
+              </Box>
             ))}
-          </Stepper>
-
+          </Box>
           {isSubmitting ? (
             <Box className="data-entry-modal-loading">
               <CircularProgress className="data-entry-modal-spinner" />
@@ -672,7 +694,10 @@ const DataEntryModal = ({ isOpen, onClose, onSave, onNavigate }) => {
           )}
         </DialogContent>
 
-        <DialogActions className="data-entry-modal-navigation">
+        <Box className="data-entry-modal-navigation">
+          <div className="data-entry-modal-step-count">
+            Step {currentStep} of {steps.length}
+          </div>
           <Button
             onClick={handlePrevious}
             disabled={currentStep === 1}
@@ -681,7 +706,6 @@ const DataEntryModal = ({ isOpen, onClose, onSave, onNavigate }) => {
           >
             Previous
           </Button>
-          
           {currentStep < steps.length ? (
             <Button
               onClick={handleNext}
@@ -702,7 +726,7 @@ const DataEntryModal = ({ isOpen, onClose, onSave, onNavigate }) => {
               Submit
             </Button>
           )}
-        </DialogActions>
+        </Box>
       </Box>
     </Dialog>
   );

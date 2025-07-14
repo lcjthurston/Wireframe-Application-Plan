@@ -50,12 +50,14 @@ import kilowattImage from '../../assets/image.png';
 import './AccountDashboard.scss';
 import styled from 'styled-components';
 import colors from '../../assets/colors';
+import DataEntryModal from '../DataEntryModal';
 
 const AccountDashboard = ({ onLogout, onNavigate }) => {
   const [activeTab, setActiveTab] = useState('overview');
   const [showManagerModal, setShowManagerModal] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef();
+  const [showDataEntryModal, setShowDataEntryModal] = useState(false);
 
   // Mock account data
   const account = {
@@ -169,6 +171,18 @@ const AccountDashboard = ({ onLogout, onNavigate }) => {
     // TODO: Implement contract drafting
   };
 
+  const handleNewAccount = () => {
+    setShowDataEntryModal(true);
+  };
+  const handleCloseDataEntryModal = () => {
+    setShowDataEntryModal(false);
+  };
+  const handleSaveNewAccount = (data) => {
+    // TODO: Implement actual save logic
+    console.log('New Account Data:', data);
+    setShowDataEntryModal(false);
+  };
+
   const tabs = [
     { id: 'overview', label: 'Overview' },
     { id: 'contracts', label: 'Contracts & Pricing' },
@@ -218,6 +232,14 @@ const AccountDashboard = ({ onLogout, onNavigate }) => {
               <Button color="inherit" onClick={() => handleNavigation('home')}>Home</Button>
               <Button color="inherit" onClick={() => handleNavigation('task-queue')}>Task Queue</Button>
               <Button color="inherit" onClick={() => handleNavigation('accounts')} variant="outlined">Accounts</Button>
+              <Button
+                color="primary"
+                variant="contained"
+                onClick={handleNewAccount}
+                sx={{ ml: 2 }}
+              >
+                New Account
+              </Button>
               <Button
                 color="inherit"
                 onClick={() => setDropdownOpen(v => !v)}
@@ -547,6 +569,11 @@ const AccountDashboard = ({ onLogout, onNavigate }) => {
           )}
         </TabContent>
       </MainContainer>
+      <DataEntryModal
+        isOpen={showDataEntryModal}
+        onClose={handleCloseDataEntryModal}
+        onSave={handleSaveNewAccount}
+      />
     </PageContainer>
   );
 };
