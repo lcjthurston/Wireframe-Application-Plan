@@ -10,14 +10,12 @@ import {
   Tab,
   Grid,
   Alert,
-  Divider,
   IconButton
 } from '@mui/material';
 import {
   ArrowBack,
   Warning,
   Edit,
-  Business,
   Phone,
   Email,
   LocationOn
@@ -168,7 +166,77 @@ const AccountDetail = ({ accountId, onNavigate }) => {
           )}
 
           {activeTab === 2 && (
-            <Typography>ESIIDs & Usage content goes here</Typography>
+            <Box>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+                <Typography variant="h6">ESIIDs & Usage</Typography>
+                <Box sx={{ display: 'flex', gap: 2 }}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    sx={{ 
+                      bgcolor: '#C82828',
+                      '&:hover': { bgcolor: '#B71C1C' }
+                    }}
+                  >
+                    Run Refresh Usage Automation
+                  </Button>
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                  >
+                    + Add Meter
+                  </Button>
+                </Box>
+              </Box>
+              
+              <Alert severity="info" sx={{ mb: 3 }}>
+                Pending refresh until it's successfully refreshed
+              </Alert>
+
+              <Card variant="outlined">
+                <CardContent>
+                  <Typography variant="h6" gutterBottom>
+                    ESIIDs and Usage Table
+                  </Typography>
+                  <Box sx={{ overflowX: 'auto' }}>
+                    <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                      <thead>
+                        <tr style={{ borderBottom: '1px solid #ddd' }}>
+                          <th style={{ padding: '12px', textAlign: 'left' }}>ESIID</th>
+                          <th style={{ padding: '12px', textAlign: 'left' }}>Rep</th>
+                          <th style={{ padding: '12px', textAlign: 'left' }}>Load Profile</th>
+                          <th style={{ padding: '12px', textAlign: 'left' }}>kWh per Month</th>
+                          <th style={{ padding: '12px', textAlign: 'left' }}>kWh Per Year</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr style={{ borderBottom: '1px solid #eee' }}>
+                          <td style={{ padding: '12px' }}>10123456789012345</td>
+                          <td style={{ padding: '12px' }}>CNTR</td>
+                          <td style={{ padding: '12px' }}>Commercial</td>
+                          <td style={{ padding: '12px' }}>25,000</td>
+                          <td style={{ padding: '12px' }}>300,000</td>
+                        </tr>
+                        <tr style={{ borderBottom: '1px solid #eee' }}>
+                          <td style={{ padding: '12px' }}>10123456789012346</td>
+                          <td style={{ padding: '12px' }}>CNTR</td>
+                          <td style={{ padding: '12px' }}>Commercial</td>
+                          <td style={{ padding: '12px' }}>18,500</td>
+                          <td style={{ padding: '12px' }}>222,000</td>
+                        </tr>
+                        <tr style={{ borderBottom: '1px solid #eee' }}>
+                          <td style={{ padding: '12px' }}>10123456789012347</td>
+                          <td style={{ padding: '12px' }}>CNTR</td>
+                          <td style={{ padding: '12px' }}>Commercial</td>
+                          <td style={{ padding: '12px' }}>32,200</td>
+                          <td style={{ padding: '12px' }}>386,400</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </Box>
+                </CardContent>
+              </Card>
+            </Box>
           )}
 
           {activeTab === 3 && (
@@ -189,3 +257,8 @@ const AccountDetail = ({ accountId, onNavigate }) => {
 };
 
 export default AccountDetail;
+
+
+
+
+

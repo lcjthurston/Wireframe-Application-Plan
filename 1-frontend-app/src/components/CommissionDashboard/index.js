@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   Box,
   Card,
@@ -19,14 +19,26 @@ import {
   FormControl,
   InputLabel,
   Select,
-  MenuItem
+  MenuItem,
+  AppBar,
+  Toolbar,
+  Container,
+  TextField
 } from '@mui/material';
 import {
   TrendingUp as TrendingUpIcon,
   Download as DownloadIcon,
   Sort as SortIcon,
   Visibility as VisibilityIcon,
-  Edit as EditIcon
+  Edit as EditIcon,
+  AccountCircle as AccountIcon,
+  Dashboard as DashboardIcon,
+  Email as EmailIcon,
+  AttachMoney as MoneyIcon,
+  Business as BusinessIcon,
+  HealthAndSafety as HealthIcon,
+  Assignment as TaskIcon,
+  Search as SearchIcon
 } from '@mui/icons-material';
 import kilowattImage from '../../assets/image.png';
 import './CommissionDashboard.scss';
