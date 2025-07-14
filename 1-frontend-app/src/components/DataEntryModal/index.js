@@ -22,7 +22,8 @@ import {
   LinearProgress,
   Divider,
   Card,
-  CardContent
+  CardContent,
+  IconButton
 } from '@mui/material';
 import {
   Person,
@@ -30,7 +31,8 @@ import {
   AttachMoney,
   CheckCircle,
   NavigateNext,
-  NavigateBefore
+  NavigateBefore,
+  Close
 } from '@mui/icons-material';
 
 const DataEntryModal = ({ open, onClose, onSubmit, type = 'account' }) => {

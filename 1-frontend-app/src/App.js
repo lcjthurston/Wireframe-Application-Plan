@@ -107,9 +107,9 @@ const AppContent = () => {
         <>
           {renderPage()}
           <DataEntryModal
-            isOpen={isDataEntryModalOpen}
+            open={isDataEntryModalOpen}
             onClose={handleCloseDataEntry}
-            onSave={handleSaveDataEntry}
+            onSubmit={handleSaveDataEntry}
             onNavigate={handleNavigation}
           />
         </>

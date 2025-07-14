@@ -47,6 +47,30 @@ const AccountDashboard = ({ onNavigate }) => {
   const [selectedAccount, setSelectedAccount] = useState(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [filter, setFilter] = useState('all');
+  const [refreshing, setRefreshing] = useState(false);
+  const [esiidData, setEsiidData] = useState([
+    {
+      esiid: '10123456789012345',
+      rep: 'TXU Energy',
+      loadProfile: 'Commercial',
+      kwhPerMonth: '12,500',
+      kwhPerYear: '150,000'
+    },
+    // Add more mock data as needed
+  ]);
+
+  const handleRunRefreshUsage = async () => {
+    setRefreshing(true);
+    // Simulate API call
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 3000);
+  };
+
+  const handleAddMeter = () => {
+    // Handle add meter functionality
+    console.log('Add meter clicked');
+  };
 
   // Mock account data
   const mockAccounts = [

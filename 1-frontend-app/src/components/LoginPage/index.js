@@ -157,6 +157,21 @@ const LoginPage = () => {
                   variant="h2" 
                   component="h1" 
                   className="login-title"
+                  sx={{ 
+                    mb: 1,
+                    display: 'inline-block',
+                    position: 'relative',
+                    '&::after': {
+                      content: '""',
+                      position: 'absolute',
+                      bottom: '-8px',
+                      left: '0',
+                      width: '100%',
+                      height: '3px',
+                      background: 'linear-gradient(90deg, #1976d2 0%, #1565c0 100%)',
+                      borderRadius: '2px'
+                    }
+                  }}
                 >
                   Kilowatt
                 </Typography>
@@ -173,7 +188,19 @@ const LoginPage = () => {
                 value={mode}
                 onChange={handleModeChange}
                 centered
-                sx={{ mb: 4 }}
+                sx={{ 
+                  mb: 4,
+                  '& .MuiTab-root': {
+                    minHeight: 72,
+                    fontSize: '1rem',
+                    fontWeight: 600,
+                    textTransform: 'none'
+                  },
+                  '& .MuiTabs-indicator': {
+                    height: 3,
+                    borderRadius: 2
+                  }
+                }}
               >
                 <Tab 
                   label="Sign In" 
@@ -188,18 +215,10 @@ const LoginPage = () => {
                   iconPosition="top"
                 />
               </Tabs>
-              
+
               {errors.general && (
                 <Alert severity="error" className="login-alert">
                   {errors.general}
-                </Alert>
-              )}
-
-              {mode === 'signin' && (
-                <Alert severity="info" sx={{ mb: 2 }}>
-                  <strong>Test Credentials:</strong><br />
-                  Username: admin<br />
-                  Password: password
                 </Alert>
               )}
 

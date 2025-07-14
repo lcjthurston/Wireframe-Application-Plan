@@ -18,12 +18,11 @@ import {
   TextField,
   MenuItem,
   Avatar,
-  Tabs,
-  Tab,
   Dialog,
   DialogTitle,
   DialogContent,
-  DialogActions
+  DialogActions,
+  LinearProgress
 } from '@mui/material';
 import {
   Edit,
@@ -32,18 +31,19 @@ import {
   Visibility,
   Business,
   TrendingUp,
+  ElectricBolt,
   AttachMoney,
-  Assessment,
   Phone,
   Email,
-  LocationOn
+  LocationOn,
+  Star
 } from '@mui/icons-material';
 
 const ProviderDashboard = ({ onNavigate }) => {
-  const [activeTab, setActiveTab] = useState(0);
   const [providers, setProviders] = useState([]);
   const [selectedProvider, setSelectedProvider] = useState(null);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [filter, setFilter] = useState('all');
 
   // Mock provider data
   const mockProviders = [
@@ -52,48 +52,68 @@ const ProviderDashboard = ({ onNavigate }) => {
       name: 'Green Energy Solutions',
       type: 'Renewable',
       status: 'Active',
-      contracts: 45,
-      avgRate: 0.12,
-      totalRevenue: 125000,
-      contact: {
-        name: 'John Smith',
-        email: 'john@greenenergy.com',
-        phone: '(555) 123-4567'
-      },
-      address: '123 Green St, Austin, TX',
-      rating: 4.8
+      rating: 4.8,
+      customersCount: 1250,
+      totalCapacity: 500000,
+      avgRate: 0.085,
+      contactPerson: 'John Smith',
+      phone: '(555) 123-4567',
+      email: 'john@greenenergy.com',
+      address: '123 Solar Ave, Austin, TX',
+      contractStart: '2023-01-01',
+      contractEnd: '2025-12-31',
+      performance: 95
     },
     {
       id: 2,
       name: 'PowerCorp Utilities',
       type: 'Traditional',
       status: 'Active',
-      contracts: 78,
-      avgRate: 0.10,
-      totalRevenue: 245000,
-      contact: {
-        name: 'Sarah Johnson',
-        email: 'sarah@powercorp.com',
-        phone: '(555) 987-6543'
-      },
-      address: '456 Power Ave, Dallas, TX',
-      rating: 4.2
+      rating: 4.2,
+      customersCount: 2100,
+      totalCapacity: 750000,
+      avgRate: 0.092,
+      contactPerson: 'Sarah Johnson',
+      phone: '(555) 987-6543',
+      email: 'sarah@powercorp.com',
+      address: '456 Power St, Dallas, TX',
+      contractStart: '2022-06-01',
+      contractEnd: '2024-06-01',
+      performance: 88
     },
     {
       id: 3,
       name: 'Solar Dynamics',
       type: 'Solar',
+      status: 'Active',
+      rating: 4.6,
+      customersCount: 850,
+      totalCapacity: 300000,
+      avgRate: 0.078,
+      contactPerson: 'Mike Wilson',
+      phone: '(555) 456-7890',
+      email: 'mike@solardynamics.com',
+      address: '789 Sun Blvd, Houston, TX',
+      contractStart: '2023-03-15',
+      contractEnd: '2026-03-15',
+      performance: 92
+    },
+    {
+      id: 4,
+      name: 'Wind Power Inc',
+      type: 'Wind',
       status: 'Pending',
-      contracts: 23,
-      avgRate: 0.08,
-      totalRevenue: 89000,
-      contact: {
-        name: 'Mike Wilson',
-        email: 'mike@solardynamics.com',
-        phone: '(555) 456-7890'
-      },
-      address: '789 Solar Blvd, Houston, TX',
-      rating: 4.6
+      rating: 4.0,
+      customersCount: 0,
+      totalCapacity: 200000,
+      avgRate: 0.088,
+      contactPerson: 'Lisa Brown',
+      phone: '(555) 321-6543',
+      email: 'lisa@windpower.com',
+      address: '321 Windy Way, Denver, CO',
+      contractStart: '2023-06-01',
+      contractEnd: '2025-06-01',
+      performance: 85
     }
   ];
 
@@ -149,8 +169,8 @@ const ProviderDashboard = ({ onNavigate }) => {
   const providerStats = {
     total: providers.length,
     active: providers.filter(p => p.status === 'Active').length,
-    totalContracts: providers.reduce((sum, p) => sum + p.contracts, 0),
-    totalRevenue: providers.reduce((sum, p) => sum + p.totalRevenue, 0),
+    totalCapacity: providers.reduce((sum, p) => sum + p.totalCapacity, 0),
+    totalRevenue: providers.reduce((sum, p) => sum + p.totalCapacity * p.avgRate, 0),
     avgRate: providers.reduce((sum, p) => sum + p.avgRate, 0) / providers.length || 0
   };
 
@@ -197,11 +217,11 @@ const ProviderDashboard = ({ onNavigate }) => {
         <Grid item xs={12} md={3}>
           <Card sx={{ height: '100%', textAlign: 'center' }}>
             <CardContent>
-              <Assessment sx={{ fontSize: 40, color: 'warning.main', mb: 1 }} />
+              <ElectricBolt sx={{ fontSize: 40, color: 'warning.main', mb: 1 }} />
               <Typography variant="h4" sx={{ fontWeight: 600 }}>
-                {providerStats.totalContracts}
+                {providerStats.totalCapacity.toLocaleString()}
               </Typography>
-              <Typography color="textSecondary">Total Contracts</Typography>
+              <Typography color="textSecondary">Total Capacity (kW)</Typography>
             </CardContent>
           </Card>
         </Grid>
@@ -210,7 +230,7 @@ const ProviderDashboard = ({ onNavigate }) => {
             <CardContent>
               <AttachMoney sx={{ fontSize: 40, color: 'info.main', mb: 1 }} />
               <Typography variant="h4" sx={{ fontWeight: 600 }}>
-                ${(providerStats.totalRevenue / 1000).toFixed(0)}K
+                ${providerStats.totalRevenue.toLocaleString()}
               </Typography>
               <Typography color="textSecondary">Total Revenue</Typography>
             </CardContent>
@@ -227,7 +247,7 @@ const ProviderDashboard = ({ onNavigate }) => {
                 <TableCell>Provider</TableCell>
                 <TableCell>Type</TableCell>
                 <TableCell>Status</TableCell>
-                <TableCell>Contracts</TableCell>
+                <TableCell>Capacity (kW)</TableCell>
                 <TableCell>Avg Rate</TableCell>
                 <TableCell>Revenue</TableCell>
                 <TableCell>Rating</TableCell>
@@ -247,7 +267,7 @@ const ProviderDashboard = ({ onNavigate }) => {
                           {provider.name}
                         </Typography>
                         <Typography variant="body2" color="textSecondary">
-                          {provider.contact.name}
+                          {provider.contactPerson}
                         </Typography>
                       </Box>
                     </Box>
@@ -260,7 +280,7 @@ const ProviderDashboard = ({ onNavigate }) => {
                   </TableCell>
                   <TableCell>
                     <Typography variant="body2" sx={{ fontWeight: 600 }}>
-                      {provider.contracts}
+                      {provider.totalCapacity.toLocaleString()}
                     </Typography>
                   </TableCell>
                   <TableCell>
@@ -270,7 +290,7 @@ const ProviderDashboard = ({ onNavigate }) => {
                   </TableCell>
                   <TableCell>
                     <Typography variant="body2" sx={{ fontWeight: 600 }}>
-                      ${provider.totalRevenue.toLocaleString()}
+                      ${provider.totalCapacity * provider.avgRate.toLocaleString()}
                     </Typography>
                   </TableCell>
                   <TableCell>
@@ -313,11 +333,11 @@ const ProviderDashboard = ({ onNavigate }) => {
                     <Typography variant="h6" gutterBottom>Contact Information</Typography>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
                       <Phone fontSize="small" />
-                      <Typography>{selectedProvider.contact.phone}</Typography>
+                      <Typography>{selectedProvider.phone}</Typography>
                     </Box>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
                       <Email fontSize="small" />
-                      <Typography>{selectedProvider.contact.email}</Typography>
+                      <Typography>{selectedProvider.email}</Typography>
                     </Box>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                       <LocationOn fontSize="small" />
@@ -330,9 +350,9 @@ const ProviderDashboard = ({ onNavigate }) => {
                 <Card>
                   <CardContent>
                     <Typography variant="h6" gutterBottom>Performance Metrics</Typography>
-                    <Typography>Contracts: {selectedProvider.contracts}</Typography>
+                    <Typography>Capacity: {selectedProvider.totalCapacity.toLocaleString()} kW</Typography>
                     <Typography>Average Rate: ${selectedProvider.avgRate.toFixed(3)}/kWh</Typography>
-                    <Typography>Total Revenue: ${selectedProvider.totalRevenue.toLocaleString()}</Typography>
+                    <Typography>Revenue: ${selectedProvider.totalCapacity * selectedProvider.avgRate.toLocaleString()}</Typography>
                     <Typography>Rating: ⭐ {selectedProvider.rating}</Typography>
                   </CardContent>
                 </Card>
