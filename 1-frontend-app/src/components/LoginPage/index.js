@@ -158,18 +158,31 @@ const LoginPage = () => {
                   component="h1" 
                   className="login-title"
                   sx={{ 
-                    mb: 1,
+                    mb: 0.5,
                     display: 'inline-block',
                     position: 'relative',
+                    fontWeight: 600,
+                    color: '#1976d2',
+                    fontSize: { xs: '2rem', sm: '2.75rem' },
+                    letterSpacing: '-0.02em',
                     '&::after': {
                       content: '""',
                       position: 'absolute',
-                      bottom: '-8px',
+                      bottom: '-4px',
                       left: '0',
-                      width: '100%',
+                      width: '0%',
                       height: '3px',
                       background: 'linear-gradient(90deg, #1976d2 0%, #1565c0 100%)',
-                      borderRadius: '2px'
+                      borderRadius: '2px',
+                      animation: 'underlineExpand 1.5s ease-in-out 0.5s forwards'
+                    },
+                    '@keyframes underlineExpand': {
+                      '0%': {
+                        width: '0%'
+                      },
+                      '100%': {
+                        width: '100%'
+                      }
                     }
                   }}
                 >
@@ -179,6 +192,7 @@ const LoginPage = () => {
                   variant="h6" 
                   color="text.secondary"
                   className="login-subtitle"
+                  sx={{ mt: 1.5 }}
                 >
                   Business Intelligence Platform
                 </Typography>
@@ -190,28 +204,42 @@ const LoginPage = () => {
                 centered
                 sx={{ 
                   mb: 4,
+                  minHeight: 100,
                   '& .MuiTab-root': {
-                    minHeight: 72,
-                    fontSize: '1rem',
-                    fontWeight: 600,
-                    textTransform: 'none'
+                    minHeight: '100px !important',
+                    fontSize: '1.1rem !important',
+                    fontWeight: '600 !important',
+                    textTransform: 'none !important',
+                    color: 'rgba(0, 0, 0, 0.7) !important',
+                    padding: '16px 32px !important',
+                    display: 'flex !important',
+                    flexDirection: 'column !important',
+                    alignItems: 'center !important',
+                    justifyContent: 'center !important',
+                    '&.Mui-selected': {
+                      color: '#1976d2 !important'
+                    }
                   },
                   '& .MuiTabs-indicator': {
-                    height: 3,
-                    borderRadius: 2
+                    height: '3px !important',
+                    borderRadius: '2px !important',
+                    backgroundColor: '#1976d2 !important'
+                  },
+                  '& .MuiTab-iconWrapper': {
+                    marginBottom: '8px !important'
                   }
                 }}
               >
                 <Tab 
                   label="Sign In" 
                   value="signin"
-                  icon={<Person sx={{ mb: 0.5 }} />}
+                  icon={<Person fontSize="medium" />}
                   iconPosition="top"
                 />
                 <Tab 
                   label="Sign Up" 
                   value="signup"
-                  icon={<Email sx={{ mb: 0.5 }} />}
+                  icon={<Email fontSize="medium" />}
                   iconPosition="top"
                 />
               </Tabs>
