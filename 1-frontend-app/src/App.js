@@ -13,9 +13,20 @@ import ManagerDashboard from './components/ManagerDashboard';
 import EmailDraftDashboard from './components/EmailDraftDashboard';
 import CommissionDashboard from './components/CommissionDashboard';
 import ProviderDashboard from './components/ProviderDashboard';
-import SystemHealthDashboard from './components/SystemHealthDashboard';
 import DataEntryModal from './components/DataEntryModal';
-import './App.css';
+
+function App() {
+  // App component logic remains the same
+  
+  return (
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <AuthProvider>
+        <AppContent />
+      </AuthProvider>
+    </ThemeProvider>
+  );
+}
 
 // Loading component
 const LoadingScreen = () => (
@@ -85,8 +96,6 @@ const AppContent = () => {
         return <CommissionDashboard onLogout={logout} onNavigate={handleNavigation} />;
       case 'provider':
         return <ProviderDashboard onLogout={logout} onNavigate={handleNavigation} />;
-      case 'system-health':
-        return <SystemHealthDashboard onLogout={logout} onNavigate={handleNavigation} />;
       default:
         return <HomePage onLogout={logout} onNavigate={handleNavigation} onOpenDataEntry={handleOpenDataEntry} />;
     }
@@ -110,17 +119,5 @@ const AppContent = () => {
     </div>
   );
 };
-
-// Main App component with providers
-function App() {
-  return (
-    <AuthProvider>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <AppContent />
-      </ThemeProvider>
-    </AuthProvider>
-  );
-}
 
 export default App;
