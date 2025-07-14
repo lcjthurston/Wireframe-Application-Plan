@@ -303,6 +303,57 @@ const CommissionDashboard = ({ onLogout, onNavigate }) => {
 
   const filteredCommissions = getFilteredCommissions();
 
+  const mockManagers = [
+    {
+      id: 1,
+      name: 'Sarah Johnson',
+      company: 'Property Management Inc.',
+      email: 'sarah.johnson@propmanage.com',
+      phone: '(713) 555-0123',
+      address: '123 Business Rd, Suite 500, Houston, TX 77001'
+    },
+    {
+      id: 2,
+      name: 'Michael Chen',
+      company: 'Elite Property Solutions',
+      email: 'michael.chen@eliteprop.com',
+      phone: '(713) 555-0456',
+      address: '456 Commerce St, Floor 12, Houston, TX 77002'
+    },
+    {
+      id: 3,
+      name: 'Jennifer Martinez',
+      company: 'Skyline Management Group',
+      email: 'j.martinez@skylinegroup.com',
+      phone: '(281) 555-0789',
+      address: '789 Tower Blvd, Suite 300, Sugar Land, TX 77478'
+    },
+    {
+      id: 4,
+      name: 'David Thompson',
+      company: 'Metro Property Services',
+      email: 'david.thompson@metroprop.com',
+      phone: '(832) 555-0321',
+      address: '321 Main Street, Suite 150, The Woodlands, TX 77380'
+    },
+    {
+      id: 5,
+      name: 'Lisa Rodriguez',
+      company: 'Premier Realty Management',
+      email: 'lisa.rodriguez@premierrealty.com',
+      phone: '(713) 555-0654',
+      address: '654 Park Avenue, Suite 200, Houston, TX 77019'
+    },
+    {
+      id: 6,
+      name: 'Robert Kim',
+      company: 'Coastal Property Partners',
+      email: 'robert.kim@coastalpartners.com',
+      phone: '(409) 555-0987',
+      address: '987 Bay Street, Suite 400, Galveston, TX 77550'
+    }
+  ];
+
   return (
     <Box className="commission-dashboard">
       <AppBar position="static" className="commission-app-bar">

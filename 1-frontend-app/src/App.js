@@ -50,14 +50,25 @@ const LoadingScreen = () => (
 // Main app content component
 const AppContent = () => {
   const { isAuthenticated, loading, logout } = useAuth();
-  const [currentPage, setCurrentPage] = useState('home');
+  const [currentPage, setCurrentPage] = useState(() => {
+    // Restore current page from localStorage on app load
+    return localStorage.getItem('currentPage') || 'home';
+  });
   const [isDataEntryModalOpen, setIsDataEntryModalOpen] = useState(false);
-  const [selectedAccountId, setSelectedAccountId] = useState(null);
+  const [selectedAccountId, setSelectedAccountId] = useState(() => {
+    // Restore selected account ID from localStorage
+    const stored = localStorage.getItem('selectedAccountId');
+    return stored ? parseInt(stored) : null;
+  });
 
   const handleNavigation = (page, params = {}) => {
     setCurrentPage(page);
+    // Store current page in localStorage
+    localStorage.setItem('currentPage', page);
+    
     if (params.accountId) {
       setSelectedAccountId(params.accountId);
+      localStorage.setItem('selectedAccountId', params.accountId.toString());
     }
   };
 

@@ -50,6 +50,61 @@ const ManagerDashboard = ({ onLogout, onNavigate }) => {
         totalCommission: 125000,
         pendingContracts: 3
       },
+      {
+        id: 2,
+        name: 'Michael Chen',
+        managementCompany: 'Elite Property Solutions',
+        email: 'michael.chen@eliteprop.com',
+        phone: '(713) 555-0456',
+        officeAddress: '456 Commerce St, Floor 12, Houston, TX 77002',
+        accountCount: 18,
+        totalCommission: 95000,
+        pendingContracts: 2
+      },
+      {
+        id: 3,
+        name: 'Jennifer Martinez',
+        managementCompany: 'Skyline Management Group',
+        email: 'j.martinez@skylinegroup.com',
+        phone: '(281) 555-0789',
+        officeAddress: '789 Tower Blvd, Suite 300, Sugar Land, TX 77478',
+        accountCount: 31,
+        totalCommission: 158000,
+        pendingContracts: 5
+      },
+      {
+        id: 4,
+        name: 'David Thompson',
+        managementCompany: 'Metro Property Services',
+        email: 'david.thompson@metroprop.com',
+        phone: '(832) 555-0321',
+        officeAddress: '321 Main Street, Suite 150, The Woodlands, TX 77380',
+        accountCount: 22,
+        totalCommission: 112000,
+        pendingContracts: 1
+      },
+      {
+        id: 5,
+        name: 'Lisa Rodriguez',
+        managementCompany: 'Premier Realty Management',
+        email: 'lisa.rodriguez@premierrealty.com',
+        phone: '(713) 555-0654',
+        officeAddress: '654 Park Avenue, Suite 200, Houston, TX 77019',
+        accountCount: 27,
+        totalCommission: 135000,
+        pendingContracts: 4
+      },
+      {
+        id: 6,
+        name: 'Robert Kim',
+        managementCompany: 'Coastal Property Partners',
+        email: 'robert.kim@coastalpartners.com',
+        phone: '(409) 555-0987',
+        officeAddress: '987 Bay Street, Suite 400, Galveston, TX 77550',
+        accountCount: 15,
+        totalCommission: 78000,
+        pendingContracts: 2
+      }
     ];
     setManagers(mockManagers);
     setFilteredManagers(mockManagers);
