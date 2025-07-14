@@ -1,185 +1,373 @@
 import React, { useState } from 'react';
-import { 
-  Dialog, 
-  DialogTitle, 
-  DialogContent, 
-  DialogActions, 
-  Button, 
-  TextField, 
-  Grid, 
-  Typography, 
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+  Stepper,
+  Step,
+  StepLabel,
   Box,
-  MenuItem,
+  Typography,
+  TextField,
+  Grid,
   FormControl,
   InputLabel,
   Select,
-  FormHelperText,
-  IconButton,
-  Stepper,
-  Step,
-  StepLabel
+  MenuItem,
+  FormControlLabel,
+  Checkbox,
+  Alert,
+  LinearProgress,
+  Divider,
+  Card,
+  CardContent
 } from '@mui/material';
-import { Close } from '@mui/icons-material';
+import {
+  Person,
+  Business,
+  AttachMoney,
+  CheckCircle,
+  NavigateNext,
+  NavigateBefore
+} from '@mui/icons-material';
 
-const DataEntryModal = ({ open, onClose, dataType = 'account' }) => {
+const DataEntryModal = ({ open, onClose, onSubmit, type = 'account' }) => {
   const [activeStep, setActiveStep] = useState(0);
   const [formData, setFormData] = useState({
-    name: '',
+    // Account Information
+    accountName: '',
+    accountType: '',
+    customerName: '',
     email: '',
     phone: '',
-    type: '',
-    status: '',
     address: '',
-    notes: ''
+    
+    // Business Information
+    businessType: '',
+    taxId: '',
+    annualUsage: '',
+    currentProvider: '',
+    
+    // Commission Information
+    commissionRate: '',
+    commissionType: 'percentage',
+    paymentTerms: '',
+    managerAssigned: '',
+    
+    // Additional Options
+    autoRenewal: false,
+    emailNotifications: true,
+    smsNotifications: false
   });
   
-  const handleChange = (e) => {
-    const { name, value } = e.target;
+  const [errors, setErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const steps = [
+    { label: 'Account Details', icon: <Person /> },
+    { label: 'Business Info', icon: <Business /> },
+    { label: 'Commission Setup', icon: <AttachMoney /> },
+    { label: 'Review & Submit', icon: <CheckCircle /> }
+  ];
+
+  const handleInputChange = (field, value) => {
     setFormData(prev => ({
       ...prev,
-      [name]: value
+      [field]: value
     }));
+    
+    // Clear error when user starts typing
+    if (errors[field]) {
+      setErrors(prev => ({
+        ...prev,
+        [field]: ''
+      }));
+    }
   };
-  
+
+  const validateStep = (step) => {
+    const newErrors = {};
+    
+    switch (step) {
+      case 0: // Account Details
+        if (!formData.accountName) newErrors.accountName = 'Account name is required';
+        if (!formData.customerName) newErrors.customerName = 'Customer name is required';
+        if (!formData.email) newErrors.email = 'Email is required';
+        if (!formData.phone) newErrors.phone = 'Phone is required';
+        break;
+        
+      case 1: // Business Info
+        if (!formData.businessType) newErrors.businessType = 'Business type is required';
+        if (!formData.annualUsage) newErrors.annualUsage = 'Annual usage is required';
+        break;
+        
+      case 2: // Commission Setup
+        if (!formData.commissionRate) newErrors.commissionRate = 'Commission rate is required';
+        if (!formData.managerAssigned) newErrors.managerAssigned = 'Manager assignment is required';
+        break;
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleNext = () => {
-    setActiveStep(prev => prev + 1);
+    if (validateStep(activeStep)) {
+      setActiveStep(prev => prev + 1);
+    }
   };
-  
+
   const handleBack = () => {
     setActiveStep(prev => prev - 1);
   };
-  
-  const handleSubmit = () => {
-    // Submit logic
-    onClose();
+
+  const handleSubmit = async () => {
+    if (!validateStep(activeStep)) return;
+    
+    setIsSubmitting(true);
+    try {
+      await onSubmit(formData);
+      onClose();
+      // Reset form
+      setFormData({
+        accountName: '',
+        accountType: '',
+        customerName: '',
+        email: '',
+        phone: '',
+        address: '',
+        businessType: '',
+        taxId: '',
+        annualUsage: '',
+        currentProvider: '',
+        commissionRate: '',
+        commissionType: 'percentage',
+        paymentTerms: '',
+        managerAssigned: '',
+        autoRenewal: false,
+        emailNotifications: true,
+        smsNotifications: false
+      });
+      setActiveStep(0);
+    } catch (error) {
+      console.error('Submission error:', error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
-  
-  // Define steps based on data type
-  const getSteps = () => {
-    switch(dataType) {
-      case 'account':
-        return ['Basic Information', 'Contact Details', 'Additional Information'];
-      case 'provider':
-        return ['Provider Details', 'Commission Structure', 'Review'];
+
+  const renderStepContent = (step) => {
+    switch (step) {
+      case 0:
+        return (
+          <Grid container spacing={3}>
+            <Grid item xs={12} md={6}>
+              <TextField
+                fullWidth
+                label="Account Name"
+                value={formData.accountName}
+                onChange={(e) => handleInputChange('accountName', e.target.value)}
+                error={!!errors.accountName}
+                helperText={errors.accountName}
+                required
+              />
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <FormControl fullWidth>
+                <InputLabel>Account Type</InputLabel>
+                <Select
+                  value={formData.accountType}
+                  onChange={(e) => handleInputChange('accountType', e.target.value)}
+                  label="Account Type"
+                >
+                  <MenuItem value="residential">Residential</MenuItem>
+                  <MenuItem value="commercial">Commercial</MenuItem>
+                  <MenuItem value="industrial">Industrial</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <TextField
+                fullWidth
+                label="Customer Name"
+                value={formData.customerName}
+                onChange={(e) => handleInputChange('customerName', e.target.value)}
+                error={!!errors.customerName}
+                helperText={errors.customerName}
+                required
+              />
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <TextField
+                fullWidth
+                label="Email"
+                type="email"
+                value={formData.email}
+                onChange={(e) => handleInputChange('email', e.target.value)}
+                error={!!errors.email}
+                helperText={errors.email}
+                required
+              />
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <TextField
+                fullWidth
+                label="Phone"
+                value={formData.phone}
+                onChange={(e) => handleInputChange('phone', e.target.value)}
+                error={!!errors.phone}
+                helperText={errors.phone}
+                required
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                label="Address"
+                value={formData.address}
+                onChange={(e) => handleInputChange('address', e.target.value)}
+                multiline
+                rows={2}
+              />
+            </Grid>
+          </Grid>
+        );
+      case 1:
+        return (
+          <Grid container spacing={3}>
+            <Grid item xs={12} md={6}>
+              <FormControl fullWidth>
+                <InputLabel>Business Type</InputLabel>
+                <Select
+                  value={formData.businessType}
+                  onChange={(e) => handleInputChange('businessType', e.target.value)}
+                  label="Business Type"
+                >
+                  <MenuItem value="soleProprietorship">Sole Proprietorship</MenuItem>
+                  <MenuItem value="partnership">Partnership</MenuItem>
+                  <MenuItem value="corporation">Corporation</MenuItem>
+                  <MenuItem value="llc">LLC</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <TextField
+                fullWidth
+                label="Tax ID"
+                value={formData.taxId}
+                onChange={(e) => handleInputChange('taxId', e.target.value)}
+              />
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <TextField
+                fullWidth
+                label="Annual Usage"
+                value={formData.annualUsage}
+                onChange={(e) => handleInputChange('annualUsage', e.target.value)}
+                error={!!errors.annualUsage}
+                helperText={errors.annualUsage}
+                required
+              />
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <TextField
+                fullWidth
+                label="Current Provider"
+                value={formData.currentProvider}
+                onChange={(e) => handleInputChange('currentProvider', e.target.value)}
+              />
+            </Grid>
+          </Grid>
+        );
+      case 2:
+        return (
+          <Grid container spacing={3}>
+            <Grid item xs={12} md={6}>
+              <TextField
+                fullWidth
+                label="Commission Rate"
+                value={formData.commissionRate}
+                onChange={(e) => handleInputChange('commissionRate', e.target.value)}
+                error={!!errors.commissionRate}
+                helperText={errors.commissionRate}
+                required
+              />
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <FormControl fullWidth>
+                <InputLabel>Commission Type</InputLabel>
+                <Select
+                  value={formData.commissionType}
+                  onChange={(e) => handleInputChange('commissionType', e.target.value)}
+                  label="Commission Type"
+                >
+                  <MenuItem value="percentage">Percentage</MenuItem>
+                  <MenuItem value="fixed">Fixed Amount</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <TextField
+                fullWidth
+                label="Payment Terms"
+                value={formData.paymentTerms}
+                onChange={(e) => handleInputChange('paymentTerms', e.target.value)}
+              />
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <FormControl fullWidth>
+                <InputLabel>Manager Assigned</InputLabel>
+                <Select
+                  value={formData.managerAssigned}
+                  onChange={(e) => handleInputChange('managerAssigned', e.target.value)}
+                  label="Manager Assigned"
+                >
+                  <MenuItem value="yes">Yes</MenuItem>
+                  <MenuItem value="no">No</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+          </Grid>
+        );
+      case 3:
+        return (
+          <Card>
+            <CardContent>
+              <Typography variant="h6" gutterBottom>Review Your Entry</Typography>
+              <Typography variant="body1" gutterBottom>Account Details:</Typography>
+              <Typography variant="body2">Account Name: {formData.accountName}</Typography>
+              <Typography variant="body2">Account Type: {formData.accountType}</Typography>
+              <Typography variant="body2">Customer Name: {formData.customerName}</Typography>
+              <Typography variant="body2">Email: {formData.email}</Typography>
+              <Typography variant="body2">Phone: {formData.phone}</Typography>
+              <Typography variant="body2">Address: {formData.address}</Typography>
+              <Divider sx={{ my: 2 }} />
+              <Typography variant="body1" gutterBottom>Business Information:</Typography>
+              <Typography variant="body2">Business Type: {formData.businessType}</Typography>
+              <Typography variant="body2">Tax ID: {formData.taxId}</Typography>
+              <Typography variant="body2">Annual Usage: {formData.annualUsage}</Typography>
+              <Typography variant="body2">Current Provider: {formData.currentProvider}</Typography>
+              <Divider sx={{ my: 2 }} />
+              <Typography variant="body1" gutterBottom>Commission Setup:</Typography>
+              <Typography variant="body2">Commission Rate: {formData.commissionRate}</Typography>
+              <Typography variant="body2">Commission Type: {formData.commissionType}</Typography>
+              <Typography variant="body2">Payment Terms: {formData.paymentTerms}</Typography>
+              <Typography variant="body2">Manager Assigned: {formData.managerAssigned}</Typography>
+              <Divider sx={{ my: 2 }} />
+              <Typography variant="body1" gutterBottom>Additional Options:</Typography>
+              <Typography variant="body2">Auto Renewal: {formData.autoRenewal ? 'Yes' : 'No'}</Typography>
+              <Typography variant="body2">Email Notifications: {formData.emailNotifications ? 'Yes' : 'No'}</Typography>
+              <Typography variant="body2">SMS Notifications: {formData.smsNotifications ? 'Yes' : 'No'}</Typography>
+            </CardContent>
+          </Card>
+        );
       default:
-        return ['Step 1', 'Step 2', 'Step 3'];
+        return null;
     }
   };
-  
-  const steps = getSteps();
-  
-  // Render form fields based on active step and data type
-  const renderFormFields = () => {
-    if (dataType === 'account') {
-      switch(activeStep) {
-        case 0:
-          return (
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  label="Account Name"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  required
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <FormControl fullWidth required>
-                  <InputLabel>Account Type</InputLabel>
-                  <Select
-                    name="type"
-                    value={formData.type}
-                    onChange={handleChange}
-                    label="Account Type"
-                  >
-                    <MenuItem value="commercial">Commercial</MenuItem>
-                    <MenuItem value="residential">Residential</MenuItem>
-                    <MenuItem value="industrial">Industrial</MenuItem>
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid item xs={12}>
-                <FormControl fullWidth required>
-                  <InputLabel>Status</InputLabel>
-                  <Select
-                    name="status"
-                    value={formData.status}
-                    onChange={handleChange}
-                    label="Status"
-                  >
-                    <MenuItem value="active">Active</MenuItem>
-                    <MenuItem value="pending">Pending</MenuItem>
-                    <MenuItem value="inactive">Inactive</MenuItem>
-                  </Select>
-                </FormControl>
-              </Grid>
-            </Grid>
-          );
-        case 1:
-          return (
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  label="Email"
-                  name="email"
-                  type="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  required
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  label="Phone"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  required
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  label="Address"
-                  name="address"
-                  value={formData.address}
-                  onChange={handleChange}
-                  multiline
-                  rows={2}
-                />
-              </Grid>
-            </Grid>
-          );
-        case 2:
-          return (
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  label="Notes"
-                  name="notes"
-                  value={formData.notes}
-                  onChange={handleChange}
-                  multiline
-                  rows={4}
-                />
-              </Grid>
-            </Grid>
-          );
-        default:
-          return null;
-      }
-    }
-    
-    // Add other data types as needed
-    
-    return null;
-  };
-  
+
   return (
     <Dialog 
       open={open} 
@@ -196,7 +384,7 @@ const DataEntryModal = ({ open, onClose, dataType = 'account' }) => {
       <DialogTitle>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <Typography variant="h6">
-            {dataType === 'account' ? 'New Account' : 'New Entry'}
+            {type === 'account' ? 'New Account' : 'New Entry'}
           </Typography>
           <IconButton onClick={onClose} size="small">
             <Close fontSize="small" />
@@ -206,14 +394,14 @@ const DataEntryModal = ({ open, onClose, dataType = 'account' }) => {
       
       <DialogContent dividers>
         <Stepper activeStep={activeStep} sx={{ mb: 4 }}>
-          {steps.map((label) => (
-            <Step key={label}>
-              <StepLabel>{label}</StepLabel>
+          {steps.map((step) => (
+            <Step key={step.label}>
+              <StepLabel icon={step.icon}>{step.label}</StepLabel>
             </Step>
           ))}
         </Stepper>
         
-        {renderFormFields()}
+        {renderStepContent(activeStep)}
       </DialogContent>
       
       <DialogActions sx={{ p: 2, justifyContent: 'space-between' }}>
