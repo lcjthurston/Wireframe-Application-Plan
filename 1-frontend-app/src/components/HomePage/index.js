@@ -23,6 +23,7 @@ import {
   ListItemIcon,
   Badge
 } from '@mui/material';
+import AuthDebug from '../AuthDebug';
 import {
   Search as SearchIcon,
   Dashboard as DashboardIcon,
@@ -434,6 +435,8 @@ const HomePage = ({ onLogout, onNavigate, onOpenDataEntry }) => {
           </Grid>
         </Grid>
 
+        {/* Debug component for testing authentication */}
+        <AuthDebug />
 
       </Container>
 

@@ -107,6 +107,54 @@ async def login_for_access_token(
     }
 
 
+@router.post("/refresh", response_model=Token)
+async def refresh_token(refresh_token_data: dict, db: Session = Depends(get_db)):
+    """Refresh access token using refresh token"""
+    from app.core.security import verify_token
+
+    refresh_token = refresh_token_data.get("refresh_token")
+    if not refresh_token:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Refresh token is required"
+        )
+
+    # Verify refresh token
+    payload = verify_token(refresh_token)
+    if payload is None:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid refresh token",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+    user_id = payload.get("sub")
+    if user_id is None:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid refresh token",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+    # Check if user still exists and is active
+    user = db.query(User).filter(User.id == int(user_id)).first()
+    if not user or not user.is_active:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="User not found or inactive"
+        )
+
+    # Create new tokens
+    new_access_token = create_access_token(data={"sub": str(user.id)})
+    new_refresh_token = create_refresh_token(data={"sub": str(user.id)})
+
+    return {
+        "access_token": new_access_token,
+        "refresh_token": new_refresh_token,
+        "token_type": "bearer"
+    }
+
+
 @router.get("/me", response_model=UserResponse)
 async def get_current_user(
     token: str = Depends(oauth2_scheme),
@@ -114,7 +162,7 @@ async def get_current_user(
 ):
     """Get current user information"""
     from app.core.security import verify_token
-    
+
     payload = verify_token(token)
     if payload is None:
         raise HTTPException(
@@ -122,7 +170,7 @@ async def get_current_user(
             detail="Could not validate credentials",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    
+
     user_id = payload.get("sub")
     if user_id is None:
         raise HTTPException(

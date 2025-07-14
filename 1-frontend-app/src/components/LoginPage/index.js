@@ -32,9 +32,11 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { LottieWithStates, LottieIcon } from '../lottie';
 import serverAnimation from '../../assets/lottie/ui/serverAnimation.json';
 import buttonSpinnerAnimation from '../../assets/lottie/loading/button-spinner.json';
+import { useAuth } from '../../contexts/AuthContext';
 import './LoginPage.scss';
 
-const LoginPage = ({ onLogin }) => {
+const LoginPage = () => {
+  const { login, loading: authLoading, error: authError } = useAuth();
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -100,7 +102,8 @@ const LoginPage = ({ onLogin }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    
+    setErrors({});
+
     const newErrors = validateForm();
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -109,12 +112,19 @@ const LoginPage = ({ onLogin }) => {
     }
 
     try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      console.log(`${mode === 'signin' ? 'Sign in' : 'Sign up'} attempt:`, formData);
-      onLogin();
+      if (mode === 'signin') {
+        // Use the real login function from auth context
+        await login(formData.username, formData.password);
+        // Login successful - the auth context will handle the state update
+      } else {
+        // TODO: Implement signup functionality
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        console.log('Sign up attempt:', formData);
+        setErrors({ general: 'Sign up functionality not yet implemented.' });
+      }
     } catch (error) {
       console.error(`${mode === 'signin' ? 'Sign in' : 'Sign up'} error:`, error);
-      setErrors({ general: `${mode === 'signin' ? 'Sign in' : 'Sign up'} failed. Please try again.` });
+      setErrors({ general: error.message || `${mode === 'signin' ? 'Sign in' : 'Sign up'} failed. Please try again.` });
     } finally {
       setIsLoading(false);
     }
@@ -182,6 +192,14 @@ const LoginPage = ({ onLogin }) => {
               {errors.general && (
                 <Alert severity="error" className="login-alert">
                   {errors.general}
+                </Alert>
+              )}
+
+              {mode === 'signin' && (
+                <Alert severity="info" sx={{ mb: 2 }}>
+                  <strong>Test Credentials:</strong><br />
+                  Username: admin<br />
+                  Password: password
                 </Alert>
               )}
 

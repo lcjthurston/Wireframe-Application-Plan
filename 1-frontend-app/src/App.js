@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
+import { Box, CircularProgress, Typography } from '@mui/material';
 import theme from './theme';
+import { AuthProvider, useAuth } from './contexts/AuthContext';
 import LoginPage from './components/LoginPage';
 import HomePage from './components/HomePage';
 import TaskQueue from './components/TaskQueue';
@@ -15,21 +17,30 @@ import SystemHealthDashboard from './components/SystemHealthDashboard';
 import DataEntryModal from './components/DataEntryModal';
 import './App.css';
 
-function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+// Loading component
+const LoadingScreen = () => (
+  <Box
+    sx={{
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center',
+      minHeight: '100vh',
+      background: 'linear-gradient(135deg, #c62828 0%, #8e0000 100%)',
+      color: 'white',
+    }}
+  >
+    <CircularProgress size={60} sx={{ color: 'white', mb: 2 }} />
+    <Typography variant="h6">Loading Kilowatt...</Typography>
+  </Box>
+);
+
+// Main app content component
+const AppContent = () => {
+  const { isAuthenticated, loading, logout } = useAuth();
   const [currentPage, setCurrentPage] = useState('home');
   const [isDataEntryModalOpen, setIsDataEntryModalOpen] = useState(false);
   const [selectedAccountId, setSelectedAccountId] = useState(null);
-
-  const handleLogin = () => {
-    setIsLoggedIn(true);
-    setCurrentPage('home');
-  };
-
-  const handleLogout = () => {
-    setIsLoggedIn(false);
-    setCurrentPage('home');
-  };
 
   const handleNavigation = (page, params = {}) => {
     setCurrentPage(page);
@@ -51,51 +62,65 @@ function App() {
     // TODO: Implement data saving logic
   };
 
+  // Show loading screen while checking authentication
+  if (loading) {
+    return <LoadingScreen />;
+  }
+
   const renderPage = () => {
     switch (currentPage) {
       case 'home':
-        return <HomePage onLogout={handleLogout} onNavigate={handleNavigation} onOpenDataEntry={handleOpenDataEntry} />;
+        return <HomePage onLogout={logout} onNavigate={handleNavigation} onOpenDataEntry={handleOpenDataEntry} />;
       case 'task-queue':
-        return <TaskQueue onLogout={handleLogout} onNavigate={handleNavigation} />;
+        return <TaskQueue onLogout={logout} onNavigate={handleNavigation} />;
       case 'accounts':
-        return <AccountsList onLogout={handleLogout} onNavigate={handleNavigation} />;
+        return <AccountsList onLogout={logout} onNavigate={handleNavigation} />;
       case 'account-detail':
-        return <AccountDashboard onLogout={handleLogout} onNavigate={handleNavigation} accountId={selectedAccountId} />;
+        return <AccountDashboard onLogout={logout} onNavigate={handleNavigation} accountId={selectedAccountId} />;
       case 'manager':
-        return <ManagerDashboard onLogout={handleLogout} onNavigate={handleNavigation} />;
+        return <ManagerDashboard onLogout={logout} onNavigate={handleNavigation} />;
       case 'email-draft':
-        return <EmailDraftDashboard onLogout={handleLogout} onNavigate={handleNavigation} />;
+        return <EmailDraftDashboard onLogout={logout} onNavigate={handleNavigation} />;
       case 'commission':
-        return <CommissionDashboard onLogout={handleLogout} onNavigate={handleNavigation} />;
+        return <CommissionDashboard onLogout={logout} onNavigate={handleNavigation} />;
       case 'provider':
-        return <ProviderDashboard onLogout={handleLogout} onNavigate={handleNavigation} />;
+        return <ProviderDashboard onLogout={logout} onNavigate={handleNavigation} />;
       case 'system-health':
-        return <SystemHealthDashboard onLogout={handleLogout} onNavigate={handleNavigation} />;
+        return <SystemHealthDashboard onLogout={logout} onNavigate={handleNavigation} />;
       default:
-        return <HomePage onLogout={handleLogout} onNavigate={handleNavigation} onOpenDataEntry={handleOpenDataEntry} />;
+        return <HomePage onLogout={logout} onNavigate={handleNavigation} onOpenDataEntry={handleOpenDataEntry} />;
     }
   };
 
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <div className="App">
-        {isLoggedIn ? (
-          <>
-            {renderPage()}
-            <DataEntryModal
-              isOpen={isDataEntryModalOpen}
-              onClose={handleCloseDataEntry}
-              onSave={handleSaveDataEntry}
-              onNavigate={handleNavigation}
-            />
-          </>
-        ) : (
-          <LoginPage onLogin={handleLogin} />
-        )}
-      </div>
-    </ThemeProvider>
+    <div className="App">
+      {isAuthenticated ? (
+        <>
+          {renderPage()}
+          <DataEntryModal
+            isOpen={isDataEntryModalOpen}
+            onClose={handleCloseDataEntry}
+            onSave={handleSaveDataEntry}
+            onNavigate={handleNavigation}
+          />
+        </>
+      ) : (
+        <LoginPage />
+      )}
+    </div>
+  );
+};
+
+// Main App component with providers
+function App() {
+  return (
+    <AuthProvider>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <AppContent />
+      </ThemeProvider>
+    </AuthProvider>
   );
 }
 
-export default App; 
+export default App;
