@@ -129,20 +129,17 @@ const LoginPage = ({ onLogin }) => {
                 style={{ width: 60, height: 60, marginRight: 16, borderRadius: 12 }}
               />
               <Typography variant="h3" sx={{ fontWeight: 700 }}>
-                Kilowatt
+                kiloWatt
               </Typography>
             </Box>
-            <Typography variant="h4" sx={{ fontWeight: 600, mb: 2 }}>
-              Welcome to
-            </Typography>
-            <Typography variant="h4" sx={{ fontWeight: 700, mb: 3 }}>
-              Kilowatt
+            <Typography variant="h4" sx={{ fontWeight: 600, mb: 3 }}>
+              Welcome to Your
             </Typography>
             <Typography variant="h6" sx={{ opacity: 0.9, maxWidth: 400 }}>
               Business Intelligence Platform
             </Typography>
             <Typography variant="body1" sx={{ opacity: 0.8, mt: 2, maxWidth: 400 }}>
-              Streamline your energy business operations with our comprehensive management platform.
+              Streamline energy business operations with our comprehensive management platform.
             </Typography>
           </Box>
 
