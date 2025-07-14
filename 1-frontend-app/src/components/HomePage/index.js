@@ -1,465 +1,424 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   AppBar,
   Toolbar,
   Typography,
   Button,
-  TextField,
   Card,
   CardContent,
+  Container,
   Grid,
   Avatar,
-  Menu,
-  MenuItem,
-  IconButton,
   Chip,
-  Container,
-  Paper,
-  Divider,
   List,
   ListItem,
+  ListItemAvatar,
   ListItemText,
-  ListItemIcon,
-  Badge
+  TextField,
+  InputAdornment,
+  Divider,
+  Paper
 } from '@mui/material';
-import AuthDebug from '../AuthDebug';
 import {
-  Search as SearchIcon,
-  Dashboard as DashboardIcon,
-  Assignment as TaskIcon,
-  AccountCircle as AccountIcon,
-  Email as EmailIcon,
-  AttachMoney as MoneyIcon,
-  Business as BusinessIcon,
-  HealthAndSafety as HealthIcon,
-  Settings as SettingsIcon,
-  Logout as LogoutIcon,
-  TrendingUp as TrendingUpIcon,
-  Warning as WarningIcon,
-  CheckCircle as CheckCircleIcon,
-  Error as ErrorIcon
+  Search,
+  Person,
+  Email,
+  Assignment,
+  Business,
+  HealthAndSafety,
+  QueueMusic,
+  CheckCircle,
+  Error,
+  Warning,
+  Info,
+  TrendingUp,
+  SupervisedUserCircle,
+  Drafts,
+  AccountBalance
 } from '@mui/icons-material';
 import kilowattImage from '../../assets/image.png';
-import { LottieIcon } from '../lottie';
-import dashboardPulseAnimation from '../../assets/lottie/icons/dashboard-pulse.json';
-import taskBounceAnimation from '../../assets/lottie/icons/task-bounce.json';
-import emailPulseAnimation from '../../assets/lottie/icons/email-pulse.json';
-import warningFlashAnimation from '../../assets/lottie/icons/warning-flash.json';
-import './HomePage.scss';
 
-const HomePage = ({ onLogout, onNavigate, onOpenDataEntry }) => {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [anchorEl, setAnchorEl] = useState(null);
-  const [userProfile, setUserProfile] = useState({
-    name: 'John Doe',
-    email: 'john.doe@kilowatt.com',
-    avatar: null
-  });
+const HomePage = ({ onLogout, onNavigate }) => {
+  const [searchTerm, setSearchTerm] = useState('');
 
-  const myTasks = {
-    providerSelection: 12,
-    superFlagged: 3,
-    draftedEmails: 8,
-    newAccounts: 5
-  };
-
-  const teamTasks = {
-    providerSelection: 25,
-    superFlagged: 7,
-    draftedEmails: 15,
-    newAccounts: 12
+  // Mock data for dashboard
+  const stats = {
+    providerSelections: 37,
+    superFlagged: 10,
+    draftedEmails: 23,
+    newAccounts: 17
   };
 
   const systemHealth = [
-    {
-      name: 'Email Monitoring',
-      status: 'OK',
-      lastRun: '2 minutes ago',
-      icon: '📧'
-    },
-    {
-      name: 'Centerpoint Usage Retrieval',
-      status: 'OK',
-      lastRun: '5 minutes ago',
-      icon: '⚡'
-    },
-    {
-      name: 'Daily Pricing Imports',
-      status: 'ERROR',
-      lastRun: '1 hour ago',
-      icon: '💰'
-    },
-    {
-      name: 'Contract Follow-up Bot',
-      status: 'OK',
-      lastRun: '15 minutes ago',
-      icon: '📋'
-    }
+    { name: 'Email Monitoring', status: 'OK', time: '2 minutes ago', icon: <Email /> },
+    { name: 'Centerpoint Usage Retrieval', status: 'OK', time: '5 minutes ago', icon: <TrendingUp /> },
+    { name: 'Daily Pricing Imports', status: 'ERROR', time: '1 hour ago', icon: <Warning /> },
+    { name: 'Contract Follow-up Bot', status: 'OK', time: '10 minutes ago', icon: <Assignment /> }
   ];
 
   const recentActivity = [
-    {
-      type: 'bot',
-      action: 'Contract sent to ABC Corp.',
-      timestamp: '2 minutes ago',
-      icon: '🤖'
+    { 
+      type: 'contract', 
+      message: 'Contract sent to ABC Corp.', 
+      time: '2 minutes ago',
+      icon: <Assignment />,
+      color: '#2196F3'
     },
-    {
-      type: 'user',
-      user: 'Sarah Johnson',
-      action: 'Updated manager for XYZ Inc.',
-      timestamp: '5 minutes ago',
-      icon: '👤'
+    { 
+      type: 'manager', 
+      message: 'Sarah Johnson Updated manager for XYZ Inc.', 
+      time: '5 minutes ago',
+      icon: <Person />,
+      color: '#4CAF50'
     },
-    {
-      type: 'bot',
-      action: 'New account "Main Street Plaza" created from email',
-      timestamp: '8 minutes ago',
-      icon: '🤖'
+    { 
+      type: 'account', 
+      message: 'New account "Main Street Plaza" created from email', 
+      time: '8 minutes ago',
+      icon: <Business />,
+      color: '#FF9800'
     },
-    {
-      type: 'user',
-      user: 'Mike Chen',
-      action: 'Generated pricing sheet for Downtown Center',
-      timestamp: '12 minutes ago',
-      icon: '👤'
-    },
-    {
-      type: 'bot',
-      action: 'Usage data updated for 15 accounts',
-      timestamp: '15 minutes ago',
-      icon: '🤖'
+    { 
+      type: 'pricing', 
+      message: 'Mike Chen Generated pricing sheet for Downtown Center', 
+      time: '12 minutes ago',
+      icon: <TrendingUp />,
+      color: '#9C27B0'
     }
   ];
 
-  const handleSearch = (e) => {
-    e.preventDefault();
-    console.log('Searching for:', searchQuery);
-  };
-
-  const handleNavigation = (page) => {
-    console.log('Navigating to:', page);
-    if (onNavigate) {
-      onNavigate(page);
-    }
-  };
-
-  const handleProfileMenuOpen = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleProfileMenuClose = () => {
-    setAnchorEl(null);
-  };
-
-  const handleProfileAction = (action) => {
-    console.log('Profile action:', action);
-    if (action === 'logout') {
-      onLogout();
-    }
-    handleProfileMenuClose();
-  };
-
   const getStatusColor = (status) => {
     switch (status) {
-      case 'OK':
-        return 'success';
-      case 'ERROR':
-        return 'error';
-      case 'WARNING':
-        return 'warning';
-      default:
-        return 'default';
+      case 'OK': return 'success';
+      case 'ERROR': return 'error';
+      case 'WARNING': return 'warning';
+      default: return 'default';
+    }
+  };
+
+  const getStatusIcon = (status) => {
+    switch (status) {
+      case 'OK': return <CheckCircle />;
+      case 'ERROR': return <Error />;
+      case 'WARNING': return <Warning />;
+      default: return <Info />;
     }
   };
 
   return (
-    <Box className="home-page">
-      <AppBar position="static" className="home-app-bar">
-        <Toolbar className="home-toolbar">
-          <Box sx={{ display: 'flex', alignItems: 'center', flexGrow: 1 }}>
-            <Box
-              sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}
-              onClick={() => handleNavigation('home')}
-            >
-              <img src={kilowattImage} alt="Kilowatt" className="home-logo" />
-              <Typography variant="h6" component="div" className="home-brand">
-                Kilowatt
-              </Typography>
-            </Box>
+    <Box sx={{ minHeight: '100vh', backgroundColor: '#fafafa' }}>
+      <AppBar 
+        position="static" 
+        sx={{ 
+          background: 'linear-gradient(135deg, #C82828 0%, #B71C1C 100%)',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+        }}
+      >
+        <Toolbar sx={{ minHeight: 72 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', mr: 4 }}>
+            <img 
+              src={kilowattImage} 
+              alt="Kilowatt Logo" 
+              style={{ width: 44, height: 44, marginRight: 14, borderRadius: 9 }}
+            />
+            <Typography variant="h6" sx={{ fontWeight: 700, color: 'white' }}>
+              Kilowatt
+            </Typography>
           </Box>
 
-          {/* Navigation Buttons */}
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mr: 2 }}>
+          <Box sx={{ display: 'flex', gap: 2, mr: 4 }}>
             <Button
-              color="inherit"
-              startIcon={<DashboardIcon />}
-              onClick={() => handleNavigation('manager')}
-              size="small"
+              startIcon={<SupervisedUserCircle />}
+              onClick={() => onNavigate('managers')}
+              sx={{ color: 'white', textTransform: 'none', fontWeight: 500 }}
             >
               Manager
             </Button>
             <Button
-              color="inherit"
-              startIcon={<EmailIcon />}
-              onClick={() => handleNavigation('email-draft')}
-              size="small"
+              startIcon={<Drafts />}
+              onClick={() => onNavigate('emailDrafts')}
+              sx={{ color: 'white', textTransform: 'none', fontWeight: 500 }}
             >
               Email Drafts
             </Button>
             <Button
-              color="inherit"
-              startIcon={<MoneyIcon />}
-              onClick={() => handleNavigation('commission')}
-              size="small"
+              startIcon={<AccountBalance />}
+              onClick={() => onNavigate('commissions')}
+              sx={{ color: 'white', textTransform: 'none', fontWeight: 500 }}
             >
               Commission
             </Button>
             <Button
-              color="inherit"
-              startIcon={<BusinessIcon />}
-              onClick={() => handleNavigation('provider')}
-              size="small"
+              startIcon={<Business />}
+              onClick={() => onNavigate('providers')}
+              sx={{ color: 'white', textTransform: 'none', fontWeight: 500 }}
             >
               Providers
             </Button>
             <Button
-              color="inherit"
-              startIcon={<HealthIcon />}
-              onClick={() => handleNavigation('system-health')}
-              size="small"
+              startIcon={<HealthAndSafety />}
+              onClick={() => onNavigate('systemHealth')}
+              sx={{ color: 'white', textTransform: 'none', fontWeight: 500 }}
             >
               System Health
             </Button>
             <Button
-              color="inherit"
-              startIcon={<TaskIcon />}
-              onClick={() => handleNavigation('task-queue')}
-              size="small"
+              startIcon={<QueueMusic />}
+              onClick={() => onNavigate('taskQueue')}
+              sx={{ color: 'white', textTransform: 'none', fontWeight: 500 }}
             >
               Task Queue
             </Button>
           </Box>
 
-          <Box className="home-search-container">
-            <TextField
-              placeholder="Search accounts, providers, or tasks..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              variant="outlined"
-              size="small"
-              className="home-search-field"
-              InputProps={{
-                startAdornment: (
-                  <SearchIcon sx={{ color: 'text.secondary', mr: 1 }} />
-                ),
-              }}
-            />
-          </Box>
+          <Box sx={{ flexGrow: 1 }} />
+
+          <TextField
+            placeholder="Search accounts, providers, or tasks..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            size="small"
+            sx={{
+              mr: 2,
+              minWidth: 300,
+              '& .MuiOutlinedInput-root': {
+                backgroundColor: 'rgba(255,255,255,0.15)',
+                borderRadius: 3,
+                '& fieldset': {
+                  borderColor: 'rgba(255,255,255,0.3)',
+                },
+                '&:hover fieldset': {
+                  borderColor: 'rgba(255,255,255,0.5)',
+                },
+                '&.Mui-focused fieldset': {
+                  borderColor: 'white',
+                },
+                '& input': {
+                  color: 'white',
+                  '&::placeholder': {
+                    color: 'rgba(255,255,255,0.7)',
+                    opacity: 1,
+                  },
+                },
+              },
+            }}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <Search sx={{ color: 'rgba(255,255,255,0.7)' }} />
+                </InputAdornment>
+              ),
+            }}
+          />
 
           <Button
-            color="inherit"
-            onClick={handleProfileMenuOpen}
-            className="home-profile-button"
-            startIcon={<AccountIcon />}
+            onClick={onLogout}
+            sx={{ 
+              color: 'white', 
+              textTransform: 'none', 
+              fontWeight: 600,
+              display: 'flex',
+              alignItems: 'center',
+              gap: 1
+            }}
           >
-            {userProfile.name}
+            <Avatar sx={{ width: 32, height: 32, bgcolor: 'rgba(255,255,255,0.2)' }}>
+              <Person />
+            </Avatar>
+            John Doe
           </Button>
         </Toolbar>
       </AppBar>
 
-      <Container maxWidth="xl" className="home-content">
-        <Box className="home-welcome-section">
-          <Typography variant="h4" className="home-welcome-title">
-            Welcome back, {userProfile.name}!
+      <Container maxWidth="xl" sx={{ py: 4 }}>
+        {/* Welcome Section */}
+        <Box sx={{ mb: 4 }}>
+          <Typography variant="h4" component="h1" sx={{ fontWeight: 700, mb: 1 }}>
+            Welcome back, John Doe!
           </Typography>
-          <Typography variant="body1" className="home-welcome-subtitle">
+          <Typography variant="body1" color="text.secondary">
             Here's what's happening with your accounts and team today.
           </Typography>
         </Box>
 
-        <Grid container spacing={3} className="home-stats-grid">
+        {/* Stats Cards */}
+        <Grid container spacing={3} sx={{ mb: 4 }}>
           <Grid item xs={12} sm={6} md={3}>
-            <Card className="home-stat-card">
+            <Card 
+              sx={{ 
+                borderRadius: 3, 
+                boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+                transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+                '&:hover': {
+                  transform: 'translateY(-2px)',
+                  boxShadow: '0 8px 24px rgba(0,0,0,0.15)'
+                }
+              }}
+            >
               <CardContent sx={{ textAlign: 'center', py: 3 }}>
-                <Typography variant="h3" className="home-stat-value">
-                  {myTasks.providerSelection + teamTasks.providerSelection}
+                <Typography variant="h3" sx={{ fontWeight: 700, color: '#C82828', mb: 1 }}>
+                  {stats.providerSelections}
                 </Typography>
-                <Typography variant="body2" className="home-stat-label">
+                <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 500 }}>
                   Provider Selections
                 </Typography>
-                <Box className="home-stat-icon" sx={{ display: 'flex', justifyContent: 'center', mt: 1 }}>
-                  <LottieIcon
-                    animationData={dashboardPulseAnimation}
-                    size={48}
-                    loop={true}
-                    autoplay={true}
-                    speed={0.8}
-                    hover={true}
-                  />
-                </Box>
               </CardContent>
             </Card>
           </Grid>
-
           <Grid item xs={12} sm={6} md={3}>
-            <Card className="home-stat-card">
+            <Card 
+              sx={{ 
+                borderRadius: 3, 
+                boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+                transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+                '&:hover': {
+                  transform: 'translateY(-2px)',
+                  boxShadow: '0 8px 24px rgba(0,0,0,0.15)'
+                }
+              }}
+            >
               <CardContent sx={{ textAlign: 'center', py: 3 }}>
-                <Typography variant="h3" className="home-stat-value">
-                  {myTasks.superFlagged + teamTasks.superFlagged}
+                <Typography variant="h3" sx={{ fontWeight: 700, color: '#C82828', mb: 1 }}>
+                  {stats.superFlagged}
                 </Typography>
-                <Typography variant="body2" className="home-stat-label">
+                <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 500 }}>
                   Super Flagged
                 </Typography>
-                <Box className="home-stat-icon" sx={{ display: 'flex', justifyContent: 'center', mt: 1 }}>
-                  <LottieIcon
-                    animationData={warningFlashAnimation}
-                    size={48}
-                    loop={true}
-                    autoplay={true}
-                    speed={1.2}
-                    hover={true}
-                  />
-                </Box>
               </CardContent>
             </Card>
           </Grid>
-
           <Grid item xs={12} sm={6} md={3}>
-            <Card className="home-stat-card">
+            <Card 
+              sx={{ 
+                borderRadius: 3, 
+                boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+                transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+                '&:hover': {
+                  transform: 'translateY(-2px)',
+                  boxShadow: '0 8px 24px rgba(0,0,0,0.15)'
+                }
+              }}
+            >
               <CardContent sx={{ textAlign: 'center', py: 3 }}>
-                <Typography variant="h3" className="home-stat-value">
-                  {myTasks.draftedEmails + teamTasks.draftedEmails}
+                <Typography variant="h3" sx={{ fontWeight: 700, color: '#C82828', mb: 1 }}>
+                  {stats.draftedEmails}
                 </Typography>
-                <Typography variant="body2" className="home-stat-label">
+                <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 500 }}>
                   Drafted Emails
                 </Typography>
-                <Box className="home-stat-icon" sx={{ display: 'flex', justifyContent: 'center', mt: 1 }}>
-                  <LottieIcon
-                    animationData={emailPulseAnimation}
-                    size={48}
-                    loop={true}
-                    autoplay={true}
-                    speed={1.0}
-                    hover={true}
-                  />
-                </Box>
               </CardContent>
             </Card>
           </Grid>
-
           <Grid item xs={12} sm={6} md={3}>
-            <Card className="home-stat-card">
+            <Card 
+              sx={{ 
+                borderRadius: 3, 
+                boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+                transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+                '&:hover': {
+                  transform: 'translateY(-2px)',
+                  boxShadow: '0 8px 24px rgba(0,0,0,0.15)'
+                }
+              }}
+            >
               <CardContent sx={{ textAlign: 'center', py: 3 }}>
-                <Typography variant="h3" className="home-stat-value">
-                  {myTasks.newAccounts + teamTasks.newAccounts}
+                <Typography variant="h3" sx={{ fontWeight: 700, color: '#C82828', mb: 1 }}>
+                  {stats.newAccounts}
                 </Typography>
-                <Typography variant="body2" className="home-stat-label">
+                <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 500 }}>
                   New Accounts
                 </Typography>
-                <Box className="home-stat-icon" sx={{ display: 'flex', justifyContent: 'center', mt: 1 }}>
-                  <LottieIcon
-                    animationData={taskBounceAnimation}
-                    size={48}
-                    loop={true}
-                    autoplay={true}
-                    speed={0.6}
-                    hover={true}
-                  />
-                </Box>
               </CardContent>
             </Card>
           </Grid>
         </Grid>
 
+        {/* System Health and Recent Activity */}
         <Grid container spacing={3}>
           <Grid item xs={12} md={6}>
-            <Typography variant="h6" className="home-section-title">
-              System Health
-            </Typography>
-            <Box className="home-health-grid">
-              {systemHealth.map((item, index) => (
-                <Box key={index} className="home-health-item">
-                  <Typography className="home-health-icon">
-                    {item.icon}
-                  </Typography>
-                  <Box className="home-health-info">
-                    <Typography variant="body1" className="home-health-name">
-                      {item.name}
-                    </Typography>
-                    <Typography variant="body2" className="home-health-status">
-                      {item.lastRun}
-                    </Typography>
-                  </Box>
-                  <Chip
-                    label={item.status}
-                    color={getStatusColor(item.status)}
-                    size="small"
-                    className={`home-status-chip home-status-${item.status.toLowerCase()}`}
-                  />
-                </Box>
-              ))}
-            </Box>
+            <Card sx={{ borderRadius: 3, boxShadow: '0 4px 12px rgba(0,0,0,0.1)', height: '100%' }}>
+              <CardContent>
+                <Typography variant="h6" sx={{ fontWeight: 600, mb: 3, display: 'flex', alignItems: 'center' }}>
+                  <HealthAndSafety sx={{ mr: 1, color: '#C82828' }} />
+                  System Health
+                </Typography>
+                <List sx={{ p: 0 }}>
+                  {systemHealth.map((item, index) => (
+                    <React.Fragment key={index}>
+                      <ListItem sx={{ px: 0, py: 2 }}>
+                        <ListItemAvatar>
+                          <Avatar sx={{ bgcolor: 'transparent', color: '#666' }}>
+                            {item.icon}
+                          </Avatar>
+                        </ListItemAvatar>
+                        <ListItemText
+                          primary={
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                              <Typography variant="subtitle2" sx={{ fontWeight: 500 }}>
+                                {item.name}
+                              </Typography>
+                              <Chip 
+                                icon={getStatusIcon(item.status)}
+                                label={item.status} 
+                                color={getStatusColor(item.status)}
+                                size="small"
+                              />
+                            </Box>
+                          }
+                          secondary={
+                            <Typography variant="body2" color="text.secondary">
+                              {item.time}
+                            </Typography>
+                          }
+                        />
+                      </ListItem>
+                      {index < systemHealth.length - 1 && <Divider />}
+                    </React.Fragment>
+                  ))}
+                </List>
+              </CardContent>
+            </Card>
           </Grid>
 
           <Grid item xs={12} md={6}>
-            <Typography variant="h6" className="home-section-title">
-              Recent Activity
-            </Typography>
-            <Paper className="home-activity-list">
-              {recentActivity.map((activity, index) => (
-                <Box key={index} className="home-activity-item">
-                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    <Typography className="home-activity-icon">
-                      {activity.icon}
-                    </Typography>
-                    <Box className="home-activity-content">
-                      <Typography variant="body2" className="home-activity-text">
-                        {activity.type === 'user' ? (
-                          <>
-                            <span className="home-activity-user">{activity.user}</span> {activity.action}
-                          </>
-                        ) : (
-                          activity.action
-                        )}
-                      </Typography>
-                      <Typography variant="caption" className="home-activity-timestamp">
-                        {activity.timestamp}
-                      </Typography>
-                    </Box>
-                  </Box>
-                </Box>
-              ))}
-            </Paper>
+            <Card sx={{ borderRadius: 3, boxShadow: '0 4px 12px rgba(0,0,0,0.1)', height: '100%' }}>
+              <CardContent>
+                <Typography variant="h6" sx={{ fontWeight: 600, mb: 3, display: 'flex', alignItems: 'center' }}>
+                  <Assignment sx={{ mr: 1, color: '#C82828' }} />
+                  Recent Activity
+                </Typography>
+                <List sx={{ p: 0 }}>
+                  {recentActivity.map((item, index) => (
+                    <React.Fragment key={index}>
+                      <ListItem sx={{ px: 0, py: 2 }}>
+                        <ListItemAvatar>
+                          <Avatar sx={{ bgcolor: item.color, width: 40, height: 40 }}>
+                            {item.icon}
+                          </Avatar>
+                        </ListItemAvatar>
+                        <ListItemText
+                          primary={
+                            <Typography variant="subtitle2" sx={{ fontWeight: 500, mb: 0.5 }}>
+                              {item.message}
+                            </Typography>
+                          }
+                          secondary={
+                            <Typography variant="body2" color="text.secondary">
+                              {item.time}
+                            </Typography>
+                          }
+                        />
+                      </ListItem>
+                      {index < recentActivity.length - 1 && <Divider />}
+                    </React.Fragment>
+                  ))}
+                </List>
+              </CardContent>
+            </Card>
           </Grid>
         </Grid>
-
-        {/* Debug component for testing authentication */}
-        <AuthDebug />
-
       </Container>
-
-      <Menu
-        anchorEl={anchorEl}
-        open={Boolean(anchorEl)}
-        onClose={handleProfileMenuClose}
-        className="home-menu"
-      >
-        <MenuItem onClick={() => handleProfileAction('profile')} className="home-menu-item">
-          <AccountIcon sx={{ mr: 1 }} />
-          Profile
-        </MenuItem>
-        <MenuItem onClick={() => handleProfileAction('settings')} className="home-menu-item">
-          <SettingsIcon sx={{ mr: 1 }} />
-          Settings
-        </MenuItem>
-        <Divider />
-        <MenuItem onClick={() => handleProfileAction('logout')} className="home-menu-item">
-          <LogoutIcon sx={{ mr: 1 }} />
-          Logout
-        </MenuItem>
-      </Menu>
     </Box>
   );
 };
