@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
+import { Box } from '@mui/material';
 import LottiePlayer from './LottiePlayer';
 import LottieErrorBoundary from './LottieErrorBoundary';
 import LottieLoadingState from './LottieLoadingState';
@@ -89,13 +89,6 @@ const LottieWithStates = ({
     }
   };
 
-  // Reset retry count when animation loads successfully
-  useEffect(() => {
-    if (isLoaded && !error) {
-      setRetryCount(0);
-    }
-  }, [isLoaded, error]);
-
   const containerStyle = {
     width,
     height,
@@ -103,53 +96,32 @@ const LottieWithStates = ({
   };
 
   // Show loading state
-  if (showLoading && isLoading && !animationData) {
+  if (isLoading && showLoading) {
     return (
-      <Container style={containerStyle} className={className}>
+      <Box sx={containerStyle} className={className}>
         <LottieLoadingState
           type={loadingType}
           size={loadingSize}
           message={loadingMessage}
-          width="100%"
-          height="100%"
+          showMessage={true}
         />
-      </Container>
+      </Box>
     );
-  }
-
-  // Show error state
-  if (error && !isLoading) {
-    const ErrorComponent = (
-      <ErrorContainer style={containerStyle} className={className}>
-        <ErrorIcon>⚠️</ErrorIcon>
-        <ErrorTitle>Animation Failed</ErrorTitle>
-        <ErrorMessage>{error.message}</ErrorMessage>
-        {retryCount < maxRetries && (
-          <RetryButton onClick={handleRetry}>
-            Retry ({maxRetries - retryCount} attempts left)
-          </RetryButton>
-        )}
-        {retryCount >= maxRetries && (
-          <MaxRetriesMessage>
-            Maximum retry attempts reached. Please check your connection.
-          </MaxRetriesMessage>
-        )}
-      </ErrorContainer>
-    );
-
-    if (errorFallback) {
-      return typeof errorFallback === 'function' 
-        ? errorFallback(error, handleRetry)
-        : errorFallback;
-    }
-
-    return ErrorComponent;
   }
 
   // Show animation
   if (animationData) {
     const AnimationComponent = (
-      <Container style={containerStyle} className={className}>
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          position: 'relative',
+          ...containerStyle
+        }}
+        className={className}
+      >
         <LottiePlayer
           ref={animationRef}
           animationData={animationData}
@@ -164,7 +136,7 @@ const LottieWithStates = ({
           onError={handleError}
           {...props}
         />
-      </Container>
+      </Box>
     );
 
     if (showErrorBoundary) {
@@ -186,79 +158,34 @@ const LottieWithStates = ({
     return AnimationComponent;
   }
 
-  // Fallback empty state
+  // Show error state
+  if (error) {
+    return (
+      <LottieErrorBoundary
+        onError={handleError}
+        onRetry={handleRetry}
+        fallback={errorFallback}
+        width={width}
+        height={height}
+        className={className}
+        style={style}
+      >
+        <div>Error loading animation</div>
+      </LottieErrorBoundary>
+    );
+  }
+
+  // Default empty state
   return (
-    <Container style={containerStyle} className={className}>
-      <EmptyState>No animation data</EmptyState>
-    </Container>
+    <Box sx={containerStyle} className={className}>
+      <LottieLoadingState
+        type="spinner"
+        size={loadingSize}
+        message="No animation data"
+        showMessage={true}
+      />
+    </Box>
   );
 };
-
-// Styled Components
-const Container = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-`;
-
-const ErrorContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  background: rgba(255, 0, 0, 0.05);
-  border: 1px solid rgba(255, 0, 0, 0.2);
-  border-radius: 8px;
-  text-align: center;
-  gap: 12px;
-`;
-
-const ErrorIcon = styled.div`
-  font-size: 24px;
-`;
-
-const ErrorTitle = styled.h3`
-  margin: 0;
-  font-size: 16px;
-  font-weight: 600;
-  color: #d32f2f;
-`;
-
-const ErrorMessage = styled.p`
-  margin: 0;
-  font-size: 14px;
-  color: #666;
-  line-height: 1.4;
-`;
-
-const RetryButton = styled.button`
-  background: #d32f2f;
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 4px;
-  font-size: 12px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-
-  &:hover {
-    background: #b71c1c;
-  }
-`;
-
-const MaxRetriesMessage = styled.div`
-  font-size: 12px;
-  color: #999;
-  font-style: italic;
-`;
-
-const EmptyState = styled.div`
-  color: #999;
-  font-size: 14px;
-  font-style: italic;
-`;
 
 export default LottieWithStates;

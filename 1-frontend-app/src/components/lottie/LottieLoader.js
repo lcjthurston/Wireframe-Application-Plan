@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
+import { Box, Typography } from '@mui/material';
 import LottiePlayer from './LottiePlayer';
 
 const LottieLoader = ({
@@ -17,8 +17,26 @@ const LottieLoader = ({
   const loaderSize = typeof size === 'number' ? `${size}px` : size;
 
   const LoaderContent = (
-    <LoaderContainer className={className} style={style}>
-      <AnimationContainer size={loaderSize}>
+    <Box
+      className={className}
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: 2,
+        ...style
+      }}
+    >
+      <Box
+        sx={{
+          width: loaderSize,
+          height: loaderSize,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}
+      >
         <LottiePlayer
           animationData={animationData}
           loop={true}
@@ -29,58 +47,46 @@ const LottieLoader = ({
           renderer="svg"
           {...props}
         />
-      </AnimationContainer>
-      {showMessage && <LoaderMessage>{message}</LoaderMessage>}
-    </LoaderContainer>
+      </Box>
+      {showMessage && (
+        <Typography
+          variant="body2"
+          sx={{
+            fontSize: 14,
+            fontWeight: 500,
+            color: 'text.secondary',
+            textAlign: 'center'
+          }}
+        >
+          {message}
+        </Typography>
+      )}
+    </Box>
   );
 
   if (overlay) {
     return (
-      <OverlayContainer color={overlayColor}>
+      <Box
+        sx={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100vw',
+          height: '100vh',
+          backgroundColor: overlayColor,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 9999,
+          backdropFilter: 'blur(2px)'
+        }}
+      >
         {LoaderContent}
-      </OverlayContainer>
+      </Box>
     );
   }
 
   return LoaderContent;
 };
-
-// Styled Components
-const LoaderContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 16px;
-`;
-
-const AnimationContainer = styled.div`
-  width: ${props => props.size};
-  height: ${props => props.size};
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const LoaderMessage = styled.div`
-  font-size: 14px;
-  font-weight: 500;
-  color: #666;
-  text-align: center;
-`;
-
-const OverlayContainer = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: ${props => props.color};
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 9999;
-  backdrop-filter: blur(2px);
-`;
 
 export default LottieLoader;

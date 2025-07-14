@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
+import { Box } from '@mui/material';
 import LottiePlayer from './LottiePlayer';
 
 const LottieBackground = ({
@@ -18,12 +18,18 @@ const LottieBackground = ({
   ...props
 }) => {
   return (
-    <BackgroundContainer
-      $position={position}
-      $zIndex={zIndex}
-      $opacity={opacity}
+    <Box
+      sx={{
+        position,
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        zIndex,
+        opacity,
+        ...style
+      }}
       className={className}
-      style={style}
     >
       <LottiePlayer
         animationData={animationData}
@@ -36,43 +42,33 @@ const LottieBackground = ({
         preserveAspectRatio="xMidYMid slice"
         {...props}
       />
-      {overlay && <Overlay $color={overlayColor} />}
-      {children && <ContentLayer>{children}</ContentLayer>}
-    </BackgroundContainer>
+      {overlay && (
+        <Box
+          sx={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            backgroundColor: overlayColor,
+            pointerEvents: 'none'
+          }}
+        />
+      )}
+      {children && (
+        <Box
+          sx={{
+            position: 'relative',
+            zIndex: 1,
+            width: '100%',
+            height: '100%'
+          }}
+        >
+          {children}
+        </Box>
+      )}
+    </Box>
   );
 };
-
-// Styled Components
-const BackgroundContainer = styled.div`
-  position: ${props => props.$position};
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: ${props => props.$zIndex};
-  opacity: ${props => props.$opacity};
-  overflow: hidden;
-  pointer-events: none;
-`;
-
-const Overlay = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: ${props => props.$color};
-  pointer-events: none;
-`;
-
-const ContentLayer = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: auto;
-  z-index: 1;
-`;
 
 export default LottieBackground;
