@@ -1,136 +1,115 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
-  AppBar,
-  Toolbar,
+  Box,
   Typography,
+  Paper,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  ListItemSecondaryAction,
+  Avatar,
+  IconButton,
+  Chip,
   TextField,
-  Button,
+  InputAdornment,
+  Grid,
   Card,
   CardContent,
-  Chip,
-  Avatar,
-  Menu,
-  MenuItem,
-  IconButton,
-  Badge,
-  Box,
-  Grid,
-  Alert,
   Divider,
-  InputAdornment,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  FormControl,
-  InputLabel,
-  Select,
-  Checkbox,
-  ListItemText,
-  OutlinedInput
+  Button,
+  Menu,
+  MenuItem
 } from '@mui/material';
 import {
-  Search as SearchIcon,
+  Search,
+  MoreVert,
   AccountCircle,
   Business,
-  Phone,
-  Email,
-  LocationOn,
-  Person,
-  AttachMoney,
-  Description,
-  History,
-  Refresh,
-  GetApp,
+  Home,
   Edit,
-  MoreVert,
-  CheckCircle,
-  Warning,
-  Error,
-  Info,
-  Add as AddIcon,
-  FilterList as FilterIcon
+  Delete,
+  Visibility,
+  FilterList
 } from '@mui/icons-material';
-import kilowattImage from '../../assets/image.png';
-import './AccountsList.scss';
-import styled from 'styled-components';
-import colors from '../../assets/colors';
-import DataEntryModal from '../DataEntryModal';
 
-const AccountsList = ({ onLogout, onNavigate }) => {
+const AccountsList = ({ onNavigate, onSelectAccount }) => {
+  const [accounts, setAccounts] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState([]);
-  const [managerFilter, setManagerFilter] = useState([]);
-  const [companyFilter, setCompanyFilter] = useState([]);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-  const dropdownRef = useRef();
-  const [showDataEntryModal, setShowDataEntryModal] = useState(false);
+  const [filterType, setFilterType] = useState('all');
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [selectedAccountId, setSelectedAccountId] = useState(null);
 
   // Mock accounts data
-  const accounts = [
+  const mockAccounts = [
     {
       id: 1,
-      name: 'ABC Corporation',
-      manager: 'Sarah Johnson',
-      managementCompany: 'Property Management Inc.',
-      status: 'Needs Pricing',
-      statusColor: 'warning'
+      accountName: 'Tech Solutions Inc',
+      customerName: 'John Smith',
+      accountType: 'Commercial',
+      status: 'Active',
+      monthlyUsage: 15000,
+      monthlyBill: 1800,
+      lastActivity: '2024-01-15'
     },
     {
       id: 2,
-      name: 'XYZ Industries',
-      manager: 'Mike Chen',
-      managementCompany: 'Commercial Real Estate LLC',
-      status: 'Good',
-      statusColor: 'success'
+      accountName: 'Downtown Restaurant',
+      customerName: 'Maria Garcia',
+      accountType: 'Commercial',
+      status: 'Active',
+      monthlyUsage: 8500,
+      monthlyBill: 850,
+      lastActivity: '2024-01-14'
     },
     {
       id: 3,
-      name: 'Tech Solutions Ltd',
-      manager: null,
-      managementCompany: 'Metro Property Group',
-      status: 'Needs Manager',
-      statusColor: 'error'
+      accountName: 'Smith Residence',
+      customerName: 'Robert Smith',
+      accountType: 'Residential',
+      status: 'Pending',
+      monthlyUsage: 1200,
+      monthlyBill: 96,
+      lastActivity: '2024-01-13'
     },
     {
       id: 4,
-      name: 'Green Energy Co',
-      manager: 'Lisa Rodriguez',
-      managementCompany: 'Sustainable Properties',
-      status: 'Needs Contract Sent',
-      statusColor: 'info'
+      accountName: 'Manufacturing Corp',
+      customerName: 'David Wilson',
+      accountType: 'Industrial',
+      status: 'Active',
+      monthlyUsage: 45000,
+      monthlyBill: 4500,
+      lastActivity: '2024-01-12'
     },
     {
       id: 5,
-      name: 'Manufacturing Plus',
-      manager: 'David Kim',
-      managementCompany: 'Industrial Management Co.',
-      status: 'Needs Providers Selected',
-      statusColor: 'warning'
+      accountName: 'Green Energy Co',
+      customerName: 'Lisa Rodriguez',
+      accountType: 'Commercial',
+      status: 'Active',
+      monthlyUsage: 25000,
+      monthlyBill: 2750,
+      lastActivity: '2024-01-11'
+    },
+    {
+      id: 6,
+      accountName: 'Manufacturing Plus',
+      customerName: 'David Kim',
+      accountType: 'Industrial',
+      status: 'Pending',
+      monthlyUsage: 30000,
+      monthlyBill: 3300,
+      lastActivity: '2024-01-10'
     }
   ];
 
-  // Get unique values for filters
-  const uniqueStatuses = [...new Set(accounts.map(account => account.status))];
-  const uniqueManagers = [...new Set(accounts.map(account => account.manager).filter(Boolean))];
-  const uniqueCompanies = [...new Set(accounts.map(account => account.managementCompany))];
-
-  // Filter accounts based on search and filters
-  const filteredAccounts = accounts.filter(account => {
-    const matchesSearch = account.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         (account.manager && account.manager.toLowerCase().includes(searchTerm.toLowerCase())) ||
-                         account.managementCompany.toLowerCase().includes(searchTerm.toLowerCase());
-    
-    const matchesStatus = statusFilter.length === 0 || statusFilter.includes(account.status);
-    const matchesManager = managerFilter.length === 0 || 
-                          (account.manager && managerFilter.includes(account.manager)) ||
-                          (!account.manager && managerFilter.includes('Unassigned'));
-    const matchesCompany = companyFilter.length === 0 || companyFilter.includes(account.managementCompany);
-
-    return matchesSearch && matchesStatus && matchesManager && matchesCompany;
+  // Filter accounts based on search and filter type
+  const filteredAccounts = mockAccounts.filter(account => {
+    const matchesSearch = account.accountName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         account.customerName.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesFilter = filterType === 'all' || account.status === filterType;
+    return matchesSearch && matchesFilter;
   });
 
   const handleNavigation = (page) => {
@@ -572,3 +551,4 @@ const FiltersSection = styled.div`
 `;
 
 export default AccountsList;
+
