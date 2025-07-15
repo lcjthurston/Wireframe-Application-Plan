@@ -15,6 +15,7 @@ import CommissionDashboard from './components/CommissionDashboard';
 import ProviderDashboard from './components/ProviderDashboard';
 import DataEntryModal from './components/DataEntryModal';
 import AccountDetail from './components/AccountDetail';
+import ManagerDetail from './components/ManagerDetail';
 
 function App() {
   // App component logic remains the same
@@ -60,15 +61,20 @@ const AppContent = () => {
     const stored = localStorage.getItem('selectedAccountId');
     return stored ? parseInt(stored) : null;
   });
+  const [selectedManagerId, setSelectedManagerId] = useState(null);
 
   const handleNavigation = (page, params = {}) => {
     setCurrentPage(page);
-    // Store current page in localStorage
     localStorage.setItem('currentPage', page);
     
     if (params.accountId) {
       setSelectedAccountId(params.accountId);
       localStorage.setItem('selectedAccountId', params.accountId.toString());
+    }
+    
+    if (params.managerId) {
+      setSelectedManagerId(params.managerId);
+      localStorage.setItem('selectedManagerId', params.managerId.toString());
     }
   };
 
@@ -102,6 +108,8 @@ const AppContent = () => {
         return <AccountDetail onLogout={logout} onNavigate={handleNavigation} accountId={selectedAccountId} />;
       case 'manager':
         return <ManagerDashboard onLogout={logout} onNavigate={handleNavigation} />;
+      case 'managerDetail':
+        return <ManagerDetail onLogout={logout} onNavigate={handleNavigation} managerId={selectedManagerId} />;
       case 'email-draft':
         return <EmailDraftDashboard onLogout={logout} onNavigate={handleNavigation} />;
       case 'commission':

@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import {
   Box,
+  AppBar,
+  Toolbar,
+  Typography,
+  Button,
   Card,
   CardContent,
-  Typography,
-  Grid,
-  Chip,
-  Button,
   Table,
   TableBody,
   TableCell,
@@ -14,19 +14,23 @@ import {
   TableHead,
   TableRow,
   Paper,
-  Avatar
+  Container,
+  Avatar,
+  Grid,
+  Chip
 } from '@mui/material';
 import {
+  ArrowBack,
+  Add,
   Person,
-  Business,
+  History,
   Email,
   Phone,
-  LocationOn,
-  Add,
-  History
+  Business
 } from '@mui/icons-material';
+import kilowattImage from '../../assets/image.png';
 
-const ManagerDetail = ({ managerId, onNavigate }) => {
+const ManagerDetail = ({ managerId, onNavigate, onLogout }) => {
   const [manager, setManager] = useState(null);
   const [associatedAccounts, setAssociatedAccounts] = useState([]);
 
@@ -64,147 +68,189 @@ const ManagerDetail = ({ managerId, onNavigate }) => {
   if (!manager) return null;
 
   return (
-    <Box sx={{ p: 3 }}>
-      <Card sx={{ mb: 3 }}>
-        <CardContent>
-          <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
-            <Avatar sx={{ width: 64, height: 64, mr: 2, bgcolor: 'primary.main' }}>
-              <Person sx={{ fontSize: 32 }} />
-            </Avatar>
-            <Box>
-              <Typography variant="h4" component="h1">
-                {manager.name}
-              </Typography>
-              <Typography variant="subtitle1" color="text.secondary">
-                {manager.title}
-              </Typography>
-            </Box>
+    <Box sx={{ minHeight: '100vh', backgroundColor: '#fafafa' }}>
+      <AppBar 
+        position="static" 
+        sx={{ 
+          background: 'linear-gradient(135deg, #C82828 0%, #B71C1C 100%)',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+        }}
+      >
+        <Toolbar sx={{ minHeight: 72 }}>
+          <Button
+            startIcon={<ArrowBack />}
+            onClick={() => onNavigate('manager')}
+            sx={{ color: 'white', mr: 2 }}
+          >
+            Back to Managers
+          </Button>
+          
+          <Box sx={{ display: 'flex', alignItems: 'center', mr: 2 }}>
+            <img 
+              src={kilowattImage} 
+              alt="Kilowatt Logo" 
+              style={{ width: 44, height: 44, marginRight: 14, borderRadius: 9 }}
+            />
+            <Typography variant="h6" sx={{ fontWeight: 700, color: 'white' }}>
+              Kilowatt
+            </Typography>
           </Box>
 
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={6}>
-              <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                <Email sx={{ mr: 1, color: 'text.secondary' }} />
-                <Typography>{manager.email}</Typography>
+          <Box sx={{ flexGrow: 1 }} />
+
+          <Button
+            onClick={onLogout}
+            sx={{ color: 'white', textTransform: 'none', fontWeight: 600 }}
+          >
+            Logout
+          </Button>
+        </Toolbar>
+      </AppBar>
+
+      <Container maxWidth="xl" sx={{ py: 4 }}>
+        <Card sx={{ mb: 3 }}>
+          <CardContent>
+            <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+              <Avatar sx={{ width: 64, height: 64, mr: 2, bgcolor: 'primary.main' }}>
+                <Person sx={{ fontSize: 32 }} />
+              </Avatar>
+              <Box>
+                <Typography variant="h4" component="h1">
+                  {manager.name}
+                </Typography>
+                <Typography variant="subtitle1" color="text.secondary">
+                  {manager.title}
+                </Typography>
               </Box>
-              <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                <Phone sx={{ mr: 1, color: 'text.secondary' }} />
-                <Typography>{manager.phone}</Typography>
-              </Box>
-              <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <Business sx={{ mr: 1, color: 'text.secondary' }} />
-                <Typography>{manager.managementCompany}</Typography>
-              </Box>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Grid container spacing={2}>
-                <Grid item xs={6}>
-                  <Card variant="outlined">
-                    <CardContent sx={{ textAlign: 'center' }}>
-                      <Typography variant="h4" color="primary">
-                        {manager.accountCount}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        Active Accounts
-                      </Typography>
-                    </CardContent>
-                  </Card>
-                </Grid>
-                <Grid item xs={6}>
-                  <Card variant="outlined">
-                    <CardContent sx={{ textAlign: 'center' }}>
-                      <Typography variant="h4" color="success.main">
-                        {manager.activeAccounts}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        Total Billing
-                      </Typography>
-                    </CardContent>
-                  </Card>
-                </Grid>
-                <Grid item xs={6}>
-                  <Card variant="outlined">
-                    <CardContent sx={{ textAlign: 'center' }}>
-                      <Typography variant="h4" color="warning.main">
-                        ${manager.totalCommission.toLocaleString()}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        YTD Commission
-                      </Typography>
-                    </CardContent>
-                  </Card>
-                </Grid>
-                <Grid item xs={6}>
-                  <Card variant="outlined">
-                    <CardContent sx={{ textAlign: 'center' }}>
-                      <Typography variant="h4" color="info.main">
-                        {manager.pendingContracts}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        Pending Contracts
-                      </Typography>
-                    </CardContent>
-                  </Card>
+            </Box>
+
+            <Grid container spacing={3}>
+              <Grid item xs={12} md={6}>
+                <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                  <Email sx={{ mr: 1, color: 'text.secondary' }} />
+                  <Typography>{manager.email}</Typography>
+                </Box>
+                <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                  <Phone sx={{ mr: 1, color: 'text.secondary' }} />
+                  <Typography>{manager.phone}</Typography>
+                </Box>
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                  <Business sx={{ mr: 1, color: 'text.secondary' }} />
+                  <Typography>{manager.managementCompany}</Typography>
+                </Box>
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <Grid container spacing={2}>
+                  <Grid item xs={6}>
+                    <Card variant="outlined">
+                      <CardContent sx={{ textAlign: 'center' }}>
+                        <Typography variant="h4" color="primary">
+                          {manager.accountCount}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          Active Accounts
+                        </Typography>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Card variant="outlined">
+                      <CardContent sx={{ textAlign: 'center' }}>
+                        <Typography variant="h4" color="success.main">
+                          {manager.activeAccounts}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          Total Billing
+                        </Typography>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Card variant="outlined">
+                      <CardContent sx={{ textAlign: 'center' }}>
+                        <Typography variant="h4" color="warning.main">
+                          ${manager.totalCommission.toLocaleString()}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          YTD Commission
+                        </Typography>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Card variant="outlined">
+                      <CardContent sx={{ textAlign: 'center' }}>
+                        <Typography variant="h4" color="info.main">
+                          {manager.pendingContracts}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          Pending Contracts
+                        </Typography>
+                      </CardContent>
+                    </Card>
+                  </Grid>
                 </Grid>
               </Grid>
             </Grid>
-          </Grid>
 
-          <Box sx={{ mt: 3, display: 'flex', gap: 2 }}>
-            <Button variant="outlined" startIcon={<Add />}>
-              Account List
-            </Button>
-            <Button variant="outlined" startIcon={<History />}>
-              Activity History
-            </Button>
-          </Box>
-        </CardContent>
-      </Card>
+            <Box sx={{ mt: 3, display: 'flex', gap: 2 }}>
+              <Button variant="outlined" startIcon={<Add />}>
+                Account List
+              </Button>
+              <Button variant="outlined" startIcon={<History />}>
+                Activity History
+              </Button>
+            </Box>
+          </CardContent>
+        </Card>
 
-      <Card>
-        <CardContent>
-          <Typography variant="h6" component="h2" sx={{ mb: 3 }}>
-            Associated Accounts
-          </Typography>
-          
-          <TableContainer component={Paper} variant="outlined">
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Account Name</TableCell>
-                  <TableCell>Status</TableCell>
-                  <TableCell>Contract End Date</TableCell>
-                  <TableCell>Rate</TableCell>
-                  <TableCell>Monthly Commission</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {associatedAccounts.map((account) => (
-                  <TableRow key={account.id} hover>
-                    <TableCell>
-                      <Typography variant="subtitle2" fontWeight="medium">
-                        {account.name}
-                      </Typography>
-                    </TableCell>
-                    <TableCell>
-                      <Chip 
-                        label={account.status} 
-                        color="success" 
-                        size="small" 
-                      />
-                    </TableCell>
-                    <TableCell>{account.contractEndDate}</TableCell>
-                    <TableCell>{account.rate}</TableCell>
-                    <TableCell>{account.monthlyCommission}</TableCell>
+        <Card>
+          <CardContent>
+            <Typography variant="h6" component="h2" sx={{ mb: 3 }}>
+              Associated Accounts
+            </Typography>
+            
+            <TableContainer component={Paper} variant="outlined">
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Account Name</TableCell>
+                    <TableCell>Status</TableCell>
+                    <TableCell>Contract End Date</TableCell>
+                    <TableCell>Rate</TableCell>
+                    <TableCell>Monthly Commission</TableCell>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </CardContent>
-      </Card>
+                </TableHead>
+                <TableBody>
+                  {associatedAccounts.map((account) => (
+                    <TableRow key={account.id} hover>
+                      <TableCell>
+                        <Typography variant="subtitle2" fontWeight="medium">
+                          {account.name}
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Chip 
+                          label={account.status} 
+                          color="success" 
+                          size="small" 
+                        />
+                      </TableCell>
+                      <TableCell>{account.contractEndDate}</TableCell>
+                      <TableCell>{account.rate}</TableCell>
+                      <TableCell>{account.monthlyCommission}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </CardContent>
+        </Card>
+      </Container>
     </Box>
   );
 };
 
 export default ManagerDetail;
+
+
