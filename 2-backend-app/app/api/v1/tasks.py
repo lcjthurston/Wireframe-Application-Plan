@@ -117,37 +117,39 @@ async def delete_task(
     db.commit()
     return {"message": "Task deleted successfully"}
 
-
-@router.post("/{task_id}/assign")
-async def assign_task(
-    task_id: int,
+@router.get("/user/{user_id}", response_model=List[TaskResponse])
+async def get_user_tasks(
     user_id: int,
+    status: str = None,
     db: Session = Depends(get_db),
     current_user_id: int = Depends(get_current_user_id)
 ):
-    """Assign a task to a user"""
-    task = db.query(Task).filter(Task.id == task_id).first()
-    if task is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Task not found"
-        )
+    """Get tasks assigned to a specific user"""
+    query = db.query(Task).filter(Task.assigned_to == user_id)
     
-    task.assigned_to = user_id
-    task.status = "in_progress"
-    db.commit()
-    db.refresh(task)
+    if status:
+        query = query.filter(Task.status == status)
     
-    return {"message": "Task assigned successfully", "task_id": task_id}
+    tasks = query.order_by(Task.created_at.desc()).all()
+    return tasks
 
+@router.get("/account/{account_id}", response_model=List[TaskResponse])
+async def get_account_tasks(
+    account_id: int,
+    db: Session = Depends(get_db),
+    current_user_id: int = Depends(get_current_user_id)
+):
+    """Get all tasks related to a specific account"""
+    tasks = db.query(Task).filter(Task.account_id == account_id).order_by(Task.created_at.desc()).all()
+    return tasks
 
-@router.post("/{task_id}/complete")
-async def complete_task(
+@router.post("/{task_id}/cancel")
+async def cancel_task(
     task_id: int,
     db: Session = Depends(get_db),
     current_user_id: int = Depends(get_current_user_id)
 ):
-    """Mark a task as completed"""
+    """Cancel a task"""
     task = db.query(Task).filter(Task.id == task_id).first()
     if task is None:
         raise HTTPException(
@@ -155,9 +157,39 @@ async def complete_task(
             detail="Task not found"
         )
     
-    task.status = "completed"
-    task.completed_at = datetime.utcnow()
+    if task.status == "completed":
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Cannot cancel completed task"
+        )
+    
+    task.status = "cancelled"
+    task.updated_at = datetime.utcnow()
     db.commit()
     db.refresh(task)
     
-    return {"message": "Task completed successfully", "task_id": task_id} 
+    return {"message": "Task cancelled successfully", "task_id": task_id}
+
+@router.get("/stats")
+async def get_task_stats(
+    db: Session = Depends(get_db),
+    current_user_id: int = Depends(get_current_user_id)
+):
+    """Get task statistics"""
+    total_tasks = db.query(Task).count()
+    pending_tasks = db.query(Task).filter(Task.status == "pending").count()
+    in_progress_tasks = db.query(Task).filter(Task.status == "in_progress").count()
+    completed_tasks = db.query(Task).filter(Task.status == "completed").count()
+    overdue_tasks = db.query(Task).filter(
+        Task.due_date < datetime.utcnow(),
+        Task.status.in_(["pending", "in_progress"])
+    ).count()
+    
+    return {
+        "total": total_tasks,
+        "pending": pending_tasks,
+        "in_progress": in_progress_tasks,
+        "completed": completed_tasks,
+        "overdue": overdue_tasks,
+        "completion_rate": round((completed_tasks / total_tasks * 100) if total_tasks > 0 else 0, 2)
+    }

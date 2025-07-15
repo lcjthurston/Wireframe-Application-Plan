@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Boolean, DateTime, JSON
+from sqlalchemy import Column, Integer, String, Boolean, DateTime, Text, ForeignKey
 from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
 from app.database import Base
@@ -12,9 +12,11 @@ class Manager(Base):
     email = Column(String, unique=True, index=True, nullable=False)
     phone = Column(String)
     department = Column(String)
-    accounts_count = Column(Integer, default=0)
-    performance_metrics = Column(JSON)  # Store performance data
+    position = Column(String)
+    hire_date = Column(DateTime)
     is_active = Column(Boolean, default=True)
+    notes = Column(Text)
+    created_by = Column(Integer, ForeignKey("users.id"))
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 

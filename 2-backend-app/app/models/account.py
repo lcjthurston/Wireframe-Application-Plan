@@ -15,6 +15,7 @@ class Account(Base):
     created_by = Column(Integer, ForeignKey("users.id"))
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow)
+    manager_id = Column(Integer, ForeignKey("managers.id"))
 
     # Relationships
     manager = relationship("Manager", back_populates="accounts")

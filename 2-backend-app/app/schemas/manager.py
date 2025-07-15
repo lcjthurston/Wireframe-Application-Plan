@@ -1,36 +1,38 @@
-from pydantic import BaseModel
-from typing import Optional, Dict, Any
+from pydantic import BaseModel, EmailStr
+from typing import Optional
 from datetime import datetime
 
 
 class ManagerBase(BaseModel):
     name: str
-    email: str
+    email: EmailStr
     phone: Optional[str] = None
     department: Optional[str] = None
+    position: Optional[str] = None
 
 
 class ManagerCreate(ManagerBase):
-    pass
+    hire_date: Optional[datetime] = None
+    notes: Optional[str] = None
 
 
 class ManagerUpdate(BaseModel):
     name: Optional[str] = None
-    email: Optional[str] = None
+    email: Optional[EmailStr] = None
     phone: Optional[str] = None
     department: Optional[str] = None
-    accounts_count: Optional[int] = None
-    performance_metrics: Optional[Dict[str, Any]] = None
+    position: Optional[str] = None
+    notes: Optional[str] = None
     is_active: Optional[bool] = None
 
 
 class ManagerResponse(ManagerBase):
     id: int
-    accounts_count: int
-    performance_metrics: Optional[Dict[str, Any]] = None
     is_active: bool
+    hire_date: Optional[datetime]
+    notes: Optional[str]
     created_at: datetime
-    updated_at: Optional[datetime] = None
-
+    updated_at: Optional[datetime]
+    
     class Config:
         from_attributes = True 
