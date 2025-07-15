@@ -6,6 +6,7 @@ from app.models.account import Account
 from app.schemas.account import AccountCreate, AccountUpdate, AccountResponse
 from app.api.v1.auth import oauth2_scheme
 from app.core.security import verify_token
+from app.services.centerpoint import centerpoint_client
 
 router = APIRouter()
 
@@ -104,26 +105,35 @@ async def delete_account(
 @router.post("/{account_id}/refresh-usage")
 async def refresh_usage_data(
     account_id: int,
-    db: Session = Depends(get_db),
-    current_user_id: int = Depends(get_current_user_id)
+    current_user_id: int = Depends(get_current_user_id),
+    db: Session = Depends(get_db)
 ):
     """Refresh usage data from Centerpoint API"""
     account = db.query(Account).filter(Account.id == account_id).first()
-    if account is None:
+    if not account:
+        raise HTTPException(status_code=404, detail="Account not found")
+    
+    if not account.esiid:
+        raise HTTPException(status_code=400, detail="Account has no ESIID")
+    
+    try:
+        usage_data = await centerpoint_client.get_usage_data(account.esiid)
+        
+        # Update account with real usage data
+        account.usage_kwh = usage_data.get("total_kwh", 0)
+        account.last_usage_update = datetime.utcnow()
+        db.commit()
+        
+        return {
+            "message": "Usage data updated successfully",
+            "usage_kwh": account.usage_kwh,
+            "last_updated": account.last_usage_update
+        }
+    except Exception as e:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Account not found"
+            status_code=500, 
+            detail=f"Failed to refresh usage data: {str(e)}"
         )
-    
-    # TODO: Implement Centerpoint API integration
-    # This would fetch usage data from Centerpoint and update the account
-    
-    # Mock response for now
-    return {
-        "message": "Usage data refresh initiated",
-        "account_id": account_id,
-        "status": "pending"
-    }
 
 
 @router.post("/{account_id}/generate-pricing")

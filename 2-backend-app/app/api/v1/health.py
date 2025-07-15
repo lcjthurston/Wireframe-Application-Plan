@@ -7,6 +7,9 @@ from app.models.system_health import SystemHealth
 from app.schemas.system_health import SystemHealthCreate, SystemHealthResponse
 from app.api.v1.auth import oauth2_scheme
 from app.core.security import verify_token
+from app.services.centerpoint import centerpoint_client
+import redis
+from app.core.config import settings
 
 router = APIRouter()
 
@@ -50,32 +53,60 @@ async def get_services_status(
     return services
 
 
-@router.post("/check")
-async def check_system_health(
-    db: Session = Depends(get_db),
-    current_user_id: int = Depends(get_current_user_id)
-):
-    """Manual system health check"""
-    # TODO: Implement actual health checks for:
-    # - Database connectivity
-    # - External API connectivity (Centerpoint)
-    # - Email service connectivity
-    # - Redis connectivity
-    
-    # Mock health check for now
+@router.get("/")
+async def get_system_health(db: Session = Depends(get_db)):
+    """Get comprehensive system health status"""
     health_status = {
-        "database": "OK",
-        "centerpoint_api": "OK", 
-        "email_service": "OK",
-        "redis": "OK",
-        "timestamp": datetime.utcnow().isoformat()
+        "timestamp": datetime.utcnow(),
+        "overall_status": "healthy",
+        "services": {}
     }
     
-    return {
-        "status": "healthy",
-        "services": health_status,
-        "message": "All systems operational"
-    }
+    # Database health
+    try:
+        db.execute("SELECT 1")
+        health_status["services"]["database"] = {"status": "healthy", "response_time_ms": 0}
+    except Exception as e:
+        health_status["services"]["database"] = {"status": "unhealthy", "error": str(e)}
+        health_status["overall_status"] = "unhealthy"
+    
+    # Redis health
+    try:
+        r = redis.from_url(settings.redis_url)
+        r.ping()
+        health_status["services"]["redis"] = {"status": "healthy"}
+    except Exception as e:
+        health_status["services"]["redis"] = {"status": "unhealthy", "error": str(e)}
+    
+    # Centerpoint API health
+    try:
+        is_healthy = await centerpoint_client.check_connection()
+        health_status["services"]["centerpoint_api"] = {
+            "status": "healthy" if is_healthy else "unhealthy"
+        }
+        if not is_healthy:
+            health_status["overall_status"] = "degraded"
+    except Exception as e:
+        health_status["services"]["centerpoint_api"] = {"status": "unhealthy", "error": str(e)}
+    
+    return health_status
+
+
+@router.post("/check")
+async def run_health_check(db: Session = Depends(get_db)):
+    """Run comprehensive health check and store results"""
+    health_data = await get_system_health(db)
+    
+    # Store health check result in database
+    health_record = SystemHealth(
+        status=health_data["overall_status"],
+        details=health_data["services"],
+        checked_at=datetime.utcnow()
+    )
+    db.add(health_record)
+    db.commit()
+    
+    return health_data
 
 
 @router.post("/", response_model=SystemHealthResponse)

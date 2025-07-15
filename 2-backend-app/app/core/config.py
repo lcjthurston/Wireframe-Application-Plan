@@ -19,6 +19,10 @@ class Settings(BaseSettings):
     access_token_expire_minutes: int = 30
     refresh_token_expire_days: int = 7
     
+    # Centerpoint API
+    centerpoint_api_url: str = "https://api.centerpoint.com"
+    centerpoint_api_key: Optional[str] = None
+    
     # Redis
     redis_url: str = "redis://localhost:6379"
     
@@ -30,10 +34,6 @@ class Settings(BaseSettings):
     
     # CORS
     cors_origins: List[str] = ["http://localhost:3000", "http://localhost:3001"]
-    
-    # External APIs
-    centerpoint_api_url: str = "https://api.centerpoint.com"
-    centerpoint_api_key: Optional[str] = None
     
     # Logging
     log_level: str = "INFO"
