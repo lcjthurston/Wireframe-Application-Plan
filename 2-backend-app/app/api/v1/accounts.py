@@ -24,12 +24,12 @@ def get_current_user_id(token: str = Depends(oauth2_scheme)) -> int:
 
 @router.get("/", response_model=List[AccountResponse])
 async def get_accounts(
-    skip: int = 0,
+    skip: int = 0, 
     limit: int = 100,
-    db: Session = Depends(get_db),
-    current_user_id: int = Depends(get_current_user_id)
+    current_user_id: int = Depends(get_current_user_id),
+    db: Session = Depends(get_db)
 ):
-    """Get all accounts with pagination"""
+    """Get all accounts with real database query"""
     accounts = db.query(Account).offset(skip).limit(limit).all()
     return accounts
 
@@ -37,38 +37,24 @@ async def get_accounts(
 @router.get("/{account_id}", response_model=AccountResponse)
 async def get_account(
     account_id: int,
-    db: Session = Depends(get_db),
-    current_user_id: int = Depends(get_current_user_id)
+    current_user_id: int = Depends(get_current_user_id),
+    db: Session = Depends(get_db)
 ):
-    """Get account by ID"""
+    """Get specific account"""
     account = db.query(Account).filter(Account.id == account_id).first()
-    if account is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Account not found"
-        )
+    if not account:
+        raise HTTPException(status_code=404, detail="Account not found")
     return account
 
 
 @router.post("/", response_model=AccountResponse)
 async def create_account(
-    account_data: AccountCreate,
-    db: Session = Depends(get_db),
-    current_user_id: int = Depends(get_current_user_id)
+    account: AccountCreate,
+    current_user_id: int = Depends(get_current_user_id),
+    db: Session = Depends(get_db)
 ):
-    """Create a new account"""
-    # Check if account number already exists
-    existing_account = db.query(Account).filter(
-        Account.account_number == account_data.account_number
-    ).first()
-    
-    if existing_account:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Account number already exists"
-        )
-    
-    db_account = Account(**account_data.dict())
+    """Create new account"""
+    db_account = Account(**account.dict(), created_by=current_user_id)
     db.add(db_account)
     db.commit()
     db.refresh(db_account)
@@ -78,23 +64,19 @@ async def create_account(
 @router.put("/{account_id}", response_model=AccountResponse)
 async def update_account(
     account_id: int,
-    account_data: AccountUpdate,
-    db: Session = Depends(get_db),
-    current_user_id: int = Depends(get_current_user_id)
+    account_update: AccountUpdate,
+    current_user_id: int = Depends(get_current_user_id),
+    db: Session = Depends(get_db)
 ):
-    """Update an account"""
+    """Update account"""
     account = db.query(Account).filter(Account.id == account_id).first()
-    if account is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Account not found"
-        )
+    if not account:
+        raise HTTPException(status_code=404, detail="Account not found")
     
-    # Update only provided fields
-    update_data = account_data.dict(exclude_unset=True)
-    for field, value in update_data.items():
+    for field, value in account_update.dict(exclude_unset=True).items():
         setattr(account, field, value)
     
+    account.updated_at = datetime.utcnow()
     db.commit()
     db.refresh(account)
     return account
