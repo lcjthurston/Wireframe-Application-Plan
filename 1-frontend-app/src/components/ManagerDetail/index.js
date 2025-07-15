@@ -26,7 +26,10 @@ import {
   History,
   Email,
   Phone,
-  Business
+  Business,
+  Delete,
+  SwapHoriz,
+  Edit
 } from '@mui/icons-material';
 import kilowattImage from '../../assets/image.png';
 import NavBar from '../shared/NavBar';
@@ -165,12 +168,53 @@ const ManagerDetail = ({ managerId, onNavigate, onLogout }) => {
               </Grid>
             </Grid>
 
-            <Box sx={{ mt: 3, display: 'flex', gap: 2 }}>
-              <Button variant="outlined" startIcon={<Add />}>
-                Account List
+            <Box sx={{ mt: 3, display: 'flex', gap: 2, flexWrap: 'wrap' }}>
+              <Button
+                variant="contained"
+                startIcon={<Add />}
+                onClick={() => console.log('Add New Account clicked')}
+                sx={{
+                  backgroundColor: '#c62828',
+                  '&:hover': { backgroundColor: '#8e0000' }
+                }}
+              >
+                Add New Account
               </Button>
-              <Button variant="outlined" startIcon={<History />}>
-                Activity History
+              <Button
+                variant="outlined"
+                startIcon={<Delete />}
+                onClick={() => console.log('Remove Account clicked')}
+                sx={{
+                  borderColor: '#c62828',
+                  color: '#c62828',
+                  '&:hover': { borderColor: '#8e0000', color: '#8e0000' }
+                }}
+              >
+                Remove Account
+              </Button>
+              <Button
+                variant="outlined"
+                startIcon={<SwapHoriz />}
+                onClick={() => console.log('Change Management Company clicked')}
+                sx={{
+                  borderColor: '#c62828',
+                  color: '#c62828',
+                  '&:hover': { borderColor: '#8e0000', color: '#8e0000' }
+                }}
+              >
+                Change Management Company
+              </Button>
+              <Button
+                variant="outlined"
+                startIcon={<Edit />}
+                onClick={() => console.log('Edit Manager Info clicked')}
+                sx={{
+                  borderColor: '#c62828',
+                  color: '#c62828',
+                  '&:hover': { borderColor: '#8e0000', color: '#8e0000' }
+                }}
+              >
+                Edit Manager Info
               </Button>
             </Box>
           </CardContent>

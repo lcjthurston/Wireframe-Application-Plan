@@ -66,7 +66,7 @@ const CommissionDashboard = ({ onLogout, onNavigate }) => {
   const energyRepData = [
     {
       id: 1,
-      name: 'Sarah Johnson',
+      name: 'PowerGrid Solutions',
       projectedCommissions: 45000,
       receivedCommissions: 42000,
       variance: -3000,
@@ -74,7 +74,7 @@ const CommissionDashboard = ({ onLogout, onNavigate }) => {
     },
     {
       id: 2,
-      name: 'Mike Wilson',
+      name: 'Energy Connect Corp',
       projectedCommissions: 38000,
       receivedCommissions: 41000,
       variance: 3000,
@@ -82,7 +82,7 @@ const CommissionDashboard = ({ onLogout, onNavigate }) => {
     },
     {
       id: 3,
-      name: 'John Smith',
+      name: 'Volt Energy Partners',
       projectedCommissions: 32000,
       receivedCommissions: 28000,
       variance: -4000,
@@ -663,7 +663,7 @@ const CommissionDashboard = ({ onLogout, onNavigate }) => {
                     <TableRow key={commission.id}>
                       <TableCell>{commission.accountName}</TableCell>
                       <TableCell>{commission.manager}</TableCell>
-                      <TableCell>{commission.rep || 'Sarah Johnson'}</TableCell>
+                      <TableCell>{commission.rep || 'PowerGrid Solutions'}</TableCell>
                       <TableCell>
                         <Typography className="commission-amount">
                           ${commission.commissionAmount.toLocaleString()}
@@ -774,9 +774,9 @@ const CommissionDashboard = ({ onLogout, onNavigate }) => {
                     label="Filter by Rep"
                   >
                     <MenuItem value="all">All Reps</MenuItem>
-                    <MenuItem value="sarah">Sarah Johnson</MenuItem>
-                    <MenuItem value="mike">Mike Wilson</MenuItem>
-                    <MenuItem value="john">John Smith</MenuItem>
+                    <MenuItem value="powergrid">PowerGrid Solutions</MenuItem>
+                    <MenuItem value="energyconnect">Energy Connect Corp</MenuItem>
+                    <MenuItem value="volt">Volt Energy Partners</MenuItem>
                   </Select>
                 </FormControl>
                 
