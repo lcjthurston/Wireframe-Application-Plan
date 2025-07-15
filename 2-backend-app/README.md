@@ -57,7 +57,7 @@ uvicorn app.main:app --reload
 - **Validation**: Pydantic
 - **Caching**: Redis
 - **Migrations**: Alembic
-- **Testing**: pytest
+- **Testing**: Built-in testing framework ready
 - **Documentation**: Swagger/OpenAPI
 
 ## 📁 Project Structure
@@ -225,17 +225,9 @@ alembic downgrade -1
 
 ### Running Tests
 ```bash
-# Run all tests
-pytest
-
-# Run with coverage
-pytest --cov=app
-
-# Run specific test file
-pytest tests/test_auth.py
-
-# Run with verbose output
-pytest -v
+# Set up testing framework as needed
+# Tests can be added to a tests/ directory
+# Use pytest or unittest for testing
 ```
 
 ### Code Quality
@@ -257,9 +249,6 @@ flake8 .
 ```bash
 # Start with auto-reload
 uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
-
-# Or use the run script
-python run.py
 ```
 
 ## 🚀 Deployment

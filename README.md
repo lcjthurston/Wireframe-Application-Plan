@@ -8,8 +8,7 @@ A comprehensive business intelligence platform for energy management, featuring 
 kilowatt-platform/
 ├── 1-frontend-app/          # React frontend application
 ├── 2-backend-app/           # FastAPI backend API
-├── README.md               # This file
-└── docs/                   # Project documentation (if any)
+└── README.md               # This file
 ```
 
 ## 🚀 Quick Start
@@ -123,8 +122,6 @@ kilowatt-platform/
 
 - [Frontend Documentation](1-frontend-app/README.md)
 - [Backend Documentation](2-backend-app/README.md)
-- [Authentication Guide](1-frontend-app/AUTHENTICATION.md)
-- [Lottie Animation Guide](1-frontend-app/docs/LOTTIE_GUIDE.md)
 
 ## 🔧 Development
 

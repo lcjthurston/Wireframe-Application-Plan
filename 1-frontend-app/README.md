@@ -185,9 +185,9 @@ npm run build
 ```
 
 ### Heroku Deployment
-The app includes Heroku configuration:
-- `Procfile` - Deployment commands
-- `static.json` - Static file serving
+The app is ready for Heroku deployment. Add deployment configuration files as needed:
+- `Procfile` - Deployment commands (to be created)
+- `static.json` - Static file serving (to be created)
 
 ### Docker Deployment
 ```bash
@@ -259,5 +259,5 @@ npm test LoginPage.test.js
 - [Material-UI Documentation](https://mui.com/)
 - [React Documentation](https://reactjs.org/)
 - [Lottie React Documentation](https://github.com/chenqingspring/react-lottie)
-- [Authentication Guide](./AUTHENTICATION.md)
+- [Authentication Implementation](./src/contexts/AuthContext.js)
 This project is proprietary to Kilowatt. 
