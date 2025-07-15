@@ -33,6 +33,7 @@ import {
   Delete
 } from '@mui/icons-material';
 import kilowattImage from '../../assets/image.png';
+import NavBar from '../shared/NavBar';
 
 const ProviderDashboard = ({ onLogout, onNavigate }) => {
   const [providers, setProviders] = useState([]);
@@ -113,43 +114,14 @@ const ProviderDashboard = ({ onLogout, onNavigate }) => {
 
   return (
     <Box sx={{ minHeight: '100vh', backgroundColor: '#fafafa' }}>
-      <AppBar 
-        position="static" 
-        sx={{ 
-          background: 'linear-gradient(135deg, #C82828 0%, #B71C1C 100%)',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
-        }}
-      >
-        <Toolbar sx={{ minHeight: 72 }}>
-          <Button
-            startIcon={<ArrowBack />}
-            onClick={() => onNavigate('home')}
-            sx={{ color: 'white', mr: 2 }}
-          >
-            Back
-          </Button>
-          
-          <Box sx={{ display: 'flex', alignItems: 'center', mr: 2 }}>
-            <img 
-              src={kilowattImage} 
-              alt="Kilowatt Logo" 
-              style={{ width: 44, height: 44, marginRight: 14, borderRadius: 9 }}
-            />
-            <Typography variant="h6" sx={{ fontWeight: 700, color: 'white' }}>
-              Kilowatt
-            </Typography>
-          </Box>
-
-          <Box sx={{ flexGrow: 1 }} />
-
-          <Button
-            onClick={onLogout}
-            sx={{ color: 'white', textTransform: 'none', fontWeight: 600 }}
-          >
-            Logout
-          </Button>
-        </Toolbar>
-      </AppBar>
+      <NavBar 
+        onNavigate={onNavigate}
+        onProfileMenuOpen={onLogout}
+        userProfile={{ name: 'Profile' }}
+        currentPage="provider"
+        searchQuery=""
+        setSearchQuery={() => {}}
+      />
 
       <Container maxWidth="xl" sx={{ py: 4 }}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>

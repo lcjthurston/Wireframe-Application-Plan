@@ -16,6 +16,7 @@ import ProviderDashboard from './components/ProviderDashboard';
 import DataEntryModal from './components/DataEntryModal';
 import AccountDetail from './components/AccountDetail';
 import ManagerDetail from './components/ManagerDetail';
+import SystemHealthDashboard from './components/SystemHealthDashboard';
 
 function App() {
   // App component logic remains the same
@@ -116,6 +117,8 @@ const AppContent = () => {
         return <CommissionDashboard onLogout={logout} onNavigate={handleNavigation} />;
       case 'provider':
         return <ProviderDashboard onLogout={logout} onNavigate={handleNavigation} />;
+      case 'system-health':
+        return <SystemHealthDashboard onLogout={logout} onNavigate={handleNavigation} />;
       default:
         return <HomePage onLogout={logout} onNavigate={handleNavigation} onOpenDataEntry={handleOpenDataEntry} />;
     }

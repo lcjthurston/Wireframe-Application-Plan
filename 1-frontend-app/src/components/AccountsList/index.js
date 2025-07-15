@@ -21,7 +21,8 @@ import {
   Checkbox,
   FormControl,
   InputLabel,
-  Select
+  Select,
+  Container
 } from '@mui/material';
 import {
   Add,
@@ -29,6 +30,7 @@ import {
   FilterList,
   MoreVert
 } from '@mui/icons-material';
+import NavBar from '../shared/NavBar';
 
 const AccountsList = ({ onLogout, onNavigate }) => {
   const [accounts, setAccounts] = useState([]);
@@ -144,166 +146,181 @@ const AccountsList = ({ onLogout, onNavigate }) => {
   };
 
   return (
-    <Box sx={{ p: 3 }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-        <Typography variant="h4" component="h1">
-          Accounts
-        </Typography>
-        <Button
-          variant="contained"
-          startIcon={<Add />}
-          onClick={handleAddAccount}
-          size="large"
-        >
-          Add Account
-        </Button>
-      </Box>
+    <Box sx={{ minHeight: '100vh', backgroundColor: '#fafafa' }}>
+      <NavBar 
+        onNavigate={onNavigate}
+        onProfileMenuOpen={onLogout}
+        userProfile={{ name: 'Profile' }}
+        currentPage="accounts"
+        searchQuery=""
+        setSearchQuery={() => {}}
+      />
 
-      <Card>
-        <CardContent>
-          {/* Enhanced Filter Section */}
-          <Box sx={{ mb: 3, display: 'flex', gap: 2, flexWrap: 'wrap', alignItems: 'center' }}>
-            <TextField
-              placeholder="Search accounts..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              sx={{ minWidth: 300 }}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Search />
-                  </InputAdornment>
-                ),
-              }}
-            />
-            
-            <FormControl sx={{ minWidth: 200 }}>
-              <InputLabel>Filter by Manager</InputLabel>
-              <Select
-                value={filterBy}
-                onChange={(e) => setFilterBy(e.target.value)}
-                label="Filter by Manager"
-              >
-                <MenuItem value="all">All Accounts</MenuItem>
-                <MenuItem value="no-manager">No Manager Assigned</MenuItem>
-                <MenuItem value="has-manager">Has Manager</MenuItem>
-              </Select>
-            </FormControl>
-
-            <FormControl sx={{ minWidth: 200 }}>
-              <InputLabel>Filter by Status</InputLabel>
-              <Select
-                value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value)}
-                label="Filter by Status"
-              >
-                <MenuItem value="all">All Status</MenuItem>
-                <MenuItem value="good">Good</MenuItem>
-                <MenuItem value="needs-pricing">Needs Pricing</MenuItem>
-                <MenuItem value="needs-contract-sent">Needs Contract Sent</MenuItem>
-                <MenuItem value="needs-providers-selected">Needs Providers Selected</MenuItem>
-              </Select>
-            </FormControl>
-          </Box>
-
-          <TableContainer component={Paper} variant="outlined">
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell padding="checkbox">
-                    <Checkbox />
-                  </TableCell>
-                  <TableCell>Account Name</TableCell>
-                  <TableCell>Manager Name</TableCell>
-                  <TableCell>Management Company</TableCell>
-                  <TableCell>Status</TableCell>
-                  <TableCell>ESIIDs</TableCell>
-                  <TableCell>Usage</TableCell>
-                  <TableCell align="right">Actions</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {filteredAccounts.map((account) => (
-                  <TableRow 
-                    key={account.id}
-                    hover
-                    sx={{ cursor: 'pointer' }}
-                  >
-                    <TableCell padding="checkbox">
-                      <Checkbox />
-                    </TableCell>
-                    <TableCell onClick={() => handleAccountClick(account)}>
-                      <Typography variant="subtitle2" fontWeight="medium">
-                        {account.name}
-                      </Typography>
-                    </TableCell>
-                    <TableCell onClick={() => handleAccountClick(account)}>
-                      {account.managerName || (
-                        <Chip 
-                          label="No Manager" 
-                          color="warning" 
-                          size="small" 
-                          variant="outlined"
-                        />
-                      )}
-                    </TableCell>
-                    <TableCell onClick={() => handleAccountClick(account)}>
-                      {account.managementCompany}
-                    </TableCell>
-                    <TableCell onClick={() => handleAccountClick(account)}>
-                      <Chip
-                        label={account.status}
-                        color={getStatusColor(account.status)}
-                        size="small"
-                      />
-                    </TableCell>
-                    <TableCell onClick={() => handleAccountClick(account)}>
-                      {account.esiidCount}
-                    </TableCell>
-                    <TableCell onClick={() => handleAccountClick(account)}>
-                      {account.usage}
-                    </TableCell>
-                    <TableCell align="right">
-                      <IconButton size="small">
-                        <MoreVert />
-                      </IconButton>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-
-          {/* Action Buttons */}
-          <Box sx={{ mt: 3, display: 'flex', gap: 2, justifyContent: 'flex-start' }}>
+      <Container maxWidth="xl" sx={{ py: 4 }}>
+        <Box sx={{ p: 3 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+            <Typography variant="h4" component="h1">
+              Accounts
+            </Typography>
             <Button
               variant="contained"
               startIcon={<Add />}
               onClick={handleAddAccount}
+              size="large"
             >
-              Add New Account
-            </Button>
-            <Button
-              variant="outlined"
-              color="error"
-              onClick={() => console.log('Remove selected accounts')}
-            >
-              Remove Account
-            </Button>
-            <Button
-              variant="outlined"
-              onClick={() => console.log('Change management company')}
-            >
-              Change Management Company
+              Add Account
             </Button>
           </Box>
-        </CardContent>
-      </Card>
+
+          <Card>
+            <CardContent>
+              {/* Enhanced Filter Section */}
+              <Box sx={{ mb: 3, display: 'flex', gap: 2, flexWrap: 'wrap', alignItems: 'center' }}>
+                <TextField
+                  placeholder="Search accounts..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  sx={{ minWidth: 300 }}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <Search />
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+                
+                <FormControl sx={{ minWidth: 200 }}>
+                  <InputLabel>Filter by Manager</InputLabel>
+                  <Select
+                    value={filterBy}
+                    onChange={(e) => setFilterBy(e.target.value)}
+                    label="Filter by Manager"
+                  >
+                    <MenuItem value="all">All Accounts</MenuItem>
+                    <MenuItem value="no-manager">No Manager Assigned</MenuItem>
+                    <MenuItem value="has-manager">Has Manager</MenuItem>
+                  </Select>
+                </FormControl>
+
+                <FormControl sx={{ minWidth: 200 }}>
+                  <InputLabel>Filter by Status</InputLabel>
+                  <Select
+                    value={statusFilter}
+                    onChange={(e) => setStatusFilter(e.target.value)}
+                    label="Filter by Status"
+                  >
+                    <MenuItem value="all">All Status</MenuItem>
+                    <MenuItem value="good">Good</MenuItem>
+                    <MenuItem value="needs-pricing">Needs Pricing</MenuItem>
+                    <MenuItem value="needs-contract-sent">Needs Contract Sent</MenuItem>
+                    <MenuItem value="needs-providers-selected">Needs Providers Selected</MenuItem>
+                  </Select>
+                </FormControl>
+              </Box>
+
+              <TableContainer component={Paper} variant="outlined">
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell padding="checkbox">
+                        <Checkbox />
+                      </TableCell>
+                      <TableCell>Account Name</TableCell>
+                      <TableCell>Manager Name</TableCell>
+                      <TableCell>Management Company</TableCell>
+                      <TableCell>Status</TableCell>
+                      <TableCell>ESIIDs</TableCell>
+                      <TableCell>Usage</TableCell>
+                      <TableCell align="right">Actions</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {filteredAccounts.map((account) => (
+                      <TableRow 
+                        key={account.id}
+                        hover
+                        sx={{ cursor: 'pointer' }}
+                      >
+                        <TableCell padding="checkbox">
+                          <Checkbox />
+                        </TableCell>
+                        <TableCell onClick={() => handleAccountClick(account)}>
+                          <Typography variant="subtitle2" fontWeight="medium">
+                            {account.name}
+                          </Typography>
+                        </TableCell>
+                        <TableCell onClick={() => handleAccountClick(account)}>
+                          {account.managerName || (
+                            <Chip 
+                              label="No Manager" 
+                              color="warning" 
+                              size="small" 
+                              variant="outlined"
+                            />
+                          )}
+                        </TableCell>
+                        <TableCell onClick={() => handleAccountClick(account)}>
+                          {account.managementCompany}
+                        </TableCell>
+                        <TableCell onClick={() => handleAccountClick(account)}>
+                          <Chip
+                            label={account.status}
+                            color={getStatusColor(account.status)}
+                            size="small"
+                          />
+                        </TableCell>
+                        <TableCell onClick={() => handleAccountClick(account)}>
+                          {account.esiidCount}
+                        </TableCell>
+                        <TableCell onClick={() => handleAccountClick(account)}>
+                          {account.usage}
+                        </TableCell>
+                        <TableCell align="right">
+                          <IconButton size="small">
+                            <MoreVert />
+                          </IconButton>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+
+              {/* Action Buttons */}
+              <Box sx={{ mt: 3, display: 'flex', gap: 2, justifyContent: 'flex-start' }}>
+                <Button
+                  variant="contained"
+                  startIcon={<Add />}
+                  onClick={handleAddAccount}
+                >
+                  Add New Account
+                </Button>
+                <Button
+                  variant="outlined"
+                  color="error"
+                  onClick={() => console.log('Remove selected accounts')}
+                >
+                  Remove Account
+                </Button>
+                <Button
+                  variant="outlined"
+                  onClick={() => console.log('Change management company')}
+                >
+                  Change Management Company
+                </Button>
+              </Box>
+            </CardContent>
+          </Card>
+        </Box>
+      </Container>
     </Box>
   );
 };
 
 export default AccountsList;
+
+
 
 
 

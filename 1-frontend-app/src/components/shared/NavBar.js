@@ -103,16 +103,6 @@ const NavBar = ({
         }}>
           <Button
             color="inherit"
-            variant={getButtonVariant('home')}
-            startIcon={<DashboardIcon />}
-            onClick={() => onNavigate('home')}
-            size="small"
-            sx={getButtonSx('home')}
-          >
-            Home
-          </Button>
-          <Button
-            color="inherit"
             variant={getButtonVariant('manager')}
             startIcon={<DashboardIcon />}
             onClick={() => onNavigate('manager')}

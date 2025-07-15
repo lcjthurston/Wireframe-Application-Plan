@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
   Box,
-  AppBar,
-  Toolbar,
   Typography,
   Button,
   Card,
@@ -37,7 +35,7 @@ import {
   Drafts,
   AccountBalance
 } from '@mui/icons-material';
-import kilowattImage from '../../assets/image.png';
+import NavBar from '../shared/NavBar';
 
 const HomePage = ({ onLogout, onNavigate }) => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -112,128 +110,14 @@ const HomePage = ({ onLogout, onNavigate }) => {
 
   return (
     <Box sx={{ minHeight: '100vh', backgroundColor: '#fafafa' }}>
-      <AppBar 
-        position="static" 
-        sx={{ 
-          background: 'linear-gradient(135deg, #D64545 0%, #C82828 100%)',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
-        }}
-      >
-        <Toolbar sx={{ minHeight: 72 }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', mr: 4 }}>
-            <img 
-              src={kilowattImage} 
-              alt="Kilowatt Logo" 
-              style={{ width: 44, height: 44, marginRight: 14, borderRadius: 9 }}
-            />
-            <Typography variant="h6" sx={{ fontWeight: 700, color: 'white' }}>
-              Kilowatt
-            </Typography>
-          </Box>
-
-          <Box sx={{ display: 'flex', gap: 2, mr: 4 }}>
-            <Button
-              startIcon={<SupervisedUserCircle />}
-              onClick={() => onNavigate('manager')}
-              sx={{ color: 'white', textTransform: 'none', fontWeight: 500 }}
-            >
-              Manager
-            </Button>
-            <Button
-              startIcon={<Drafts />}
-              onClick={() => onNavigate('email-draft')}
-              sx={{ color: 'white', textTransform: 'none', fontWeight: 500 }}
-            >
-              Email Drafts
-            </Button>
-            <Button
-              startIcon={<AccountBalance />}
-              onClick={() => onNavigate('commission')}
-              sx={{ color: 'white', textTransform: 'none', fontWeight: 500 }}
-            >
-              Commission
-            </Button>
-            <Button
-              startIcon={<Business />}
-              onClick={() => onNavigate('provider')}
-              sx={{ color: 'white', textTransform: 'none', fontWeight: 500 }}
-            >
-              Providers
-            </Button>
-            <Button
-              startIcon={<HealthAndSafety />}
-              onClick={() => onNavigate('system-health')}
-              sx={{ color: 'white', textTransform: 'none', fontWeight: 500 }}
-            >
-              System Health
-            </Button>
-            <Button
-              startIcon={<QueueMusic />}
-              onClick={() => onNavigate('task-queue')}
-              sx={{ color: 'white', textTransform: 'none', fontWeight: 500 }}
-            >
-              Task Queue
-            </Button>
-          </Box>
-
-          <Box sx={{ flexGrow: 1 }} />
-
-          <TextField
-            placeholder="Search accounts, providers, or tasks..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            size="small"
-            sx={{
-              mr: 2,
-              minWidth: 300,
-              '& .MuiOutlinedInput-root': {
-                backgroundColor: 'rgba(255,255,255,0.15)',
-                borderRadius: 3,
-                '& fieldset': {
-                  borderColor: 'rgba(255,255,255,0.3)',
-                },
-                '&:hover fieldset': {
-                  borderColor: 'rgba(255,255,255,0.5)',
-                },
-                '&.Mui-focused fieldset': {
-                  borderColor: 'white',
-                },
-                '& input': {
-                  color: 'white',
-                  '&::placeholder': {
-                    color: 'rgba(255,255,255,0.7)',
-                    opacity: 1,
-                  },
-                },
-              },
-            }}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Search sx={{ color: 'rgba(255,255,255,0.7)' }} />
-                </InputAdornment>
-              ),
-            }}
-          />
-
-          <Button
-            onClick={onLogout}
-            sx={{ 
-              color: 'white', 
-              textTransform: 'none', 
-              fontWeight: 600,
-              display: 'flex',
-              alignItems: 'center',
-              gap: 1
-            }}
-          >
-            <Avatar sx={{ width: 32, height: 32, bgcolor: 'rgba(255,255,255,0.2)' }}>
-              <Person />
-            </Avatar>
-            John Doe
-          </Button>
-        </Toolbar>
-      </AppBar>
+      <NavBar 
+        onNavigate={onNavigate}
+        onProfileMenuOpen={onLogout}
+        userProfile={{ name: 'Profile' }}
+        currentPage="home"
+        searchQuery={searchTerm}
+        setSearchQuery={setSearchTerm}
+      />
 
       <Container maxWidth="xl" sx={{ py: 4 }}>
         {/* Welcome Section */}

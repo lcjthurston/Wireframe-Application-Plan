@@ -58,6 +58,7 @@ import {
 import { styled } from '@mui/material/styles';
 import kilowattImage from '../../assets/image.png';
 import './SystemHealthDashboard.scss';
+import NavBar from '../shared/NavBar';
 
 const SystemHealthDashboard = ({ onLogout, onNavigate }) => {
   const [activeTab, setActiveTab] = useState(0);
@@ -224,167 +225,14 @@ const SystemHealthDashboard = ({ onLogout, onNavigate }) => {
 
   return (
     <Box sx={{ minHeight: '100vh', bgcolor: 'background.default' }}>
-      <AppBar position="static" className="system-health-app-bar">
-        <Toolbar sx={{
-          minHeight: 72,
-          padding: '0 24px',
-          '@media (max-width: 1200px)': {
-            flexWrap: 'wrap',
-            minHeight: 80
-          }
-        }}>
-          {/* Logo Section */}
-          <Box sx={{ display: 'flex', alignItems: 'center', flexGrow: 1 }}>
-            <Box
-              sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}
-              onClick={() => handleNavigation('home')}
-            >
-              <img
-                src={kilowattImage}
-                alt="Kilowatt"
-                className="system-health-logo"
-                style={{
-                  width: '44px',
-                  height: '44px',
-                  marginRight: '14px',
-                  borderRadius: '9px'
-                }}
-              />
-              <Typography variant="h6" component="div" sx={{ fontWeight: 700 }}>
-                Kilowatt
-              </Typography>
-            </Box>
-          </Box>
-
-          {/* Navigation Buttons */}
-          <Box sx={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 1,
-            mr: 2,
-            '@media (max-width: 900px)': {
-              '& .MuiButton-root': {
-                fontSize: '0.75rem',
-                padding: '4px 8px',
-                '& .MuiButton-startIcon': {
-                  marginRight: '4px'
-                }
-              }
-            },
-            '@media (max-width: 768px)': {
-              '& .MuiButton-root': {
-                '& .MuiButton-startIcon': {
-                  marginRight: 0
-                },
-                '& span:not(.MuiButton-startIcon)': {
-                  display: 'none'
-                }
-              }
-            }
-          }}>
-            <Button
-              color="inherit"
-              startIcon={<DashboardIcon />}
-              onClick={() => handleNavigation('manager')}
-              size="small"
-            >
-              Manager
-            </Button>
-            <Button
-              color="inherit"
-              startIcon={<EmailIcon />}
-              onClick={() => handleNavigation('email-draft')}
-              size="small"
-            >
-              Email Drafts
-            </Button>
-            <Button
-              color="inherit"
-              startIcon={<MoneyIcon />}
-              onClick={() => handleNavigation('commission')}
-              size="small"
-            >
-              Commission
-            </Button>
-            <Button
-              color="inherit"
-              startIcon={<BusinessIcon />}
-              onClick={() => handleNavigation('provider')}
-              size="small"
-            >
-              Providers
-            </Button>
-            <Button
-              color="inherit"
-              variant="contained"
-              startIcon={<HealthIcon />}
-              onClick={() => handleNavigation('system-health')}
-              size="small"
-              sx={{ bgcolor: 'rgba(255,255,255,0.2)', color: 'white' }}
-            >
-              System Health
-            </Button>
-            <Button
-              color="inherit"
-              startIcon={<TaskIcon />}
-              onClick={() => handleNavigation('task-queue')}
-              size="small"
-            >
-              Task Queue
-            </Button>
-            <Button
-              color="inherit"
-              startIcon={<BusinessIcon />}
-              onClick={() => handleNavigation('accounts')}
-              size="small"
-            >
-              Accounts
-            </Button>
-          </Box>
-
-          {/* Search Bar */}
-          <Box sx={{ mr: 2 }}>
-            <TextField
-              placeholder="Search system health..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              variant="outlined"
-              size="small"
-              sx={{
-                '& .MuiOutlinedInput-root': {
-                  backgroundColor: 'rgba(255,255,255,0.1)',
-                  '& fieldset': {
-                    borderColor: 'rgba(255,255,255,0.3)',
-                  },
-                  '&:hover fieldset': {
-                    borderColor: 'rgba(255,255,255,0.5)',
-                  },
-                  '&.Mui-focused fieldset': {
-                    borderColor: 'rgba(255,255,255,0.7)',
-                  },
-                  '& input': {
-                    color: 'white',
-                    '&::placeholder': {
-                      color: 'rgba(255,255,255,0.7)',
-                      opacity: 1,
-                    },
-                  },
-                },
-              }}
-              InputProps={{
-                startAdornment: (
-                  <SearchIcon sx={{ color: 'rgba(255,255,255,0.7)', mr: 1 }} />
-                ),
-              }}
-            />
-          </Box>
-
-          {/* Profile Button */}
-          <IconButton onClick={onLogout} sx={{ color: 'inherit' }}>
-            <LogoutIcon />
-          </IconButton>
-        </Toolbar>
-      </AppBar>
+      <NavBar 
+        onNavigate={onNavigate}
+        onProfileMenuOpen={onLogout}
+        userProfile={{ name: 'Profile' }}
+        currentPage="system-health"
+        searchQuery=""
+        setSearchQuery={() => {}}
+      />
 
       <Container maxWidth="xl" sx={{ py: 4 }}>
         <Box sx={{ mb: 4 }}>
