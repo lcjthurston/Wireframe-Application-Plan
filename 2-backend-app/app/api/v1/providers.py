@@ -2,40 +2,28 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from typing import List
 from app.database import get_db
+from app.core.dependencies import get_current_user_id, get_pagination_params, require_admin_user
 from app.models.provider import Provider
+from app.models.user import User
 from app.schemas.provider import ProviderCreate, ProviderUpdate, ProviderResponse
-from app.api.v1.auth import oauth2_scheme
-from app.core.security import verify_token
 
 router = APIRouter()
 
 
-def get_current_user_id(token: str = Depends(oauth2_scheme)) -> int:
-    payload = verify_token(token)
-    if payload is None:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Could not validate credentials",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
-    return int(payload.get("sub"))
-
-
 @router.get("/", response_model=List[ProviderResponse])
 async def get_providers(
-    skip: int = 0,
-    limit: int = 100,
-    type: str = None,
+    pagination: dict = Depends(get_pagination_params),
+    provider_type: str = None,
     db: Session = Depends(get_db),
     current_user_id: int = Depends(get_current_user_id)
 ):
     """Get all providers with optional filtering"""
     query = db.query(Provider)
-    
-    if type:
-        query = query.filter(Provider.type == type)
-    
-    providers = query.offset(skip).limit(limit).all()
+
+    if provider_type:
+        query = query.filter(Provider.type == provider_type)
+
+    providers = query.offset(pagination["skip"]).limit(pagination["limit"]).all()
     return providers
 
 

@@ -2,34 +2,22 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from typing import List
 from app.database import get_db
+from app.core.dependencies import get_current_user_id, get_pagination_params, require_manager_or_admin
 from app.models.manager import Manager
+from app.models.user import User
 from app.schemas.manager import ManagerCreate, ManagerUpdate, ManagerResponse
-from app.api.v1.auth import oauth2_scheme
-from app.core.security import verify_token
 
 router = APIRouter()
 
 
-def get_current_user_id(token: str = Depends(oauth2_scheme)) -> int:
-    payload = verify_token(token)
-    if payload is None:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Could not validate credentials",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
-    return int(payload.get("sub"))
-
-
 @router.get("/", response_model=List[ManagerResponse])
 async def get_managers(
-    skip: int = 0,
-    limit: int = 100,
+    pagination: dict = Depends(get_pagination_params),
     db: Session = Depends(get_db),
-    current_user_id: int = Depends(get_current_user_id)
+    current_user: User = Depends(require_manager_or_admin)
 ):
-    """Get all managers"""
-    managers = db.query(Manager).offset(skip).limit(limit).all()
+    """Get all managers (requires manager or admin role)"""
+    managers = db.query(Manager).offset(pagination["skip"]).limit(pagination["limit"]).all()
     return managers
 
 

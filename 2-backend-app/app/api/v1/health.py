@@ -3,10 +3,10 @@ from sqlalchemy.orm import Session
 from typing import List
 from datetime import datetime
 from app.database import get_db
+from app.core.dependencies import get_current_user_id, get_pagination_params, require_admin_user
 from app.models.system_health import SystemHealth
+from app.models.user import User
 from app.schemas.system_health import SystemHealthCreate, SystemHealthResponse
-from app.api.v1.auth import oauth2_scheme
-from app.core.security import verify_token
 from app.services.centerpoint import centerpoint_client
 import redis
 from app.core.config import settings
@@ -14,32 +14,20 @@ from app.core.config import settings
 router = APIRouter()
 
 
-def get_current_user_id(token: str = Depends(oauth2_scheme)) -> int:
-    payload = verify_token(token)
-    if payload is None:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Could not validate credentials",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
-    return int(payload.get("sub"))
-
-
 @router.get("/", response_model=List[SystemHealthResponse])
 async def get_system_health(
-    skip: int = 0,
-    limit: int = 100,
+    pagination: dict = Depends(get_pagination_params),
     service_name: str = None,
     db: Session = Depends(get_db),
-    current_user_id: int = Depends(get_current_user_id)
+    current_user: User = Depends(require_admin_user)
 ):
-    """Get system health status for all services"""
+    """Get system health status for all services (admin only)"""
     query = db.query(SystemHealth)
-    
+
     if service_name:
         query = query.filter(SystemHealth.service_name == service_name)
-    
-    health_records = query.offset(skip).limit(limit).all()
+
+    health_records = query.offset(pagination["skip"]).limit(pagination["limit"]).all()
     return health_records
 
 
@@ -53,8 +41,8 @@ async def get_services_status(
     return services
 
 
-@router.get("/")
-async def get_system_health(db: Session = Depends(get_db)):
+@router.get("/status")
+async def get_comprehensive_health_status(db: Session = Depends(get_db)):
     """Get comprehensive system health status"""
     health_status = {
         "timestamp": datetime.utcnow(),
@@ -95,7 +83,7 @@ async def get_system_health(db: Session = Depends(get_db)):
 @router.post("/check")
 async def run_health_check(db: Session = Depends(get_db)):
     """Run comprehensive health check and store results"""
-    health_data = await get_system_health(db)
+    health_data = await get_comprehensive_health_status(db)
     
     # Store health check result in database
     health_record = SystemHealth(

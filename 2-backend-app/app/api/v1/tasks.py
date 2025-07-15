@@ -3,30 +3,16 @@ from sqlalchemy.orm import Session
 from typing import List
 from datetime import datetime
 from app.database import get_db
+from app.core.dependencies import get_current_user_id, get_pagination_params
 from app.models.task import Task
 from app.schemas.task import TaskCreate, TaskUpdate, TaskResponse
-from app.api.v1.auth import oauth2_scheme
-from app.core.security import verify_token
 
 router = APIRouter()
 
 
-def get_current_user_id(token: str = Depends(oauth2_scheme)) -> int:
-    """Get current user ID from token"""
-    payload = verify_token(token)
-    if payload is None:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Could not validate credentials",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
-    return int(payload.get("sub"))
-
-
 @router.get("/", response_model=List[TaskResponse])
 async def get_tasks(
-    skip: int = 0,
-    limit: int = 100,
+    pagination: dict = Depends(get_pagination_params),
     status: str = None,
     task_type: str = None,
     db: Session = Depends(get_db),
@@ -34,13 +20,13 @@ async def get_tasks(
 ):
     """Get all tasks with optional filtering"""
     query = db.query(Task)
-    
+
     if status:
         query = query.filter(Task.status == status)
     if task_type:
         query = query.filter(Task.task_type == task_type)
-    
-    tasks = query.offset(skip).limit(limit).all()
+
+    tasks = query.offset(pagination["skip"]).limit(pagination["limit"]).all()
     return tasks
 
 

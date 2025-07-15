@@ -1,37 +1,24 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from typing import List
+from datetime import datetime
 from app.database import get_db
+from app.core.dependencies import get_current_user_id, get_pagination_params
 from app.models.account import Account
 from app.schemas.account import AccountCreate, AccountUpdate, AccountResponse
-from app.api.v1.auth import oauth2_scheme
-from app.core.security import verify_token
 from app.services.centerpoint import centerpoint_client
 
 router = APIRouter()
 
 
-def get_current_user_id(token: str = Depends(oauth2_scheme)) -> int:
-    """Get current user ID from token"""
-    payload = verify_token(token)
-    if payload is None:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Could not validate credentials",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
-    return int(payload.get("sub"))
-
-
 @router.get("/", response_model=List[AccountResponse])
 async def get_accounts(
-    skip: int = 0, 
-    limit: int = 100,
+    pagination: dict = Depends(get_pagination_params),
     current_user_id: int = Depends(get_current_user_id),
     db: Session = Depends(get_db)
 ):
     """Get all accounts with real database query"""
-    accounts = db.query(Account).offset(skip).limit(limit).all()
+    accounts = db.query(Account).offset(pagination["skip"]).limit(pagination["limit"]).all()
     return accounts
 
 

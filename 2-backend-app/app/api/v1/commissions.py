@@ -3,43 +3,31 @@ from sqlalchemy.orm import Session
 from typing import List
 from datetime import datetime
 from app.database import get_db
+from app.core.dependencies import get_current_user_id, get_pagination_params, require_manager_or_admin
 from app.models.commission import Commission
+from app.models.user import User
 from app.schemas.commission import CommissionCreate, CommissionUpdate, CommissionResponse
-from app.api.v1.auth import oauth2_scheme
-from app.core.security import verify_token
 
 router = APIRouter()
 
 
-def get_current_user_id(token: str = Depends(oauth2_scheme)) -> int:
-    payload = verify_token(token)
-    if payload is None:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Could not validate credentials",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
-    return int(payload.get("sub"))
-
-
 @router.get("/", response_model=List[CommissionResponse])
 async def get_commissions(
-    skip: int = 0,
-    limit: int = 100,
+    pagination: dict = Depends(get_pagination_params),
     status: str = None,
     manager_id: int = None,
     db: Session = Depends(get_db),
-    current_user_id: int = Depends(get_current_user_id)
+    current_user: User = Depends(require_manager_or_admin)
 ):
-    """Get all commissions with optional filtering"""
+    """Get all commissions with optional filtering (requires manager or admin role)"""
     query = db.query(Commission)
-    
+
     if status:
         query = query.filter(Commission.status == status)
     if manager_id:
         query = query.filter(Commission.manager_id == manager_id)
-    
-    commissions = query.offset(skip).limit(limit).all()
+
+    commissions = query.offset(pagination["skip"]).limit(pagination["limit"]).all()
     return commissions
 
 
