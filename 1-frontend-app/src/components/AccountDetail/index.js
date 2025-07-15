@@ -26,6 +26,7 @@ import NavBar from '../shared/NavBar';
 const AccountDetail = ({ accountId, onNavigate, onLogout }) => {
   const [account, setAccount] = useState(null);
   const [activeTab, setActiveTab] = useState(0);
+  const [showRefreshAlert, setShowRefreshAlert] = useState(false);
 
   useEffect(() => {
     const mockAccount = {
@@ -42,6 +43,15 @@ const AccountDetail = ({ accountId, onNavigate, onLogout }) => {
     };
     setAccount(mockAccount);
   }, [accountId]);
+
+  const handleRunRefreshUsage = () => {
+    setShowRefreshAlert(true);
+    
+    // Hide alert after 10 seconds
+    setTimeout(() => {
+      setShowRefreshAlert(false);
+    }, 10000);
+  };
 
   const getStatusColor = (status) => {
     switch (status.toLowerCase()) {
@@ -185,6 +195,7 @@ const AccountDetail = ({ accountId, onNavigate, onLogout }) => {
                     <Button
                       variant="contained"
                       color="primary"
+                      onClick={handleRunRefreshUsage}
                       sx={{ 
                         bgcolor: '#C82828',
                         '&:hover': { bgcolor: '#B71C1C' }
@@ -201,9 +212,11 @@ const AccountDetail = ({ accountId, onNavigate, onLogout }) => {
                   </Box>
                 </Box>
                 
-                <Alert severity="info" sx={{ mb: 3 }}>
-                  Pending refresh until it's successfully refreshed
-                </Alert>
+                {showRefreshAlert && (
+                  <Alert severity="info" sx={{ mb: 3 }}>
+                    Pending refresh ...
+                  </Alert>
+                )}
 
                 <Card variant="outlined">
                   <CardContent>
@@ -270,6 +283,9 @@ const AccountDetail = ({ accountId, onNavigate, onLogout }) => {
 };
 
 export default AccountDetail;
+
+
+
 
 
 
