@@ -100,8 +100,10 @@ def upgrade() -> None:
     sa.Column('created_at', sa.DateTime(), nullable=True),
     sa.Column('updated_at', sa.DateTime(), nullable=True),
     sa.Column('manager_id', sa.Integer(), nullable=True),
+    sa.Column('provider_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['created_by'], ['users.id'], ),
     sa.ForeignKeyConstraint(['manager_id'], ['managers.id'], ),
+    sa.ForeignKeyConstraint(['provider_id'], ['providers.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_accounts_esiid'), 'accounts', ['esiid'], unique=True)
