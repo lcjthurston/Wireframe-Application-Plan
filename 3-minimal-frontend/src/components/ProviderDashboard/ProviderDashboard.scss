@@ -1,0 +1,282 @@
+/* ProviderDashboard component-scoped styles */
+
+.provider-dashboard-container {
+  min-height: 100vh;
+  background-color: #fafafa;
+}
+
+.provider-dashboard-app-bar {
+  background: linear-gradient(135deg, #C82828 0%, #B71C1C 100%);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.provider-dashboard-toolbar {
+  min-height: 72px;
+}
+
+.provider-dashboard-logo {
+  width: 44px;
+  height: 44px;
+  margin-right: 14px;
+  border-radius: 9px;
+}
+
+.provider-dashboard-brand {
+  font-weight: 700;
+}
+
+.provider-dashboard-search-container {
+  display: flex;
+  align-items: center;
+  flex-grow: 1;
+  max-width: 600px;
+  margin: 0 32px;
+}
+
+.provider-dashboard-search-field {
+  width: 100%;
+  
+  .MuiOutlinedInput-root {
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 24px;
+    
+    &:hover {
+      background-color: rgba(255, 255, 255, 1);
+    }
+  }
+}
+
+.provider-dashboard-profile-button {
+  color: white;
+  text-transform: none;
+  font-weight: 600;
+}
+
+.provider-dashboard-content {
+  padding: 32px 0;
+  /* Container component handles horizontal centering and margins */
+}
+
+.provider-dashboard-header {
+  margin-bottom: 32px;
+}
+
+.provider-dashboard-title {
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.provider-dashboard-subtitle {
+  color: #666;
+  margin-bottom: 24px;
+}
+
+.provider-dashboard-tabs {
+  margin-bottom: 24px;
+  
+  .MuiTabs-indicator {
+    background-color: #1976d2;
+    height: 3px;
+    border-radius: 2px;
+  }
+  
+  .MuiTab-root {
+    text-transform: none;
+    font-weight: 600;
+    font-size: 0.875rem;
+    min-width: 120px;
+    
+    &.Mui-selected {
+      color: #1976d2;
+    }
+  }
+}
+
+.provider-dashboard-stats {
+  margin-bottom: 32px;
+}
+
+.provider-dashboard-stat-card {
+  height: 100%;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+  }
+}
+
+.provider-dashboard-stat-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1976d2;
+}
+
+.provider-dashboard-stat-label {
+  color: #666;
+  font-weight: 500;
+}
+
+.provider-dashboard-stat-icon {
+  font-size: 2.5rem;
+  margin-bottom: 8px;
+}
+
+.provider-dashboard-table-container {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  overflow: hidden;
+}
+
+.provider-dashboard-table {
+  .MuiTableHead-root {
+    background-color: #f8f9fa;
+    
+    .MuiTableCell-head {
+      font-weight: 600;
+      color: #333;
+      border-bottom: 2px solid #e0e0e0;
+    }
+  }
+  
+  .MuiTableBody-root {
+    .MuiTableRow-root {
+      transition: background-color 0.2s ease;
+      
+      &:hover {
+        background-color: #f8f9fa;
+      }
+    }
+    
+    .MuiTableCell-body {
+      border-bottom: 1px solid #f0f0f0;
+      padding: 16px;
+    }
+  }
+}
+
+.provider-dashboard-status-chip {
+  font-weight: 500;
+  border-radius: 16px;
+}
+
+.provider-dashboard-status-active {
+  background-color: #e8f5e8;
+  color: #2e7d32;
+}
+
+.provider-dashboard-status-pending {
+  background-color: #fff3e0;
+  color: #ed6c02;
+}
+
+.provider-dashboard-status-inactive {
+  background-color: #ffebee;
+  color: #d32f2f;
+}
+
+.provider-dashboard-action-button {
+  margin-right: 8px;
+  text-transform: none;
+  font-weight: 600;
+  border-radius: 20px;
+  padding: 8px 16px;
+  min-width: 80px;
+}
+
+.provider-dashboard-provider-link {
+  color: #1976d2;
+  text-decoration: none;
+  font-weight: 500;
+  
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.provider-dashboard-empty-state {
+  text-align: center;
+  padding: 48px 24px;
+  color: #666;
+}
+
+.provider-dashboard-empty-icon {
+  font-size: 4rem;
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+
+.provider-dashboard-empty-text {
+  font-size: 1.125rem;
+  margin-bottom: 8px;
+}
+
+.provider-dashboard-empty-subtext {
+  font-size: 0.875rem;
+  opacity: 0.7;
+}
+
+.provider-dashboard-menu-item {
+  font-weight: 500;
+}
+
+.provider-dashboard-avatar {
+  width: 32px;
+  height: 32px;
+  margin-right: 8px;
+}
+
+.provider-dashboard-badge {
+  .MuiBadge-badge {
+    background-color: #f44336;
+  }
+}
+
+.provider-dashboard-sort-button {
+  text-transform: none;
+  font-weight: 600;
+  border-radius: 20px;
+  padding: 8px 16px;
+  margin-left: 8px;
+}
+
+.provider-dashboard-export-button {
+  text-transform: none;
+  font-weight: 600;
+  border-radius: 20px;
+  padding: 8px 16px;
+}
+
+.provider-dashboard-provider-value {
+  font-weight: 600;
+  color: #1976d2;
+}
+
+.provider-dashboard-contract-date {
+  font-size: 0.875rem;
+  color: #666;
+}
+
+.provider-dashboard-filters {
+  margin-bottom: 24px;
+  padding: 24px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.provider-dashboard-filter-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.provider-dashboard-filter-item {
+  min-width: 200px;
+} 

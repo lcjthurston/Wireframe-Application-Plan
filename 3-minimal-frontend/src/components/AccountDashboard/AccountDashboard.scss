@@ -1,0 +1,478 @@
+/* AccountDashboard component-scoped styles */
+
+.account-dashboard-container {
+  min-height: 100vh;
+  background-color: #fafafa;
+}
+
+.account-dashboard-app-bar {
+  background: linear-gradient(135deg, #C82828 0%, #B71C1C 100%);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.account-dashboard-toolbar {
+  min-height: 72px;
+}
+
+.account-dashboard-logo {
+  width: 44px;
+  height: 44px;
+  margin-right: 14px;
+  border-radius: 9px;
+}
+
+.account-dashboard-brand {
+  font-weight: 700;
+}
+
+.account-dashboard-search-container {
+  display: flex;
+  align-items: center;
+  flex-grow: 1;
+  max-width: 600px;
+  margin: 0 32px;
+}
+
+.account-dashboard-search-field {
+  width: 100%;
+  
+  .MuiOutlinedInput-root {
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 24px;
+    
+    &:hover {
+      background-color: rgba(255, 255, 255, 1);
+    }
+  }
+}
+
+.account-dashboard-profile-button {
+  color: white;
+  text-transform: none;
+  font-weight: 600;
+}
+
+.account-dashboard-content {
+  padding: 32px 0;
+}
+
+.account-dashboard-header {
+  margin-bottom: 32px;
+}
+
+.account-dashboard-title {
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.account-dashboard-subtitle {
+  color: #666;
+  margin-bottom: 24px;
+}
+
+.account-dashboard-tabs {
+  margin-bottom: 24px;
+  
+  .MuiTabs-indicator {
+    background-color: #1976d2;
+    height: 3px;
+    border-radius: 2px;
+  }
+  
+  .MuiTab-root {
+    text-transform: none;
+    font-weight: 600;
+    font-size: 0.875rem;
+    min-width: 120px;
+    
+    &.Mui-selected {
+      color: #1976d2;
+    }
+  }
+}
+
+.account-dashboard-overview-grid {
+  margin-bottom: 32px;
+}
+
+.account-dashboard-card {
+  height: 100%;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+  }
+}
+
+.account-dashboard-card-header {
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.account-dashboard-card-title {
+  font-weight: 600;
+  color: #333;
+}
+
+.account-dashboard-status-chip {
+  font-weight: 500;
+  border-radius: 16px;
+}
+
+.account-dashboard-status-needs-pricing {
+  background-color: #fff3e0;
+  color: #ed6c02;
+}
+
+.account-dashboard-status-active {
+  background-color: #e8f5e8;
+  color: #2e7d32;
+}
+
+.account-dashboard-status-pending {
+  background-color: #e3f2fd;
+  color: #1976d2;
+}
+
+.account-dashboard-info-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #f0f0f0;
+  
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.account-dashboard-info-label {
+  font-weight: 600;
+  color: #666;
+}
+
+.account-dashboard-info-value {
+  font-weight: 500;
+  color: #333;
+}
+
+.account-dashboard-action-button {
+  margin-right: 8px;
+  text-transform: none;
+  font-weight: 600;
+  border-radius: 20px;
+  padding: 8px 16px;
+  min-width: 80px;
+}
+
+.account-dashboard-commission-chart {
+  height: 300px;
+  margin-top: 16px;
+}
+
+.account-dashboard-activity-item {
+  display: flex;
+  align-items: flex-start;
+  padding: 16px 0;
+  border-bottom: 1px solid #f0f0f0;
+  
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.account-dashboard-activity-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 12px;
+  font-size: 1rem;
+  
+  &.bot {
+    background-color: #e3f2fd;
+    color: #1976d2;
+  }
+  
+  &.user {
+    background-color: #e8f5e8;
+    color: #2e7d32;
+  }
+}
+
+.account-dashboard-activity-content {
+  flex: 1;
+}
+
+.account-dashboard-activity-action {
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 4px;
+}
+
+.account-dashboard-activity-meta {
+  font-size: 0.875rem;
+  color: #666;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.account-dashboard-activity-user {
+  font-weight: 500;
+  color: #1976d2;
+}
+
+.account-dashboard-esiid-item {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  border: 1px solid #e0e0e0;
+}
+
+.account-dashboard-esiid-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.account-dashboard-esiid-number {
+  font-weight: 600;
+  font-family: 'Courier New', monospace;
+  color: #333;
+}
+
+.account-dashboard-esiid-status {
+  font-size: 0.875rem;
+  color: #666;
+}
+
+.account-dashboard-esiid-details {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 16px;
+}
+
+.account-dashboard-esiid-detail {
+  text-align: center;
+  padding: 12px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+}
+
+.account-dashboard-esiid-detail-label {
+  font-size: 0.875rem;
+  color: #666;
+  margin-bottom: 4px;
+}
+
+.account-dashboard-esiid-detail-value {
+  font-weight: 600;
+  color: #333;
+}
+
+.account-dashboard-contract-section {
+  background: white;
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.account-dashboard-contract-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.account-dashboard-contract-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.account-dashboard-contract-provider {
+  font-weight: 600;
+  color: #1976d2;
+}
+
+.account-dashboard-contract-dates {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 20px;
+}
+
+.account-dashboard-contract-date {
+  text-align: center;
+}
+
+.account-dashboard-contract-date-label {
+  font-size: 0.875rem;
+  color: #666;
+  margin-bottom: 4px;
+}
+
+.account-dashboard-contract-date-value {
+  font-weight: 600;
+  color: #333;
+}
+
+.account-dashboard-documents {
+  margin-top: 20px;
+}
+
+.account-dashboard-document-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+
+.account-dashboard-document-name {
+  font-weight: 500;
+  color: #333;
+}
+
+.account-dashboard-document-link {
+  color: #1976d2;
+  text-decoration: none;
+  font-weight: 500;
+  
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.account-dashboard-pricing-history {
+  margin-top: 24px;
+}
+
+.account-dashboard-pricing-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #f0f0f0;
+  
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.account-dashboard-pricing-provider {
+  font-weight: 500;
+  color: #333;
+}
+
+.account-dashboard-pricing-date {
+  font-size: 0.875rem;
+  color: #666;
+}
+
+.account-dashboard-pricing-status {
+  font-weight: 500;
+  color: #2e7d32;
+}
+
+.account-dashboard-commission-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.account-dashboard-commission-card {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.account-dashboard-commission-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1976d2;
+  margin-bottom: 8px;
+}
+
+.account-dashboard-commission-label {
+  font-size: 0.875rem;
+  color: #666;
+  font-weight: 500;
+}
+
+.account-dashboard-empty-state {
+  text-align: center;
+  padding: 48px 24px;
+  color: #666;
+}
+
+.account-dashboard-empty-icon {
+  font-size: 4rem;
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+
+.account-dashboard-empty-text {
+  font-size: 1.125rem;
+  margin-bottom: 8px;
+}
+
+.account-dashboard-empty-subtext {
+  font-size: 0.875rem;
+  opacity: 0.7;
+}
+
+.account-dashboard-refresh-button {
+  text-transform: none;
+  font-weight: 600;
+  border-radius: 20px;
+  padding: 8px 16px;
+  margin-right: 8px;
+}
+
+.account-dashboard-generate-button {
+  text-transform: none;
+  font-weight: 600;
+  border-radius: 20px;
+  padding: 8px 16px;
+  margin-right: 8px;
+}
+
+.account-dashboard-draft-button {
+  text-transform: none;
+  font-weight: 600;
+  border-radius: 20px;
+  padding: 8px 16px;
+}
+
+.account-dashboard-alert {
+  margin-bottom: 24px;
+}
+
+.account-dashboard-menu-item {
+  font-weight: 500;
+}
+
+.account-dashboard-avatar {
+  width: 32px;
+  height: 32px;
+  margin-right: 8px;
+}
+
+.account-dashboard-badge {
+  .MuiBadge-badge {
+    background-color: #f44336;
+  }
+} 

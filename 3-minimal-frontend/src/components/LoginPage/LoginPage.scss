@@ -1,0 +1,204 @@
+/* LoginPage component-scoped styles */
+
+.login-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #C82828 0%, #B71C1C 100%);
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 30% 20%, rgba(255,255,255,0.1) 0%, transparent 50%);
+    z-index: 1;
+  }
+}
+
+.login-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 48px;
+  position: relative;
+  z-index: 2;
+  height: 70vh;
+  min-height: 600px;
+  max-height: 900px;
+
+  @media (max-width: 960px) {
+    flex-direction: column;
+  }
+}
+
+.login-card {
+  width: 100%;
+  max-width: 500px;
+  border-radius: 24px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+  padding: 48px;
+  position: relative;
+  z-index: 3;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-height: 100%;
+  overflow: auto;
+
+  @media (max-width: 960px) {
+    padding: 32px;
+    max-width: 90%;
+    margin: 16px;
+  }
+}
+
+.login-card-content {
+  text-align: center;
+  padding: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.login-header {
+  margin-bottom: 32px;
+}
+
+.login-logo {
+  width: 80px;
+  height: 80px;
+  margin-bottom: 24px;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.login-title {
+  position: relative;
+  display: inline-block;
+  font-weight: 800;
+  color: #1976d2;
+  margin-bottom: 16px;
+  font-size: 3.5rem;
+  letter-spacing: -0.02em;
+
+  @media (max-width: 600px) {
+    font-size: 2.5rem;
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, #1976d2 0%, #1565c0 100%);
+    border-radius: 2px;
+  }
+}
+
+.MuiTabs-root {
+  margin-bottom: 32px !important;
+  
+  .MuiTab-root {
+    min-height: 72px !important;
+    font-size: 1rem !important;
+    font-weight: 600 !important;
+    text-transform: none !important;
+    color: rgba(0, 0, 0, 0.6) !important;
+    
+    &.Mui-selected {
+      color: #1976d2 !important;
+    }
+  }
+  
+  .MuiTabs-indicator {
+    height: 3px !important;
+    border-radius: 2px !important;
+  }
+}
+
+.login-subtitle {
+  font-weight: 500;
+  opacity: 0.8;
+  letter-spacing: 0.02em;
+}
+
+.login-form {
+  text-align: left;
+}
+
+.login-button {
+  margin-bottom: 24px;
+  padding: 16px 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.login-forgot-password {
+  text-align: center;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #1976d2;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.login-animation-container {
+  width: 450px;
+  max-width: 500px;
+  min-width: 350px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 0;
+  height: 100%;
+  overflow: visible;
+
+  @media (max-width: 960px) {
+    width: 100%;
+    margin-top: 32px;
+  }
+}
+
+.login-animation {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-text-field {
+  margin-bottom: 24px;
+
+  .MuiInputBase-input {
+    font-size: 1.1rem;
+    padding: 16px 20px;
+  }
+
+  .MuiInputLabel-root {
+    font-size: 1.1rem;
+  }
+}
+
+.login-alert {
+  margin-bottom: 32px;
+  border-radius: 16px;
+} 
