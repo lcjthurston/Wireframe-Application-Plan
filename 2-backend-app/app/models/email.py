@@ -15,7 +15,7 @@ class EmailDraft(Base):
     status = Column(String, default="draft")  # draft, scheduled, sent, failed
     scheduled_at = Column(DateTime)
     sent_at = Column(DateTime)
-    metadata = Column(JSON)  # Additional email data
+    email_metadata = Column(JSON)  # Additional email data
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 

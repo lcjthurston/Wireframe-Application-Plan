@@ -22,14 +22,14 @@ class CommissionUpdate(BaseModel):
     status: Optional[str] = None
     payment_date: Optional[datetime] = None
     notes: Optional[str] = None
-    metadata: Optional[Dict[str, Any]] = None
+    commission_metadata: Optional[Dict[str, Any]] = None
 
 
 class CommissionResponse(CommissionBase):
     id: int
     payment_date: Optional[datetime] = None
     notes: Optional[str] = None
-    metadata: Optional[Dict[str, Any]] = None
+    commission_metadata: Optional[Dict[str, Any]] = None
     created_at: datetime
     updated_at: Optional[datetime] = None
 

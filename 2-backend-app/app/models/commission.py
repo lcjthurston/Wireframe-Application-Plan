@@ -15,7 +15,7 @@ class Commission(Base):
     status = Column(String, default="pending")  # pending, approved, paid, cancelled
     payment_date = Column(DateTime)
     notes = Column(String)
-    metadata = Column(JSON)  # Additional commission data
+    commission_metadata = Column(JSON)  # Additional commission data
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 

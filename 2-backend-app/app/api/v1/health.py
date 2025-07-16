@@ -8,7 +8,11 @@ from app.models.system_health import SystemHealth
 from app.models.user import User
 from app.schemas.system_health import SystemHealthCreate, SystemHealthResponse
 from app.services.centerpoint import centerpoint_client
-import redis
+try:
+    import redis
+    REDIS_AVAILABLE = True
+except ImportError:
+    REDIS_AVAILABLE = False
 from app.core.config import settings
 
 router = APIRouter()
@@ -58,13 +62,16 @@ async def get_comprehensive_health_status(db: Session = Depends(get_db)):
         health_status["services"]["database"] = {"status": "unhealthy", "error": str(e)}
         health_status["overall_status"] = "unhealthy"
     
-    # Redis health
-    try:
-        r = redis.from_url(settings.redis_url)
-        r.ping()
-        health_status["services"]["redis"] = {"status": "healthy"}
-    except Exception as e:
-        health_status["services"]["redis"] = {"status": "unhealthy", "error": str(e)}
+    # Redis health (optional)
+    if REDIS_AVAILABLE:
+        try:
+            r = redis.from_url(settings.redis_url)
+            r.ping()
+            health_status["services"]["redis"] = {"status": "healthy"}
+        except Exception as e:
+            health_status["services"]["redis"] = {"status": "unhealthy", "error": str(e)}
+    else:
+        health_status["services"]["redis"] = {"status": "not_installed", "message": "Redis not available"}
     
     # Centerpoint API health
     try:

@@ -21,14 +21,14 @@ class EmailDraftUpdate(BaseModel):
     recipient: Optional[str] = None
     status: Optional[str] = None
     scheduled_at: Optional[datetime] = None
-    metadata: Optional[Dict[str, Any]] = None
+    email_metadata: Optional[Dict[str, Any]] = None
 
 
 class EmailDraftResponse(EmailDraftBase):
     id: int
     scheduled_at: Optional[datetime] = None
     sent_at: Optional[datetime] = None
-    metadata: Optional[Dict[str, Any]] = None
+    email_metadata: Optional[Dict[str, Any]] = None
     created_at: datetime
     updated_at: Optional[datetime] = None
 
