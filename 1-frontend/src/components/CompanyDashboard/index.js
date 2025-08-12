@@ -98,10 +98,13 @@ const CompanyDashboard = ({ onLogout, onNavigate }) => {
 
   return (
     <Box sx={{ minHeight: '100vh', backgroundColor: '#fafafa' }}>
-      <NavBar 
+      <NavBar
         onNavigate={onNavigate}
         onProfileMenuOpen={onLogout}
         userProfile={{ name: 'Profile' }}
+        currentPage="companies"
+        searchQuery={searchTerm}
+        setSearchQuery={setSearchTerm}
       />
       
       <Container maxWidth="xl" sx={{ mt: 4, mb: 4 }}>

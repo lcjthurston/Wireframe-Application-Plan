@@ -204,7 +204,7 @@ firestore-debug.log
 
 # Package manager lock files (choose one based on your preference)
 # Uncomment the one you want to ignore
-# package-lock.json
+package-lock.json
 # yarn.lock
 # pnpm-lock.yaml
 
