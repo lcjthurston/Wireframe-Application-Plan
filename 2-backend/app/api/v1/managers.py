@@ -1,6 +1,6 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session
-from typing import List
+from typing import List, Optional
 from app.database import get_db
 from app.core.dependencies import get_current_user_id, get_pagination_params, require_manager_or_admin
 from app.models.manager import Manager
@@ -14,10 +14,34 @@ router = APIRouter()
 async def get_managers(
     pagination: dict = Depends(get_pagination_params),
     db: Session = Depends(get_db),
-    current_user: User = Depends(require_manager_or_admin)
+    current_user: User = Depends(require_manager_or_admin),
+    search: Optional[str] = Query(None, description="Search by manager name"),
+    management_company: Optional[str] = Query(None, description="Filter by management company"),
+    office_city: Optional[str] = Query(None, description="Filter by office city"),
+    mgr_status: Optional[str] = Query(None, description="Filter by manager status"),
+    active_only: bool = Query(True, description="Show only active managers")
 ):
-    """Get all managers (requires manager or admin role)"""
-    managers = db.query(Manager).offset(pagination["skip"]).limit(pagination["limit"]).all()
+    """Get all managers with filtering options"""
+    query = db.query(Manager)
+
+    # Apply filters
+    if active_only:
+        query = query.filter(Manager.is_active == True)
+
+    if search:
+        query = query.filter(Manager.name.ilike(f"%{search}%"))
+
+    if management_company:
+        query = query.filter(Manager.management_company.ilike(f"%{management_company}%"))
+
+    if office_city:
+        query = query.filter(Manager.office_city.ilike(f"%{office_city}%"))
+
+    if mgr_status:
+        query = query.filter(Manager.mgr_status.ilike(f"%{mgr_status}%"))
+
+    # Apply pagination
+    managers = query.offset(pagination["skip"]).limit(pagination["limit"]).all()
     return managers
 
 
@@ -88,7 +112,43 @@ async def delete_manager(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Manager not found"
         )
-    
+
     db.delete(manager)
     db.commit()
-    return {"message": "Manager deleted successfully"} 
+    return {"message": "Manager deleted successfully"}
+
+
+@router.get("/stats/companies")
+async def get_management_companies_stats(
+    db: Session = Depends(get_db),
+    current_user_id: int = Depends(get_current_user_id)
+):
+    """Get statistics about management companies"""
+    from sqlalchemy import func
+
+    # Get company counts
+    company_stats = db.query(
+        Manager.management_company,
+        func.count(Manager.id).label('manager_count')
+    ).filter(
+        Manager.management_company.isnot(None),
+        Manager.is_active == True
+    ).group_by(Manager.management_company).order_by(
+        func.count(Manager.id).desc()
+    ).limit(20).all()
+
+    # Get total stats
+    total_managers = db.query(Manager).filter(Manager.is_active == True).count()
+    total_companies = db.query(Manager.management_company).filter(
+        Manager.management_company.isnot(None),
+        Manager.is_active == True
+    ).distinct().count()
+
+    return {
+        "total_managers": total_managers,
+        "total_companies": total_companies,
+        "top_companies": [
+            {"company": company, "manager_count": count}
+            for company, count in company_stats
+        ]
+    }

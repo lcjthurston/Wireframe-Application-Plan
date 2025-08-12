@@ -8,18 +8,36 @@ class Manager(Base):
     __tablename__ = "managers"
 
     id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, nullable=False)
-    email = Column(String, unique=True, index=True, nullable=False)
-    phone = Column(String)
-    department = Column(String)
-    position = Column(String)
-    hire_date = Column(DateTime)
+    # Core manager information from MANAGER LIST.xlsx
+    mgr_id = Column(Integer, unique=True, index=True)  # Original MGR_ID from Excel
+    name = Column(String, nullable=False)  # MANAGER field
+    mgr_status = Column(String)  # MGR_STATUS field
+    mgr_class = Column(String)  # MGR_CLASS field
+
+    # Company and office information
+    management_company = Column(String)  # MGMT CO field
+    office = Column(String)  # OFFICE field
+    office_city = Column(String)  # OFFICE_CITY field
+    supervisor = Column(String)  # SUPERVISOR field
+    admin_assistant = Column(String)  # ADM_ASST field
+
+    # Contact information
+    email = Column(String, index=True)  # EMAIL field (not unique since many are null)
+    assistant_email = Column(String)  # ASST_EMAIL field
+    phone = Column(String)  # PHONE field
+    cell = Column(String)  # CELL field
+    fax = Column(String)  # FAX field
+
+    # Additional fields
+    mgr_note = Column(Text)  # MGR NOTE field
+    last_update = Column(String)  # UDPATE field (keeping as string since format varies)
+
+    # System fields
     is_active = Column(Boolean, default=True)
-    notes = Column(Text)
     created_by = Column(Integer, ForeignKey("users.id"))
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
     # Relationships
     accounts = relationship("Account", back_populates="manager")
-    commissions = relationship("Commission", back_populates="manager") 
+    commissions = relationship("Commission", back_populates="manager")
