@@ -20,10 +20,9 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  AppBar,
-  Toolbar,
   Container,
-  TextField
+  TextField,
+  InputAdornment
 } from '@mui/material';
 import {
   TrendingUp as TrendingUpIcon,
@@ -38,9 +37,10 @@ import {
   Business as BusinessIcon,
   HealthAndSafety as HealthIcon,
   Assignment as TaskIcon,
-  Search as SearchIcon
+  Search as SearchIcon,
+  Add as AddIcon
 } from '@mui/icons-material';
-import kilowattImage from '../../assets/image.png';
+import NavBar from '../shared/NavBar';
 import './CommissionDashboard.scss';
 
 const CommissionDashboard = ({ onLogout, onNavigate }) => {
@@ -263,12 +263,7 @@ const CommissionDashboard = ({ onLogout, onNavigate }) => {
     console.log('Searching for:', searchQuery);
   };
 
-  const handleNavigation = (page) => {
-    console.log('Navigating to:', page);
-    if (onNavigate) {
-      onNavigate(page);
-    }
-  };
+
 
   const handleCommissionAction = (action, commissionId) => {
     console.log('Commission action:', action, 'for commission:', commissionId);
@@ -411,294 +406,172 @@ const CommissionDashboard = ({ onLogout, onNavigate }) => {
   ];
 
   return (
-    <Box className="commission-dashboard">
-      <AppBar position="static" className="commission-app-bar">
-        <Toolbar sx={{
-          minHeight: 72,
-          padding: '0 24px',
-          '@media (max-width: 1200px)': {
-            flexWrap: 'wrap',
-            minHeight: 80
-          }
-        }}>
-          {/* Logo Section */}
-          <Box sx={{ display: 'flex', alignItems: 'center', flexGrow: 1 }}>
-            <Box
-              sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}
-              onClick={() => handleNavigation('home')}
-            >
-              <img src={kilowattImage} alt="Kilowatt" className="commission-logo" />
-              <Typography variant="h6" component="div" sx={{ fontWeight: 700 }}>
-                Kilowatt
-              </Typography>
-            </Box>
-          </Box>
+    <Box className="commission-dashboard" sx={{ minHeight: '100vh', backgroundColor: '#fafafa' }}>
+      <NavBar
+        onNavigate={onNavigate}
+        onProfileMenuOpen={onLogout}
+        userProfile={{ name: 'Profile' }}
+        currentPage="commissions"
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+      />
 
-          {/* Navigation Buttons */}
-          <Box sx={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 1,
-            mr: 2,
-            '@media (max-width: 900px)': {
-              '& .MuiButton-root': {
-                fontSize: '0.75rem',
-                padding: '4px 8px',
-                '& .MuiButton-startIcon': {
-                  marginRight: '4px'
-                }
-              }
-            },
-            '@media (max-width: 768px)': {
-              '& .MuiButton-root': {
-                '& .MuiButton-startIcon': {
-                  marginRight: 0
-                },
-                '& span:not(.MuiButton-startIcon)': {
-                  display: 'none'
-                }
-              }
-            }
-          }}>
-            <Button
-              color="inherit"
-              startIcon={<DashboardIcon />}
-              onClick={() => handleNavigation('manager')}
-              size="small"
-            >
-              Manager
-            </Button>
-            <Button
-              color="inherit"
-              startIcon={<EmailIcon />}
-              onClick={() => handleNavigation('email-draft')}
-              size="small"
-            >
-              Email Drafts
-            </Button>
-            <Button
-              color="inherit"
-              variant="contained"
-              startIcon={<MoneyIcon />}
-              onClick={() => handleNavigation('commission')}
-              size="small"
-              sx={{ bgcolor: 'rgba(255,255,255,0.2)', color: 'white' }}
-            >
-              Commission
-            </Button>
-            <Button
-              color="inherit"
-              startIcon={<BusinessIcon />}
-              onClick={() => handleNavigation('provider')}
-              size="small"
-            >
-              Providers
-            </Button>
-            <Button
-              color="inherit"
-              startIcon={<HealthIcon />}
-              onClick={() => handleNavigation('system-health')}
-              size="small"
-            >
-              System Health
-            </Button>
-            <Button
-              color="inherit"
-              startIcon={<TaskIcon />}
-              onClick={() => handleNavigation('task-queue')}
-              size="small"
-            >
-              Task Queue
-            </Button>
-            <Button
-              color="inherit"
-              startIcon={<BusinessIcon />}
-              onClick={() => handleNavigation('accounts')}
-              size="small"
-            >
-              Accounts
-            </Button>
-          </Box>
-
-          {/* Search Bar */}
-          <Box sx={{ mr: 2 }}>
-            <TextField
-              placeholder="Search commissions..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              variant="outlined"
-              size="small"
-              sx={{
-                '& .MuiOutlinedInput-root': {
-                  backgroundColor: 'rgba(255,255,255,0.1)',
-                  '& fieldset': {
-                    borderColor: 'rgba(255,255,255,0.3)',
-                  },
-                  '&:hover fieldset': {
-                    borderColor: 'rgba(255,255,255,0.5)',
-                  },
-                  '&.Mui-focused fieldset': {
-                    borderColor: 'rgba(255,255,255,0.7)',
-                  },
-                  '& input': {
-                    color: 'white',
-                    '&::placeholder': {
-                      color: 'rgba(255,255,255,0.7)',
-                      opacity: 1,
-                    },
-                  },
-                },
-              }}
-              InputProps={{
-                startAdornment: (
-                  <SearchIcon sx={{ color: 'rgba(255,255,255,0.7)', mr: 1 }} />
-                ),
-              }}
-            />
-          </Box>
-
-          {/* Profile Button */}
-          <Button
-            color="inherit"
-            onClick={() => handleNavigation('home')}
-            className="commission-profile-button"
-            startIcon={<AccountIcon />}
-          >
-            Profile
-          </Button>
-        </Toolbar>
-      </AppBar>
-
-      <Container maxWidth="xl" className="commission-content">
-        <Box className="commission-header">
-          <Typography variant="h4" className="commission-title">
+      <Container maxWidth="xl" sx={{ py: 4 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
+          <Typography variant="h4" component="h1" sx={{ fontWeight: 700 }}>
             Commission Dashboard
           </Typography>
-          <Typography variant="body1" className="commission-subtitle">
-            Track and manage commission payments and earnings
-          </Typography>
+          <Button
+            variant="contained"
+            startIcon={<AddIcon />}
+            onClick={() => onNavigate('addCommission')}
+            size="large"
+            sx={{
+              background: 'linear-gradient(135deg, #C82828 0%, #B71C1C 100%)',
+              '&:hover': {
+                background: 'linear-gradient(135deg, #B71C1C 0%, #A01818 100%)'
+              }
+            }}
+          >
+            Add Commission
+          </Button>
         </Box>
 
-        <Grid container spacing={3} className="commission-stats">
+        {/* Stats Cards */}
+        <Grid container spacing={3} sx={{ mb: 4 }}>
           <Grid item xs={12} sm={6} md={3}>
-            <Card className="commission-stat-card">
+            <Card sx={{ borderRadius: 2, boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
               <CardContent sx={{ textAlign: 'center', py: 3 }}>
-                <Typography variant="h3" className="commission-stat-value">
+                <MoneyIcon sx={{ fontSize: 40, color: '#C82828', mb: 1 }} />
+                <Typography variant="h4" sx={{ fontWeight: 700, mb: 1 }}>
                   ${commissionStats.totalCommissions.toLocaleString()}
                 </Typography>
-                <Typography variant="body2" className="commission-stat-label">
+                <Typography variant="body2" color="text.secondary">
                   Total Commissions
                 </Typography>
-                <Typography variant="h2" className="commission-stat-icon">
-                  💰
-                </Typography>
               </CardContent>
             </Card>
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
-            <Card className="commission-stat-card">
+            <Card sx={{ borderRadius: 2, boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
               <CardContent sx={{ textAlign: 'center', py: 3 }}>
-                <Typography variant="h3" className="commission-stat-value">
+                <TrendingUpIcon sx={{ fontSize: 40, color: '#FF9800', mb: 1 }} />
+                <Typography variant="h4" sx={{ fontWeight: 700, mb: 1 }}>
                   ${commissionStats.pendingCommissions.toLocaleString()}
                 </Typography>
-                <Typography variant="body2" className="commission-stat-label">
+                <Typography variant="body2" color="text.secondary">
                   Pending Commissions
                 </Typography>
-                <Typography variant="h2" className="commission-stat-icon">
-                  ⏳
-                </Typography>
               </CardContent>
             </Card>
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
-            <Card className="commission-stat-card">
+            <Card sx={{ borderRadius: 2, boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
               <CardContent sx={{ textAlign: 'center', py: 3 }}>
-                <Typography variant="h3" className="commission-stat-value">
+                <VisibilityIcon sx={{ fontSize: 40, color: '#4CAF50', mb: 1 }} />
+                <Typography variant="h4" sx={{ fontWeight: 700, mb: 1 }}>
                   ${commissionStats.averageCommission.toLocaleString()}
                 </Typography>
-                <Typography variant="body2" className="commission-stat-label">
+                <Typography variant="body2" color="text.secondary">
                   Average Commission
-                </Typography>
-                <Typography variant="h2" className="commission-stat-icon">
-                  📊
                 </Typography>
               </CardContent>
             </Card>
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
-            <Card className="commission-stat-card">
+            <Card sx={{ borderRadius: 2, boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
               <CardContent sx={{ textAlign: 'center', py: 3 }}>
-                <Typography variant="h3" className="commission-stat-value">
+                <BusinessIcon sx={{ fontSize: 40, color: '#2196F3', mb: 1 }} />
+                <Typography variant="h4" sx={{ fontWeight: 700, mb: 1 }}>
                   {commissionStats.activeAccounts}
                 </Typography>
-                <Typography variant="body2" className="commission-stat-label">
+                <Typography variant="body2" color="text.secondary">
                   Active Accounts
-                </Typography>
-                <Typography variant="h2" className="commission-stat-icon">
-                  🏢
                 </Typography>
               </CardContent>
             </Card>
           </Grid>
         </Grid>
 
-        <FormControl className="commission-period-selector">
-          <InputLabel>Select Period</InputLabel>
-          <Select
-            value={selectedPeriod}
-            onChange={(e) => setSelectedPeriod(e.target.value)}
-            label="Select Period"
-          >
-            {periodOptions.map((option) => (
-              <MenuItem key={option.value} value={option.value}>
-                {option.label}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+        {/* Search and Filters */}
+        <Box sx={{ mb: 3, display: 'flex', gap: 2, alignItems: 'center', flexWrap: 'wrap' }}>
+          <TextField
+            fullWidth
+            placeholder="Search commissions by account, REP, or amount..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon />
+                </InputAdornment>
+              ),
+            }}
+            sx={{ maxWidth: 600 }}
+          />
 
-        <Tabs
-          value={activeTab}
-          onChange={(e, newValue) => setActiveTab(newValue)}
-          className="commission-tabs"
-        >
-          <Tab label="Account Overview" />
-          <Tab label="Energy Rep Overview" />
-          <Tab label="Projected vs Received Report" />
-        </Tabs>
+          <FormControl size="small" sx={{ minWidth: 150 }}>
+            <InputLabel>Select Period</InputLabel>
+            <Select
+              value={selectedPeriod}
+              onChange={(e) => setSelectedPeriod(e.target.value)}
+              label="Select Period"
+            >
+              {periodOptions.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Box>
 
-        {activeTab === 0 && (
-          <>
-            <Paper className="commission-filters">
-              <Box className="commission-filter-row">
-                <Button
-                  variant="outlined"
-                  startIcon={<DownloadIcon />}
-                  className="commission-export-button"
-                >
-                  Export Data
-                </Button>
-                <Button
-                  variant="outlined"
-                  startIcon={<SortIcon />}
-                  onClick={() => handleSort('commissionAmount')}
-                  className="commission-sort-button"
-                >
-                  Sort by Amount
-                </Button>
-                <Button
-                  variant="outlined"
-                  startIcon={<SortIcon />}
-                  onClick={() => handleSort('contractExpiration')}
-                  className="commission-sort-button"
-                >
-                  Sort by Expiration
-                </Button>
-              </Box>
-            </Paper>
+        {/* Commission Tabs */}
+        <Card sx={{ borderRadius: 2, boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
+          <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+            <Tabs
+              value={activeTab}
+              onChange={(event, newValue) => setActiveTab(newValue)}
+              aria-label="commission tabs"
+            >
+              <Tab label="Account Overview" icon={<BusinessIcon />} />
+              <Tab label="Energy Rep Overview" icon={<TrendingUpIcon />} />
+              <Tab label="Projected vs Received Report" icon={<VisibilityIcon />} />
+            </Tabs>
+          </Box>
+
+          <CardContent sx={{ p: 3 }}>
+            {activeTab === 0 && (
+              <Box>
+                {/* Action Buttons */}
+                <Box sx={{ mb: 3, display: 'flex', gap: 2, flexWrap: 'wrap' }}>
+                  <Button
+                    variant="outlined"
+                    startIcon={<DownloadIcon />}
+                    size="small"
+                  >
+                    Export Data
+                  </Button>
+                  <Button
+                    variant="outlined"
+                    startIcon={<SortIcon />}
+                    onClick={() => handleSort('commissionAmount')}
+                    size="small"
+                  >
+                    Sort by Amount
+                  </Button>
+                  <Button
+                    variant="outlined"
+                    startIcon={<SortIcon />}
+                    onClick={() => handleSort('contractExpiration')}
+                    size="small"
+                  >
+                    Sort by Expiration
+                  </Button>
+                </Box>
 
             <TableContainer className="commission-table-container">
               <Table className="commission-table">
@@ -751,22 +624,26 @@ const CommissionDashboard = ({ onLogout, onNavigate }) => {
                 </TableBody>
               </Table>
             </TableContainer>
-          </>
-        )}
+              </Box>
+            )}
 
         {activeTab === 1 && (
-          <TableContainer className="commission-table-container">
-            <Table className="commission-table">
-              <TableHead>
-                <TableRow>
-                  <TableCell>Rep Name</TableCell>
-                  <TableCell>Projected Commissions</TableCell>
-                  <TableCell>Received Commissions</TableCell>
-                  <TableCell>Variance</TableCell>
-                  <TableCell>Performance</TableCell>
-                  <TableCell>Actions</TableCell>
-                </TableRow>
-              </TableHead>
+          <Box>
+            <Typography variant="h6" sx={{ mb: 3, fontWeight: 600 }}>
+              Energy Rep Performance Overview
+            </Typography>
+            <TableContainer component={Paper} sx={{ borderRadius: 2 }}>
+              <Table>
+                <TableHead sx={{ backgroundColor: '#f8f9fa' }}>
+                  <TableRow>
+                    <TableCell sx={{ fontWeight: 600 }}>Rep Name</TableCell>
+                    <TableCell sx={{ fontWeight: 600 }}>Projected Commissions</TableCell>
+                    <TableCell sx={{ fontWeight: 600 }}>Received Commissions</TableCell>
+                    <TableCell sx={{ fontWeight: 600 }}>Variance</TableCell>
+                    <TableCell sx={{ fontWeight: 600 }}>Performance</TableCell>
+                    <TableCell sx={{ fontWeight: 600 }}>Actions</TableCell>
+                  </TableRow>
+                </TableHead>
               <TableBody>
                 {energyRepData.map((rep) => (
                   <TableRow key={rep.id}>
@@ -816,49 +693,53 @@ const CommissionDashboard = ({ onLogout, onNavigate }) => {
               </TableBody>
             </Table>
           </TableContainer>
+          </Box>
         )}
 
         {activeTab === 2 && (
-          <>
-            <Paper className="commission-filters">
-              <Box className="commission-filter-row">
-                <FormControl className="commission-filter-item">
-                  <InputLabel>Filter by Rep</InputLabel>
-                  <Select
-                    value={selectedRep}
-                    onChange={(e) => setSelectedRep(e.target.value)}
-                    label="Filter by Rep"
-                  >
-                    <MenuItem value="all">All Reps</MenuItem>
-                    <MenuItem value="powergrid">PowerGrid Solutions</MenuItem>
-                    <MenuItem value="energyconnect">Energy Connect Corp</MenuItem>
-                    <MenuItem value="volt">Volt Energy Partners</MenuItem>
-                  </Select>
-                </FormControl>
-                
-                <FormControl className="commission-filter-item">
-                  <InputLabel>Date Range</InputLabel>
-                  <Select
-                    value={dateRange}
-                    onChange={(e) => setDateRange(e.target.value)}
-                    label="Date Range"
-                  >
-                    <MenuItem value="current-month">Current Month</MenuItem>
-                    <MenuItem value="last-month">Last Month</MenuItem>
-                    <MenuItem value="quarter">This Quarter</MenuItem>
-                    <MenuItem value="year">This Year</MenuItem>
-                  </Select>
-                </FormControl>
+          <Box>
+            <Typography variant="h6" sx={{ mb: 3, fontWeight: 600 }}>
+              Projected vs Received Report
+            </Typography>
 
-                <Button
-                  variant="outlined"
-                  startIcon={<DownloadIcon />}
-                  className="commission-export-button"
+            {/* Filters */}
+            <Box sx={{ mb: 3, display: 'flex', gap: 2, alignItems: 'center', flexWrap: 'wrap' }}>
+              <FormControl size="small" sx={{ minWidth: 150 }}>
+                <InputLabel>Filter by Rep</InputLabel>
+                <Select
+                  value={selectedRep}
+                  onChange={(e) => setSelectedRep(e.target.value)}
+                  label="Filter by Rep"
                 >
-                  Export Report
-                </Button>
-              </Box>
-            </Paper>
+                  <MenuItem value="all">All Reps</MenuItem>
+                  <MenuItem value="powergrid">PowerGrid Solutions</MenuItem>
+                  <MenuItem value="energyconnect">Energy Connect Corp</MenuItem>
+                  <MenuItem value="volt">Volt Energy Partners</MenuItem>
+                </Select>
+              </FormControl>
+
+              <FormControl size="small" sx={{ minWidth: 150 }}>
+                <InputLabel>Date Range</InputLabel>
+                <Select
+                  value={dateRange}
+                  onChange={(e) => setDateRange(e.target.value)}
+                  label="Date Range"
+                >
+                  <MenuItem value="current-month">Current Month</MenuItem>
+                  <MenuItem value="last-month">Last Month</MenuItem>
+                  <MenuItem value="quarter">This Quarter</MenuItem>
+                  <MenuItem value="year">This Year</MenuItem>
+                </Select>
+              </FormControl>
+
+              <Button
+                variant="outlined"
+                startIcon={<DownloadIcon />}
+                size="small"
+              >
+                Export Report
+              </Button>
+            </Box>
 
             <Box className="commission-chart-container">
               <Typography variant="h6" className="commission-chart-title">
@@ -914,24 +795,24 @@ const CommissionDashboard = ({ onLogout, onNavigate }) => {
                 Detailed charts and analytics will be displayed here
               </Typography>
             </Box>
-          </>
+          </Box>
         )}
 
         {filteredCommissions.length === 0 && activeTab === 0 && (
-          <Box className="commission-empty-state">
-            <Typography className="commission-empty-icon">
-              💰
-            </Typography>
-            <Typography variant="h6" className="commission-empty-text">
+          <Box sx={{ textAlign: 'center', py: 4 }}>
+            <MoneyIcon sx={{ fontSize: 60, color: 'text.secondary', mb: 2 }} />
+            <Typography variant="h6" color="text.secondary">
               No commission data found
             </Typography>
-            <Typography variant="body2" className="commission-empty-subtext">
+            <Typography variant="body2" color="text.secondary">
               Try adjusting your filters or search terms
             </Typography>
           </Box>
         )}
-      </Container>
-    </Box>
+      </CardContent>
+    </Card>
+  </Container>
+</Box>
   );
 };
 
