@@ -1,0 +1,238 @@
+{
+  "totalRecords": 25080,
+  "uniqueZones": 8,
+  "uniqueReps": 6,
+  "avgRate": 69.92715765151515,
+  "minRate": 0,
+  "maxRate": 131.109,
+  "zoneAnalysis": [
+    {
+      "zone": "North",
+      "recordCount": 2160,
+      "avgRate": 63.02874074074074,
+      "minRate": 0.0,
+      "maxRate": 90.65
+    },
+    {
+      "zone": "South",
+      "recordCount": 2160,
+      "avgRate": 63.319212962962965,
+      "minRate": 0.0,
+      "maxRate": 90.51
+    },
+    {
+      "zone": "West",
+      "recordCount": 2160,
+      "avgRate": 67.92672685185185,
+      "minRate": 0.0,
+      "maxRate": 94.76
+    },
+    {
+      "zone": "COAST",
+      "recordCount": 3771,
+      "avgRate": 69.35758769557147,
+      "minRate": 0.0,
+      "maxRate": 101.8067
+    },
+    {
+      "zone": "NORTH",
+      "recordCount": 1611,
+      "avgRate": 71.71224680322781,
+      "minRate": 0.0,
+      "maxRate": 100.4993
+    },
+    {
+      "zone": "TNMP",
+      "recordCount": 1035,
+      "avgRate": 73.1700322705314,
+      "minRate": 0.0,
+      "maxRate": 101.6735
+    },
+    {
+      "zone": "SOUTH",
+      "recordCount": 1434,
+      "avgRate": 76.7229380753138,
+      "minRate": 0.0,
+      "maxRate": 131.109
+    },
+    {
+      "zone": "WEST",
+      "recordCount": 1485,
+      "avgRate": 82.07795582491582,
+      "minRate": 0.0,
+      "maxRate": 109.2825
+    }
+  ],
+  "repAnalysis": [
+    {
+      "rep": "ATLANTIC",
+      "recordCount": 1386,
+      "avgRate": 54.188600288600284,
+      "minRate": 0.0,
+      "maxRate": 92.2,
+      "zonesServed": 3
+    },
+    {
+      "rep": "GEXA",
+      "recordCount": 8640,
+      "avgRate": 65.12031712962964,
+      "minRate": 0.0,
+      "maxRate": 95.89,
+      "zonesServed": 4
+    },
+    {
+      "rep": "NRG",
+      "recordCount": 5760,
+      "avgRate": 65.31174479166667,
+      "minRate": 0.0,
+      "maxRate": 89.97,
+      "zonesServed": 4
+    },
+    {
+      "rep": "CONSTELLATION",
+      "recordCount": 954,
+      "avgRate": 66.93689727463313,
+      "minRate": 0.0,
+      "maxRate": 105.0,
+      "zonesServed": 5
+    },
+    {
+      "rep": "HUDSON",
+      "recordCount": 2304,
+      "avgRate": 77.68098958333333,
+      "minRate": 0.0,
+      "maxRate": 98.0,
+      "zonesServed": 4
+    },
+    {
+      "rep": "APG&E",
+      "recordCount": 6036,
+      "avgRate": 82.33892046056991,
+      "minRate": 62.3017,
+      "maxRate": 131.109,
+      "zonesServed": 5
+    }
+  ],
+  "bestRates": [
+    {
+      "zone": null,
+      "rep": "CONSTELLATION",
+      "rate": 0.0,
+      "termMonths": 6.0
+    },
+    {
+      "zone": null,
+      "rep": "CONSTELLATION",
+      "rate": 0.0,
+      "termMonths": 6.0
+    },
+    {
+      "zone": null,
+      "rep": "CONSTELLATION",
+      "rate": 0.0,
+      "termMonths": 6.0
+    },
+    {
+      "zone": null,
+      "rep": "CONSTELLATION",
+      "rate": 0.0,
+      "termMonths": 6.0
+    },
+    {
+      "zone": null,
+      "rep": "CONSTELLATION",
+      "rate": 0.0,
+      "termMonths": 6.0
+    },
+    {
+      "zone": null,
+      "rep": "CONSTELLATION",
+      "rate": 0.0,
+      "termMonths": 6.0
+    },
+    {
+      "zone": null,
+      "rep": "CONSTELLATION",
+      "rate": 0.0,
+      "termMonths": 6.0
+    },
+    {
+      "zone": null,
+      "rep": "CONSTELLATION",
+      "rate": 0.0,
+      "termMonths": 6.0
+    },
+    {
+      "zone": null,
+      "rep": "CONSTELLATION",
+      "rate": 0.0,
+      "termMonths": 12.0
+    },
+    {
+      "zone": null,
+      "rep": "CONSTELLATION",
+      "rate": 0.0,
+      "termMonths": 12.0
+    },
+    {
+      "zone": null,
+      "rep": "CONSTELLATION",
+      "rate": 0.0,
+      "termMonths": 12.0
+    },
+    {
+      "zone": null,
+      "rep": "CONSTELLATION",
+      "rate": 0.0,
+      "termMonths": 12.0
+    },
+    {
+      "zone": null,
+      "rep": "CONSTELLATION",
+      "rate": 0.0,
+      "termMonths": 12.0
+    },
+    {
+      "zone": null,
+      "rep": "CONSTELLATION",
+      "rate": 0.0,
+      "termMonths": 12.0
+    },
+    {
+      "zone": null,
+      "rep": "CONSTELLATION",
+      "rate": 0.0,
+      "termMonths": 12.0
+    },
+    {
+      "zone": null,
+      "rep": "CONSTELLATION",
+      "rate": 0.0,
+      "termMonths": 12.0
+    },
+    {
+      "zone": null,
+      "rep": "CONSTELLATION",
+      "rate": 0.0,
+      "termMonths": 24.0
+    },
+    {
+      "zone": null,
+      "rep": "CONSTELLATION",
+      "rate": 0.0,
+      "termMonths": 24.0
+    },
+    {
+      "zone": null,
+      "rep": "CONSTELLATION",
+      "rate": 0.0,
+      "termMonths": 24.0
+    },
+    {
+      "zone": null,
+      "rep": "CONSTELLATION",
+      "rate": 0.0,
+      "termMonths": 24.0
+    }
+  ]
+}

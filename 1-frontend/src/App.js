@@ -19,6 +19,7 @@ import AccountDetail from './components/AccountDetail';
 import ManagerDetail from './components/ManagerDetail';
 import SystemHealthDashboard from './components/SystemHealthDashboard';
 import ESIIDDashboard from './components/ESIIDDashboard';
+import PricingDashboard from './components/PricingDashboard';
 
 function App() {
   // App component logic remains the same
@@ -125,6 +126,8 @@ const AppContent = () => {
         return <SystemHealthDashboard onLogout={logout} onNavigate={handleNavigation} />;
       case 'esiids':
         return <ESIIDDashboard onLogout={logout} onNavigate={handleNavigation} />;
+      case 'pricing':
+        return <PricingDashboard onLogout={logout} onNavigate={handleNavigation} />;
       default:
         return <HomePage onLogout={logout} onNavigate={handleNavigation} onOpenDataEntry={handleOpenDataEntry} />;
     }

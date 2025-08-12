@@ -58,3 +58,4 @@ class Provider(Base):
     accounts = relationship("Account", back_populates="provider")
     commissions = relationship("Commission", back_populates="provider")
     esiids = relationship("ESIID", back_populates="provider")
+    daily_pricing = relationship("DailyPricing", back_populates="provider")

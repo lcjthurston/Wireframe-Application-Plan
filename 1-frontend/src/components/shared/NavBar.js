@@ -16,7 +16,8 @@ import {
   Business as BusinessIcon,
   HealthAndSafety as HealthIcon,
   Assignment as TaskIcon,
-  Bolt as BoltIcon
+  Bolt as BoltIcon,
+  TrendingUp as TrendingUpIcon
 } from '@mui/icons-material';
 import kilowattImage from '../../assets/image.png';
 
@@ -131,6 +132,16 @@ const NavBar = ({
             sx={getButtonSx('esiids')}
           >
             ESIIDs
+          </Button>
+          <Button
+            color="inherit"
+            variant={getButtonVariant('pricing')}
+            startIcon={<TrendingUpIcon />}
+            onClick={() => onNavigate('pricing')}
+            size="small"
+            sx={getButtonSx('pricing')}
+          >
+            Pricing
           </Button>
           <Button
             color="inherit"
