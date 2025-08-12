@@ -1,0 +1,61 @@
+{
+  "totalCommissions": 4348,
+  "receivedCount": 592,
+  "scheduledCount": 3756,
+  "activeSchedules": 1452,
+  "totalReceivedAmount": 442734.32,
+  "avgReceivedAmount": 758.1067123287671,
+  "topReps": [
+    {
+      "rep": "RELIANT",
+      "commissionCount": 90,
+      "totalAmount": 257603.3
+    },
+    {
+      "rep": "BRILLIANT",
+      "commissionCount": 111,
+      "totalAmount": 80430.49
+    },
+    {
+      "rep": "STARTEX",
+      "commissionCount": 114,
+      "totalAmount": 68184.25
+    },
+    {
+      "rep": "CHAMPION",
+      "commissionCount": 30,
+      "totalAmount": 20824.21
+    },
+    {
+      "rep": "GEXA",
+      "commissionCount": 234,
+      "totalAmount": 10663.88
+    },
+    {
+      "rep": "TRIEAGLE",
+      "commissionCount": 2,
+      "totalAmount": 4522.14
+    },
+    {
+      "rep": "GREEN MTN",
+      "commissionCount": 2,
+      "totalAmount": 290.04
+    },
+    {
+      "rep": "SPARK",
+      "commissionCount": 2,
+      "totalAmount": 176.97
+    },
+    {
+      "rep": "TARA",
+      "commissionCount": 2,
+      "totalAmount": 31.5
+    },
+    {
+      "rep": "HUDSON",
+      "commissionCount": 1,
+      "totalAmount": 0
+    }
+  ],
+  "monthlyData": {}
+}
