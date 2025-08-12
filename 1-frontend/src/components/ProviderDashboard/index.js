@@ -38,54 +38,40 @@ import NavBar from '../shared/NavBar';
 const ProviderDashboard = ({ onLogout, onNavigate }) => {
   const [providers, setProviders] = useState([]);
 
+  // Load real provider data
   useEffect(() => {
-    const mockProviders = [
-      {
-        id: 1,
-        name: 'Green Energy Solutions',
-        contact: 'John Smith',
-        type: 'Renewable',
-        status: 'Active',
-        capacity: 500000,
-        avgRate: 0.085,
-        revenue: 42500,
-        rating: 4.8
-      },
-      {
-        id: 2,
-        name: 'PowerCorp Utilities',
-        contact: 'Sarah Johnson',
-        type: 'Traditional',
-        status: 'Active',
-        capacity: 750000,
-        avgRate: 0.092,
-        revenue: 69000,
-        rating: 4.2
-      },
-      {
-        id: 3,
-        name: 'Solar Dynamics',
-        contact: 'Mike Wilson',
-        type: 'Solar',
-        status: 'Active',
-        capacity: 300000,
-        avgRate: 0.078,
-        revenue: 23400,
-        rating: 4.6
-      },
-      {
-        id: 4,
-        name: 'Wind Power Inc',
-        contact: 'Lisa Brown',
-        type: 'Wind',
-        status: 'Pending',
-        capacity: 200000,
-        avgRate: 0.088,
-        revenue: 17600,
-        rating: 4.0
+    const loadProviderData = async () => {
+      try {
+        // Import the real provider data
+        const providersData = await import('../../data/providers.json');
+        const realProviders = providersData.default || providersData;
+
+        console.log(`📊 Loaded ${realProviders.length} real providers from database`);
+        setProviders(realProviders);
+      } catch (error) {
+        console.error('❌ Error loading provider data:', error);
+
+        // Fallback to a few sample providers if import fails
+        const fallbackProviders = [
+          {
+            id: 1,
+            name: 'Sample Provider',
+            contact: 'Sample Contact',
+            phone: '(555) 123-4567',
+            email: 'sample@example.com',
+            refundType: 'Unknown',
+            isRepActive: true,
+            location: 'Sample Location',
+            paymentTerms: 'Sample Terms',
+            accountCount: 0,
+            commissionTotal: 0
+          }
+        ];
+        setProviders(fallbackProviders);
       }
-    ];
-    setProviders(mockProviders);
+    };
+
+    loadProviderData();
   }, []);
 
   const getTypeColor = (type) => {
@@ -108,9 +94,9 @@ const ProviderDashboard = ({ onLogout, onNavigate }) => {
   };
 
   const totalProviders = providers.length;
-  const activeProviders = providers.filter(p => p.status === 'Active').length;
-  const totalCapacity = providers.reduce((sum, p) => sum + p.capacity, 0);
-  const totalRevenue = providers.reduce((sum, p) => sum + p.revenue, 0);
+  const activeProviders = providers.filter(p => p.isRepActive).length;
+  const totalAccounts = providers.reduce((sum, p) => sum + (p.accountCount || 0), 0);
+  const totalCommissions = providers.reduce((sum, p) => sum + (p.commissionTotal || 0), 0);
 
   return (
     <Box sx={{ minHeight: '100vh', backgroundColor: '#fafafa' }}>
@@ -177,10 +163,10 @@ const ProviderDashboard = ({ onLogout, onNavigate }) => {
               <CardContent sx={{ textAlign: 'center', py: 3 }}>
                 <Bolt sx={{ fontSize: 40, color: '#FF9800', mb: 1 }} />
                 <Typography variant="h4" sx={{ fontWeight: 700, mb: 1 }}>
-                  {totalCapacity.toLocaleString()}
+                  {totalAccounts.toLocaleString()}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                  Total Capacity (kW)
+                  Total Accounts
                 </Typography>
               </CardContent>
             </Card>
@@ -190,10 +176,10 @@ const ProviderDashboard = ({ onLogout, onNavigate }) => {
               <CardContent sx={{ textAlign: 'center', py: 3 }}>
                 <AttachMoney sx={{ fontSize: 40, color: '#4CAF50', mb: 1 }} />
                 <Typography variant="h4" sx={{ fontWeight: 700, mb: 1 }}>
-                  ${totalRevenue.toLocaleString()}
+                  ${totalCommissions.toLocaleString()}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                  Total Revenue
+                  Total Commissions
                 </Typography>
               </CardContent>
             </Card>
@@ -216,12 +202,11 @@ const ProviderDashboard = ({ onLogout, onNavigate }) => {
                 <TableHead sx={{ backgroundColor: '#f8f9fa' }}>
                   <TableRow>
                     <TableCell sx={{ fontWeight: 600, color: '#333' }}>Provider</TableCell>
-                    <TableCell sx={{ fontWeight: 600, color: '#333' }}>Type</TableCell>
+                    <TableCell sx={{ fontWeight: 600, color: '#333' }}>Contact Info</TableCell>
                     <TableCell sx={{ fontWeight: 600, color: '#333' }}>Status</TableCell>
-                    <TableCell sx={{ fontWeight: 600, color: '#333' }}>Capacity (kW)</TableCell>
-                    <TableCell sx={{ fontWeight: 600, color: '#333' }}>Avg Rate</TableCell>
-                    <TableCell sx={{ fontWeight: 600, color: '#333' }}>Revenue</TableCell>
-                    <TableCell sx={{ fontWeight: 600, color: '#333' }}>Rating</TableCell>
+                    <TableCell sx={{ fontWeight: 600, color: '#333' }}>Refund Type</TableCell>
+                    <TableCell sx={{ fontWeight: 600, color: '#333' }}>Location</TableCell>
+                    <TableCell sx={{ fontWeight: 600, color: '#333' }}>Accounts</TableCell>
                     <TableCell sx={{ fontWeight: 600, color: '#333' }}>Actions</TableCell>
                   </TableRow>
                 </TableHead>
@@ -259,29 +244,43 @@ const ProviderDashboard = ({ onLogout, onNavigate }) => {
                         </Box>
                       </TableCell>
                       <TableCell>
-                        <Chip 
-                          label={provider.type} 
-                          color={getTypeColor(provider.type)}
-                          size="small"
-                        />
-                      </TableCell>
-                      <TableCell>
-                        <Chip 
-                          label={provider.status} 
-                          color={getStatusColor(provider.status)}
-                          size="small"
-                        />
-                      </TableCell>
-                      <TableCell>{provider.capacity.toLocaleString()}</TableCell>
-                      <TableCell>${provider.avgRate}/kWh</TableCell>
-                      <TableCell>${provider.revenue.toLocaleString()}</TableCell>
-                      <TableCell>
-                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                          <Rating value={provider.rating} readOnly size="small" />
-                          <Typography variant="body2" sx={{ ml: 1 }}>
-                            {provider.rating}
-                          </Typography>
+                        <Box>
+                          {provider.phone && provider.phone !== 'No Phone' && (
+                            <Typography variant="body2" sx={{ display: 'flex', alignItems: 'center', mb: 0.5 }}>
+                              📞 {provider.phone}
+                            </Typography>
+                          )}
+                          {provider.email && provider.email !== 'No Email' && (
+                            <Typography variant="body2" sx={{ display: 'flex', alignItems: 'center' }}>
+                              ✉️ {provider.email}
+                            </Typography>
+                          )}
                         </Box>
+                      </TableCell>
+                      <TableCell>
+                        <Chip
+                          label={provider.isRepActive ? 'Active' : 'Inactive'}
+                          color={provider.isRepActive ? 'success' : 'default'}
+                          size="small"
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <Chip
+                          label={provider.refundType}
+                          color={provider.refundType === 'State' ? 'info' : provider.refundType === 'Check' ? 'success' : 'default'}
+                          size="small"
+                          variant="outlined"
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <Typography variant="body2">
+                          {provider.location && provider.location !== 'No Location' ? provider.location : 'Not specified'}
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography variant="body2" fontWeight="medium">
+                          {provider.accountCount || 0}
+                        </Typography>
                       </TableCell>
                       <TableCell>
                         <Box sx={{ display: 'flex', gap: 1 }}>
