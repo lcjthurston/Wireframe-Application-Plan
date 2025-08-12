@@ -113,6 +113,16 @@ const NavBar = ({
           </Button>
           <Button
             color="inherit"
+            variant={getButtonVariant('companies')}
+            startIcon={<BusinessIcon />}
+            onClick={() => onNavigate('companies')}
+            size="small"
+            sx={getButtonSx('companies')}
+          >
+            Companies
+          </Button>
+          <Button
+            color="inherit"
             variant={getButtonVariant('email-draft')}
             startIcon={<EmailIcon />}
             onClick={() => onNavigate('email-draft')}

@@ -15,7 +15,8 @@ class Manager(Base):
     mgr_class = Column(String)  # MGR_CLASS field
 
     # Company and office information
-    management_company = Column(String)  # MGMT CO field
+    management_company = Column(String)  # MGMT CO field (kept for backward compatibility)
+    management_company_id = Column(Integer, ForeignKey("management_companies.id"))  # FK to ManagementCompany
     office = Column(String)  # OFFICE field
     office_city = Column(String)  # OFFICE_CITY field
     supervisor = Column(String)  # SUPERVISOR field
@@ -39,5 +40,6 @@ class Manager(Base):
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
     # Relationships
+    management_company_rel = relationship("ManagementCompany", back_populates="managers")
     accounts = relationship("Account", back_populates="manager")
     commissions = relationship("Commission", back_populates="manager")

@@ -10,6 +10,7 @@ import TaskQueue from './components/TaskQueue';
 import AccountDashboard from './components/AccountDashboard';
 import AccountsList from './components/AccountsList';
 import ManagerDashboard from './components/ManagerDashboard';
+import CompanyDashboard from './components/CompanyDashboard';
 import EmailDraftDashboard from './components/EmailDraftDashboard';
 import CommissionDashboard from './components/CommissionDashboard';
 import ProviderDashboard from './components/ProviderDashboard';
@@ -111,6 +112,8 @@ const AppContent = () => {
         return <ManagerDashboard onLogout={logout} onNavigate={handleNavigation} />;
       case 'managerDetail':
         return <ManagerDetail onLogout={logout} onNavigate={handleNavigation} managerId={selectedManagerId} />;
+      case 'companies':
+        return <CompanyDashboard onLogout={logout} onNavigate={handleNavigation} />;
       case 'email-draft':
         return <EmailDraftDashboard onLogout={logout} onNavigate={handleNavigation} />;
       case 'commission':
