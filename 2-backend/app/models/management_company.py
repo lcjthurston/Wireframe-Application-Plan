@@ -45,3 +45,4 @@ class ManagementCompany(Base):
     # Relationships
     managers = relationship("Manager", back_populates="management_company_rel")
     accounts = relationship("Account", back_populates="management_company_rel")
+    esiids = relationship("ESIID", back_populates="management_company")

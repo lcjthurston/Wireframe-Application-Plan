@@ -57,3 +57,4 @@ class Provider(Base):
     # Relationships
     accounts = relationship("Account", back_populates="provider")
     commissions = relationship("Commission", back_populates="provider")
+    esiids = relationship("ESIID", back_populates="provider")

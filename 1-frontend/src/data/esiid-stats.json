@@ -1,0 +1,11 @@
+{
+  "total_esiids": 21550,
+  "with_usage": 11776,
+  "with_provider": 14591,
+  "with_company": 8803,
+  "total_kwh_mo": 30746515.0,
+  "total_kwh_yr": 93566652.0,
+  "total_billing": 3672653.7032,
+  "avg_kwh_mo": 1428.011471831313,
+  "avg_bill": 170.55139329432524
+}
