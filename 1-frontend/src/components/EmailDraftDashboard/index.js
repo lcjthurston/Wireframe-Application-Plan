@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import {
   Box,
-  AppBar,
-  Toolbar,
   Typography,
   Button,
   TextField,
@@ -65,6 +63,7 @@ import {
   ExpandMore as ExpandMoreIcon,
   AttachFile as AttachFileIcon
 } from '@mui/icons-material';
+import NavBar from '../shared/NavBar';
 import kilowattImage from '../../assets/image.png';
 import './EmailDraftDashboard.scss';
 
@@ -208,12 +207,7 @@ Kilowatt Team`,
     console.log('Searching for:', searchQuery);
   };
 
-  const handleNavigation = (page) => {
-    console.log('Navigating to:', page);
-    if (onNavigate) {
-      onNavigate(page);
-    }
-  };
+
 
   const handleEmailAction = (action, emailId) => {
     console.log(`${action} email:`, emailId);
@@ -306,296 +300,182 @@ Kilowatt Team`,
   const filteredEmails = getFilteredEmails();
 
   return (
-    <Box className="email-draft-dashboard">
-      <AppBar position="static" className="email-draft-app-bar">
-        <Toolbar sx={{
-          minHeight: 72,
-          padding: '0 24px',
-          '@media (max-width: 1200px)': {
-            flexWrap: 'wrap',
-            minHeight: 80
-          }
-        }}>
-          {/* Logo Section */}
-          <Box sx={{ display: 'flex', alignItems: 'center', flexGrow: 1 }}>
-            <Box
-              sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}
-              onClick={() => handleNavigation('home')}
-            >
-              <img src={kilowattImage} alt="Kilowatt" className="email-draft-logo" />
-              <Typography variant="h6" component="div" sx={{ fontWeight: 700 }}>
-                Kilowatt
-              </Typography>
-            </Box>
-          </Box>
+    <Box className="email-draft-dashboard" sx={{ minHeight: '100vh', backgroundColor: '#fafafa' }}>
+      <NavBar
+        onNavigate={onNavigate}
+        onProfileMenuOpen={onLogout}
+        userProfile={{ name: 'Profile' }}
+        currentPage="email-draft"
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+      />
 
-          {/* Navigation Buttons */}
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mr: 2 }}>
-            <Button
-              color="inherit"
-              startIcon={<DashboardIcon />}
-              onClick={() => handleNavigation('manager')}
-              size="small"
-            >
-              Manager
-            </Button>
-            <Button
-              color="inherit"
-              variant="contained"
-              startIcon={<EmailIcon />}
-              onClick={() => handleNavigation('email-draft')}
-              size="small"
-              sx={{ bgcolor: 'rgba(255,255,255,0.2)', color: 'white' }}
-            >
-              Email Drafts
-            </Button>
-            <Button
-              color="inherit"
-              startIcon={<MoneyIcon />}
-              onClick={() => handleNavigation('commission')}
-              size="small"
-            >
-              Commission
-            </Button>
-            <Button
-              color="inherit"
-              startIcon={<BusinessIcon />}
-              onClick={() => handleNavigation('provider')}
-              size="small"
-            >
-              Providers
-            </Button>
-            <Button
-              color="inherit"
-              startIcon={<HealthIcon />}
-              onClick={() => handleNavigation('system-health')}
-              size="small"
-            >
-              System Health
-            </Button>
-            <Button
-              color="inherit"
-              startIcon={<TaskIcon />}
-              onClick={() => handleNavigation('task-queue')}
-              size="small"
-            >
-              Task Queue
-            </Button>
-            <Button
-              color="inherit"
-              startIcon={<BusinessIcon />}
-              onClick={() => handleNavigation('accounts')}
-              size="small"
-            >
-              Accounts
-            </Button>
-          </Box>
-
-          {/* Search Bar */}
-          <Box sx={{ mr: 2 }}>
-            <TextField
-              placeholder="Search emails..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              variant="outlined"
-              size="small"
-              sx={{
-                '& .MuiOutlinedInput-root': {
-                  backgroundColor: 'rgba(255,255,255,0.1)',
-                  '& fieldset': {
-                    borderColor: 'rgba(255,255,255,0.3)',
-                  },
-                  '&:hover fieldset': {
-                    borderColor: 'rgba(255,255,255,0.5)',
-                  },
-                  '&.Mui-focused fieldset': {
-                    borderColor: 'rgba(255,255,255,0.7)',
-                  },
-                  '& input': {
-                    color: 'white',
-                    '&::placeholder': {
-                      color: 'rgba(255,255,255,0.7)',
-                      opacity: 1,
-                    },
-                  },
-                },
-              }}
-              InputProps={{
-                startAdornment: (
-                  <SearchIcon sx={{ color: 'rgba(255,255,255,0.7)', mr: 1 }} />
-                ),
-              }}
-            />
-          </Box>
-
-          {/* Profile Button */}
-          <Button
-            color="inherit"
-            onClick={() => handleNavigation('home')}
-            className="email-draft-profile-button"
-            startIcon={<AccountIcon />}
-          >
-            Profile
-          </Button>
-        </Toolbar>
-      </AppBar>
-
-      <Container maxWidth="xl" className="email-draft-content">
-        <Box className="email-draft-header">
-          <Typography variant="h4" className="email-draft-title">
+      <Container maxWidth="xl" sx={{ py: 4 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
+          <Typography variant="h4" component="h1" sx={{ fontWeight: 700 }}>
             Email Draft Dashboard
           </Typography>
-          <Typography variant="body1" className="email-draft-subtitle">
-            Manage and review email drafts before sending
-          </Typography>
+          <Button
+            variant="contained"
+            startIcon={<EmailIcon />}
+            onClick={() => setEmailDialogOpen(true)}
+            size="large"
+            sx={{
+              background: 'linear-gradient(135deg, #C82828 0%, #B71C1C 100%)',
+              '&:hover': {
+                background: 'linear-gradient(135deg, #B71C1C 0%, #A01818 100%)'
+              }
+            }}
+          >
+            New Email Draft
+          </Button>
         </Box>
 
-        <Grid container spacing={3} className="email-draft-stats">
+        {/* Stats Cards */}
+        <Grid container spacing={3} sx={{ mb: 4 }}>
           <Grid item xs={12} sm={6} md={3}>
-            <Card className="email-draft-stat-card">
+            <Card sx={{ borderRadius: 2, boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
               <CardContent sx={{ textAlign: 'center', py: 3 }}>
-                <Typography variant="h3" className="email-draft-stat-value">
+                <EmailIcon sx={{ fontSize: 40, color: '#C82828', mb: 1 }} />
+                <Typography variant="h4" sx={{ fontWeight: 700, mb: 1 }}>
                   {emailDrafts.length}
                 </Typography>
-                <Typography variant="body2" className="email-draft-stat-label">
+                <Typography variant="body2" color="text.secondary">
                   Total Drafts
                 </Typography>
-                <Typography variant="h2" className="email-draft-stat-icon">
-                  📧
-                </Typography>
               </CardContent>
             </Card>
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
-            <Card className="email-draft-stat-card">
+            <Card sx={{ borderRadius: 2, boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
               <CardContent sx={{ textAlign: 'center', py: 3 }}>
-                <Typography variant="h3" className="email-draft-stat-value">
+                <MoneyIcon sx={{ fontSize: 40, color: '#4CAF50', mb: 1 }} />
+                <Typography variant="h4" sx={{ fontWeight: 700, mb: 1 }}>
                   {emailDrafts.filter(e => e.emailType === 'Pricing Sheet').length}
                 </Typography>
-                <Typography variant="body2" className="email-draft-stat-label">
+                <Typography variant="body2" color="text.secondary">
                   Pricing Sheets
                 </Typography>
-                <Typography variant="h2" className="email-draft-stat-icon">
-                  💰
-                </Typography>
               </CardContent>
             </Card>
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
-            <Card className="email-draft-stat-card">
+            <Card sx={{ borderRadius: 2, boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
               <CardContent sx={{ textAlign: 'center', py: 3 }}>
-                <Typography variant="h3" className="email-draft-stat-value">
+                <BusinessIcon sx={{ fontSize: 40, color: '#2196F3', mb: 1 }} />
+                <Typography variant="h4" sx={{ fontWeight: 700, mb: 1 }}>
                   {emailDrafts.filter(e => e.emailType === 'Contract').length}
                 </Typography>
-                <Typography variant="body2" className="email-draft-stat-label">
+                <Typography variant="body2" color="text.secondary">
                   Contracts
-                </Typography>
-                <Typography variant="h2" className="email-draft-stat-icon">
-                  📋
                 </Typography>
               </CardContent>
             </Card>
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
-            <Card className="email-draft-stat-card">
+            <Card sx={{ borderRadius: 2, boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
               <CardContent sx={{ textAlign: 'center', py: 3 }}>
-                <Typography variant="h3" className="email-draft-stat-value">
+                <AccountIcon sx={{ fontSize: 40, color: '#FF9800', mb: 1 }} />
+                <Typography variant="h4" sx={{ fontWeight: 700, mb: 1 }}>
                   {emailDrafts.filter(e => e.emailType === 'Manager Change Notification').length}
                 </Typography>
-                <Typography variant="body2" className="email-draft-stat-label">
+                <Typography variant="body2" color="text.secondary">
                   Manager Changes
-                </Typography>
-                <Typography variant="h2" className="email-draft-stat-icon">
-                  👤
                 </Typography>
               </CardContent>
             </Card>
           </Grid>
         </Grid>
 
-        <Paper className="email-draft-filters">
-          <Box className="email-draft-filter-row">
-            <TextField
-              placeholder="Search emails by recipient, account, or subject..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              variant="outlined"
-              size="small"
-              sx={{ minWidth: 300, mr: 2 }}
-              InputProps={{
-                startAdornment: (
-                  <SearchIcon sx={{ color: 'rgba(0,0,0,0.5)', mr: 1 }} />
-                ),
-              }}
-            />
+        {/* Search and Filters */}
+        <Box sx={{ mb: 3, display: 'flex', gap: 2, alignItems: 'center', flexWrap: 'wrap' }}>
+          <TextField
+            placeholder="Search emails by recipient, account, or subject..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            variant="outlined"
+            size="small"
+            sx={{ minWidth: 300 }}
+            InputProps={{
+              startAdornment: (
+                <SearchIcon sx={{ color: 'rgba(0,0,0,0.5)', mr: 1 }} />
+              ),
+            }}
+          />
 
-            <FormControl className="email-draft-filter-item">
-              <InputLabel>Filter by Type</InputLabel>
-              <Select
-                value={filterType}
-                onChange={(e) => setFilterType(e.target.value)}
-                label="Filter by Type"
-              >
-                {emailTypes.map((type) => (
-                  <MenuItem key={type.id} value={type.id}>
-                    {type.label} ({type.count})
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-
-            <FormControl className="email-draft-filter-item">
-              <InputLabel>Sort by</InputLabel>
-              <Select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
-                label="Sort by"
-              >
-                {sortOptions.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-
-            <FormControl className="email-draft-filter-item">
-              <InputLabel>Status</InputLabel>
-              <Select
-                value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value)}
-                label="Status"
-              >
-                <MenuItem value="all">All Status</MenuItem>
-                <MenuItem value="draft">Draft</MenuItem>
-                <MenuItem value="scheduled">Scheduled</MenuItem>
-                <MenuItem value="sent">Sent</MenuItem>
-              </Select>
-            </FormControl>
-
-            <Button
-              variant="outlined"
-              startIcon={<FilterIcon />}
-              onClick={() => console.log('Advanced filters')}
-              sx={{ ml: 1 }}
+          <FormControl size="small" sx={{ minWidth: 150 }}>
+            <InputLabel>Filter by Type</InputLabel>
+            <Select
+              value={filterType}
+              onChange={(e) => setFilterType(e.target.value)}
+              label="Filter by Type"
             >
-              Advanced
-            </Button>
-          </Box>
-        </Paper>
+              {emailTypes.map((type) => (
+                <MenuItem key={type.id} value={type.id}>
+                  {type.label} ({type.count})
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
 
-        <Box className="email-draft-bulk-actions">
-          <Typography variant="h6" sx={{ mb: 2 }}>
-            Bulk Actions
+          <FormControl size="small" sx={{ minWidth: 120 }}>
+            <InputLabel>Sort by</InputLabel>
+            <Select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
+              label="Sort by"
+            >
+              {sortOptions.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+
+          <FormControl size="small" sx={{ minWidth: 120 }}>
+            <InputLabel>Status</InputLabel>
+            <Select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              label="Status"
+            >
+              <MenuItem value="all">All Status</MenuItem>
+              <MenuItem value="draft">Draft</MenuItem>
+              <MenuItem value="scheduled">Scheduled</MenuItem>
+              <MenuItem value="sent">Sent</MenuItem>
+            </Select>
+          </FormControl>
+
+          <Button
+            variant="outlined"
+            startIcon={<FilterIcon />}
+            onClick={() => console.log('Advanced filters')}
+            size="small"
+          >
+            Advanced
+          </Button>
+        </Box>
+
+        {/* Bulk Actions */}
+        <Box sx={{ mb: 3, display: 'flex', gap: 2, alignItems: 'center', flexWrap: 'wrap' }}>
+          <Typography variant="h6" sx={{ mr: 2 }}>
+            Bulk Actions:
           </Typography>
           <Button
             variant="contained"
             startIcon={<SendIcon />}
             onClick={() => handleBulkAction('send')}
-            className="email-draft-bulk-button"
+            size="small"
+            sx={{
+              background: 'linear-gradient(135deg, #4CAF50 0%, #388E3C 100%)',
+              '&:hover': {
+                background: 'linear-gradient(135deg, #388E3C 0%, #2E7D32 100%)'
+              }
+            }}
           >
             Send Selected
           </Button>
@@ -603,7 +483,7 @@ Kilowatt Team`,
             variant="outlined"
             startIcon={<EditIcon />}
             onClick={() => handleBulkAction('edit')}
-            className="email-draft-bulk-button"
+            size="small"
           >
             Edit Selected
           </Button>
@@ -611,24 +491,37 @@ Kilowatt Team`,
             variant="outlined"
             startIcon={<DeleteIcon />}
             onClick={() => handleBulkAction('delete')}
-            className="email-draft-bulk-button"
+            size="small"
+            color="error"
           >
             Delete Selected
           </Button>
         </Box>
 
-        <TableContainer className="email-draft-table-container">
-          <Table className="email-draft-table">
-            <TableHead>
-              <TableRow>
-                <TableCell>Recipient</TableCell>
-                <TableCell>Account</TableCell>
-                <TableCell>Email Type</TableCell>
-                <TableCell>Subject</TableCell>
-                <TableCell>Date Drafted</TableCell>
-                <TableCell>Actions</TableCell>
-              </TableRow>
-            </TableHead>
+        {/* Email List */}
+        <Card sx={{ borderRadius: 2, boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
+          <CardContent sx={{ p: 0 }}>
+            <TableContainer
+              component={Paper}
+              sx={{
+                borderRadius: 2,
+                maxHeight: 600,
+                '& .MuiTableCell-root': {
+                  borderBottom: '1px solid #f0f0f0'
+                }
+              }}
+            >
+              <Table stickyHeader>
+                <TableHead sx={{ backgroundColor: '#f8f9fa' }}>
+                  <TableRow>
+                    <TableCell sx={{ fontWeight: 600, color: '#333' }}>Recipient</TableCell>
+                    <TableCell sx={{ fontWeight: 600, color: '#333' }}>Account</TableCell>
+                    <TableCell sx={{ fontWeight: 600, color: '#333' }}>Email Type</TableCell>
+                    <TableCell sx={{ fontWeight: 600, color: '#333' }}>Subject</TableCell>
+                    <TableCell sx={{ fontWeight: 600, color: '#333' }}>Date Drafted</TableCell>
+                    <TableCell sx={{ fontWeight: 600, color: '#333' }}>Actions</TableCell>
+                  </TableRow>
+                </TableHead>
             <TableBody>
               {filteredEmails.map((email) => (
                 <TableRow key={email.id}>
@@ -677,19 +570,19 @@ Kilowatt Team`,
         </TableContainer>
 
         {filteredEmails.length === 0 && (
-          <Box className="email-draft-empty-state">
-            <Typography className="email-draft-empty-icon">
-              📧
-            </Typography>
-            <Typography variant="h6" className="email-draft-empty-text">
+          <Box sx={{ textAlign: 'center', py: 4 }}>
+            <EmailIcon sx={{ fontSize: 60, color: 'text.secondary', mb: 2 }} />
+            <Typography variant="h6" color="text.secondary">
               No email drafts found
             </Typography>
-            <Typography variant="body2" className="email-draft-empty-subtext">
+            <Typography variant="body2" color="text.secondary">
               Try adjusting your filters or search terms
             </Typography>
           </Box>
         )}
-      </Container>
+      </CardContent>
+    </Card>
+  </Container>
 
       <Dialog
         open={emailDialogOpen}
