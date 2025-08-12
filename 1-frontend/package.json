@@ -1,0 +1,47 @@
+{
+  "name": "kilowatt-wireframe-app",
+  "version": "1.0.0",
+  "description": "Kilowatt Business Intelligence Application",
+  "main": "index.js",
+  "scripts": {
+    "start": "craco start",
+    "build": "craco build",
+    "test": "craco test",
+    "eject": "react-scripts eject"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
+    "@lottiefiles/dotlottie-react": "^0.14.2",
+    "@mui/icons-material": "^7.2.0",
+    "@mui/material": "^7.2.0",
+    "@mui/x-charts": "^8.7.0",
+    "@mui/x-data-grid": "^8.7.0",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "lottie-react": "^2.4.1",
+    "lottie-web": "^5.13.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-scripts": "5.0.1",
+    "serve": "^14.2.4"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "heroku-postbuild": "npm run build",
+  "devDependencies": {
+    "@craco/craco": "^7.1.0",
+    "sass": "^1.89.2",
+    "sass-embedded": "^1.89.2"
+  }
+}
