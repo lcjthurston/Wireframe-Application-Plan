@@ -6,8 +6,18 @@ A comprehensive business intelligence platform for energy management, featuring 
 
 ```
 kilowatt-platform/
-├── 1-frontend-app/          # React frontend application
-├── 2-backend-app/           # FastAPI backend API
+├── 1-frontend/              # React frontend application
+├── 2-backend/               # FastAPI backend API
+├── scripts/                 # Python scripts for data processing
+│   ├── import/              # Data import scripts (Excel → Database)
+│   ├── export/              # Data export scripts (Database → JSON)
+│   ├── analysis/            # Data analysis scripts
+│   ├── verification/        # Integration verification scripts
+│   ├── utilities/           # Database utilities
+│   ├── run.py              # Script runner utility
+│   └── README.md           # Scripts documentation
+├── Exports/                 # Excel data files
+├── Word Docs/               # Project documentation
 └── README.md               # This file
 ```
 
@@ -186,6 +196,38 @@ cd 1-frontend-app
 docker build -t kilowatt-frontend .
 docker run -p 3000:3000 kilowatt-frontend
 ```
+
+## 🔧 Data Processing Scripts
+
+The `scripts/` directory contains organized Python scripts for data processing:
+
+### Quick Start with Scripts
+
+```bash
+# Run all imports and exports
+cd scripts
+python run.py full-setup
+
+# Import specific data
+python run.py import-accounts
+python run.py import-esiids
+
+# Export data for frontend
+python run.py export-all
+
+# Verify integrations
+python run.py verify-all
+```
+
+### Script Categories
+
+- **Import Scripts**: Import data from Excel files to database
+- **Export Scripts**: Export data from database to JSON for frontend
+- **Analysis Scripts**: Analyze and process data
+- **Verification Scripts**: Verify data integrity and integrations
+- **Utilities**: Database maintenance and helper scripts
+
+See `scripts/README.md` for detailed documentation.
 
 ## 🤝 Contributing
 
