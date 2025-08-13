@@ -5,9 +5,24 @@ A comprehensive business intelligence platform for energy management, featuring 
 ## 🏗️ Project Structure
 
 ```
-kilowatt-platform/
+Wireframe-Application-Plan/
 ├── 1-frontend/              # React frontend application
 ├── 2-backend/               # FastAPI backend API
+├── docs/                    # Project documentation (Markdown)
+│   ├── ACCOUNTS_INTEGRATION_SUMMARY.md
+│   ├── COMPONENT_UPDATES_SUMMARY.md
+│   ├── ESIID_INTEGRATION_SUMMARY.md
+│   ├── FRONTEND_BACKEND_INTEGRATION_GUIDE.md
+│   ├── MINIMAL_VERSIONS_SUMMARY.md
+│   └── SCRIPTS_ORGANIZATION_SUMMARY.md
+├── testing/                 # Testing and debugging scripts
+│   ├── debug_database.py
+│   ├── diagnose_backend.py
+│   ├── manual_backend_test.py
+│   ├── quick_server_test.py
+│   ├── test_backend.py
+│   ├── test_backend_api.py
+│   └── test_integration.py
 ├── scripts/                 # Python scripts for data processing
 │   ├── import/              # Data import scripts (Excel → Database)
 │   ├── export/              # Data export scripts (Database → JSON)
@@ -17,7 +32,7 @@ kilowatt-platform/
 │   ├── run.py              # Script runner utility
 │   └── README.md           # Scripts documentation
 ├── Exports/                 # Excel data files
-├── Word Docs/               # Project documentation
+├── Word Docs/               # Project documentation (Word format)
 └── README.md               # This file
 ```
 
