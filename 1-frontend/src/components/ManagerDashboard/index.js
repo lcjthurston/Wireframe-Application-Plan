@@ -31,27 +31,40 @@ import {
 } from '@mui/icons-material';
 import kilowattImage from '../../assets/image.png';
 import NavBar from '../shared/NavBar';
+import { dataServices } from '../../services/dataService';
+import { DATA_CONFIG, DEV_CONFIG } from '../../config/app';
 
 const ManagerDashboard = ({ onLogout, onNavigate }) => {
   const [managers, setManagers] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredManagers, setFilteredManagers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [dataSource, setDataSource] = useState('Unknown');
 
-  // Load real manager data
+  // Load manager data using data service (with backend API or JSON fallback)
   useEffect(() => {
     const loadManagerData = async () => {
+      setLoading(true);
+      setError(null);
+
       try {
-        // Import the real manager data
-        const managersData = await import('../../data/managers.json');
-        const realManagers = managersData.default || managersData;
+        console.log(`🔄 Loading manager data (Backend API: ${DATA_CONFIG.useBackendAPI ? 'Enabled' : 'Disabled'})`);
 
-        console.log(`📊 Loaded ${realManagers.length} real managers from database`);
-        setManagers(realManagers);
-        setFilteredManagers(realManagers);
+        const managers = await dataServices.managers.getAll();
+        console.log(`✅ Loaded ${managers.length} managers`);
+
+        setManagers(managers);
+        setFilteredManagers(managers);
+
+        // Set data source for debugging
+        setDataSource(DATA_CONFIG.useBackendAPI ? 'Backend API' : 'Static JSON');
+
       } catch (error) {
-        console.error('❌ Error loading manager data:', error);
+        console.error('Failed to load manager data:', error);
+        setError(`Failed to load managers: ${error.message}`);
 
-        // Fallback to a few sample managers if import fails
+        // Set minimal fallback data
         const fallbackManagers = [
           {
             id: 1,
@@ -67,6 +80,9 @@ const ManagerDashboard = ({ onLogout, onNavigate }) => {
         ];
         setManagers(fallbackManagers);
         setFilteredManagers(fallbackManagers);
+        setDataSource('Fallback Data');
+      } finally {
+        setLoading(false);
       }
     };
 

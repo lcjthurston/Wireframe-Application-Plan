@@ -27,33 +27,58 @@ import {
   Business as BusinessIcon
 } from '@mui/icons-material';
 import NavBar from '../shared/NavBar';
+import { dataServices } from '../../services/dataService';
+import { DATA_CONFIG, DEV_CONFIG } from '../../config/app';
 
 const PricingDashboard = ({ onLogout, onNavigate }) => {
   const [pricingRecords, setPricingRecords] = useState([]);
   const [filteredRecords, setFilteredRecords] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [stats, setStats] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [dataSource, setDataSource] = useState('Unknown');
 
-  // Load real pricing data
+  // Load pricing data using data service (with backend API or JSON fallback)
   useEffect(() => {
     const loadPricingData = async () => {
-      try {
-        // Import the real pricing data
-        const pricingData = await import('../../data/pricing.json');
-        const realPricing = pricingData.default || pricingData;
-        
-        console.log(`📊 Loaded ${realPricing.length} real pricing records from database`);
-        setPricingRecords(realPricing);
-        setFilteredRecords(realPricing);
+      setLoading(true);
+      setError(null);
 
-        // Load statistics
-        const statsData = await import('../../data/pricing-stats.json');
-        const realStats = statsData.default || statsData;
-        setStats(realStats);
+      try {
+        console.log(`🔄 Loading pricing data (Backend API: ${DATA_CONFIG.useBackendAPI ? 'Enabled' : 'Disabled'})`);
+
+        const pricing = await dataServices.pricing.getAll();
+        console.log(`✅ Loaded ${pricing.length} pricing records`);
+
+        setPricingRecords(pricing);
+        setFilteredRecords(pricing);
+
+        // Get pricing stats
+        try {
+          const stats = await dataServices.pricing.getStats();
+          setStats(stats);
+        } catch (statsError) {
+          // Calculate basic stats from pricing data
+          const avgPrice = pricing.length > 0
+            ? pricing.reduce((sum, p) => sum + (p.price || 0), 0) / pricing.length
+            : 0;
+          setStats({
+            total: pricing.length,
+            averagePrice: avgPrice,
+            minPrice: Math.min(...pricing.map(p => p.price || 0)),
+            maxPrice: Math.max(...pricing.map(p => p.price || 0))
+          });
+        }
+
+        // Set data source for debugging
+        setDataSource(DATA_CONFIG.useBackendAPI ? 'Backend API' : 'Static JSON');
+
       } catch (error) {
-        console.error('❌ Error loading pricing data:', error);
-        
-        // Fallback to sample data if import fails
+        console.error('Failed to load pricing data:', error);
+        setError(`Failed to load pricing: ${error.message}`);
+
+        // Set minimal fallback data
         const fallbackPricing = [
           {
             id: 1,
@@ -66,6 +91,9 @@ const PricingDashboard = ({ onLogout, onNavigate }) => {
         ];
         setPricingRecords(fallbackPricing);
         setFilteredRecords(fallbackPricing);
+        setDataSource('Fallback Data');
+      } finally {
+        setLoading(false);
       }
     };
     

@@ -32,25 +32,38 @@ import {
 } from '@mui/icons-material';
 import kilowattImage from '../../assets/image.png';
 import NavBar from '../shared/NavBar';
+import { dataServices } from '../../services/dataService';
+import { DATA_CONFIG, DEV_CONFIG } from '../../config/app';
 
 const CompanyDashboard = ({ onLogout, onNavigate }) => {
   const [companies, setCompanies] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredCompanies, setFilteredCompanies] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [dataSource, setDataSource] = useState('Unknown');
 
-  // Load real company data
+  // Load company data using data service (with backend API or JSON fallback)
   useEffect(() => {
     const loadCompanyData = async () => {
+      setLoading(true);
+      setError(null);
+
       try {
-        // Import the real company data
-        const companiesData = await import('../../data/companies.json');
-        const realCompanies = companiesData.default || companiesData;
-        
-        console.log(`📊 Loaded ${realCompanies.length} real companies from database`);
-        setCompanies(realCompanies);
-        setFilteredCompanies(realCompanies);
+        console.log(`🔄 Loading company data (Backend API: ${DATA_CONFIG.useBackendAPI ? 'Enabled' : 'Disabled'})`);
+
+        const companies = await dataServices.companies.getAll();
+        console.log(`✅ Loaded ${companies.length} companies`);
+
+        setCompanies(companies);
+        setFilteredCompanies(companies);
+
+        // Set data source for debugging
+        setDataSource(DATA_CONFIG.useBackendAPI ? 'Backend API' : 'Static JSON');
+
       } catch (error) {
-        console.error('❌ Error loading company data:', error);
+        console.error('Failed to load company data:', error);
+        setError(`Failed to load companies: ${error.message}`);
         
         // Fallback to a few sample companies if import fails
         const fallbackCompanies = [

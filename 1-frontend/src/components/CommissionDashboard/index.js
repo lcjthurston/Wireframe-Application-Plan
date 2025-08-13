@@ -41,6 +41,8 @@ import {
   Add as AddIcon
 } from '@mui/icons-material';
 import NavBar from '../shared/NavBar';
+import { dataServices } from '../../services/dataService';
+import { DATA_CONFIG, DEV_CONFIG } from '../../config/app';
 import './CommissionDashboard.scss';
 
 const CommissionDashboard = ({ onLogout, onNavigate }) => {
@@ -60,36 +62,57 @@ const CommissionDashboard = ({ onLogout, onNavigate }) => {
     totalAccounts: 0,
     activeAccounts: 0
   });
+  const [energyRepData, setEnergyRepData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [dataSource, setDataSource] = useState('Unknown');
 
-  // Load real commission data
+  // Load commission data using data service (with backend API or JSON fallback)
   useEffect(() => {
     const loadCommissionData = async () => {
+      setLoading(true);
+      setError(null);
+
       try {
-        // Import the real commission data
-        const commissionsData = await import('../../data/commissions.json');
-        const realCommissions = commissionsData.default || commissionsData;
+        console.log(`🔄 Loading commission data (Backend API: ${DATA_CONFIG.useBackendAPI ? 'Enabled' : 'Disabled'})`);
 
-        console.log(`📊 Loaded ${realCommissions.length} real commissions from database`);
-        setCommissions(realCommissions);
+        const commissions = await dataServices.commissions.getAll();
+        console.log(`✅ Loaded ${commissions.length} commissions`);
 
-        // Load statistics
-        const statsData = await import('../../data/commission-stats.json');
-        const realStats = statsData.default || statsData;
+        setCommissions(commissions);
 
-        // Map real stats to expected format
-        setCommissionStats({
-          totalCommissions: realStats.totalReceivedAmount || 0,
-          pendingCommissions: (realStats.scheduledCount || 0) * 1000, // Estimate
-          paidCommissions: realStats.totalReceivedAmount || 0,
-          averageCommission: realStats.avgReceivedAmount || 0,
-          totalAccounts: realStats.totalCommissions || 0,
-          activeAccounts: realStats.activeSchedules || 0
-        });
+        // Get commission stats
+        try {
+          const stats = await dataServices.commissions.getStats();
+          setCommissionStats({
+            totalCommissions: stats.totalAmount || 0,
+            pendingCommissions: stats.pendingAmount || 0,
+            paidCommissions: stats.paidAmount || 0,
+            averageCommission: stats.averageAmount || 0,
+            totalAccounts: stats.totalAccounts || 0,
+            activeAccounts: stats.activeAccounts || 0
+          });
+        } catch (statsError) {
+          // Calculate basic stats from commission data
+          const totalAmount = commissions.reduce((sum, c) => sum + (c.actualPaymentAmount || 0), 0);
+          setCommissionStats({
+            totalCommissions: totalAmount,
+            pendingCommissions: 0,
+            paidCommissions: totalAmount,
+            averageCommission: commissions.length > 0 ? totalAmount / commissions.length : 0,
+            totalAccounts: commissions.length,
+            activeAccounts: commissions.length
+          });
+        }
+
+        // Set data source for debugging
+        setDataSource(DATA_CONFIG.useBackendAPI ? 'Backend API' : 'Static JSON');
 
       } catch (error) {
-        console.error('❌ Error loading commission data:', error);
+        console.error('Failed to load commission data:', error);
+        setError(`Failed to load commissions: ${error.message}`);
 
-        // Fallback to sample data if import fails
+        // Set minimal fallback data
         const fallbackCommissions = [
           {
             id: 1,
@@ -101,6 +124,9 @@ const CommissionDashboard = ({ onLogout, onNavigate }) => {
           }
         ];
         setCommissions(fallbackCommissions);
+        setDataSource('Fallback Data');
+      } finally {
+        setLoading(false);
       }
     };
 

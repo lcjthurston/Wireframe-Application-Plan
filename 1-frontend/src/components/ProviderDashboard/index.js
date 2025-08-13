@@ -34,24 +34,37 @@ import {
 } from '@mui/icons-material';
 import kilowattImage from '../../assets/image.png';
 import NavBar from '../shared/NavBar';
+import { dataServices } from '../../services/dataService';
+import { DATA_CONFIG, DEV_CONFIG } from '../../config/app';
 
 const ProviderDashboard = ({ onLogout, onNavigate }) => {
   const [providers, setProviders] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [dataSource, setDataSource] = useState('Unknown');
 
-  // Load real provider data
+  // Load provider data using data service (with backend API or JSON fallback)
   useEffect(() => {
     const loadProviderData = async () => {
+      setLoading(true);
+      setError(null);
+
       try {
-        // Import the real provider data
-        const providersData = await import('../../data/providers.json');
-        const realProviders = providersData.default || providersData;
+        console.log(`🔄 Loading provider data (Backend API: ${DATA_CONFIG.useBackendAPI ? 'Enabled' : 'Disabled'})`);
 
-        console.log(`📊 Loaded ${realProviders.length} real providers from database`);
-        setProviders(realProviders);
+        const providers = await dataServices.providers.getAll();
+        console.log(`✅ Loaded ${providers.length} providers`);
+
+        setProviders(providers);
+
+        // Set data source for debugging
+        setDataSource(DATA_CONFIG.useBackendAPI ? 'Backend API' : 'Static JSON');
+
       } catch (error) {
-        console.error('❌ Error loading provider data:', error);
+        console.error('Failed to load provider data:', error);
+        setError(`Failed to load providers: ${error.message}`);
 
-        // Fallback to a few sample providers if import fails
+        // Set minimal fallback data
         const fallbackProviders = [
           {
             id: 1,
@@ -68,6 +81,9 @@ const ProviderDashboard = ({ onLogout, onNavigate }) => {
           }
         ];
         setProviders(fallbackProviders);
+        setDataSource('Fallback Data');
+      } finally {
+        setLoading(false);
       }
     };
 

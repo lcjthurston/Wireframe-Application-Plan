@@ -27,33 +27,50 @@ import {
   AttachMoney as AttachMoneyIcon
 } from '@mui/icons-material';
 import NavBar from '../shared/NavBar';
+import { dataServices } from '../../services/dataService';
+import { DATA_CONFIG, DEV_CONFIG } from '../../config/app';
 
 const ESIIDDashboard = ({ onLogout, onNavigate }) => {
   const [esiids, setEsiids] = useState([]);
   const [filteredEsiids, setFilteredEsiids] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [stats, setStats] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [dataSource, setDataSource] = useState('Unknown');
 
-  // Load real ESIID data
+  // Load ESIID data using data service (with backend API or JSON fallback)
   useEffect(() => {
     const loadESIIDData = async () => {
-      try {
-        // Import the real ESIID data
-        const esiidsData = await import('../../data/esiids.json');
-        const realEsiids = esiidsData.default || esiidsData;
-        
-        console.log(`📊 Loaded ${realEsiids.length} real ESIIDs from database`);
-        setEsiids(realEsiids);
-        setFilteredEsiids(realEsiids);
+      setLoading(true);
+      setError(null);
 
-        // Load statistics
-        const statsData = await import('../../data/esiid-stats.json');
-        const realStats = statsData.default || statsData;
-        setStats(realStats);
+      try {
+        console.log(`🔄 Loading ESIID data (Backend API: ${DATA_CONFIG.useBackendAPI ? 'Enabled' : 'Disabled'})`);
+
+        const esiids = await dataServices.esiids.getAll();
+        console.log(`✅ Loaded ${esiids.length} ESIIDs`);
+
+        setEsiids(esiids);
+        setFilteredEsiids(esiids);
+
+        // Calculate stats from loaded data
+        const calculatedStats = {
+          totalEsiids: esiids.length,
+          totalKwhMo: esiids.reduce((sum, e) => sum + (e.kwhMo || 0), 0),
+          totalBilling: esiids.reduce((sum, e) => sum + (e.totalBill || 0), 0),
+          avgKwhMo: esiids.length > 0 ? esiids.reduce((sum, e) => sum + (e.kwhMo || 0), 0) / esiids.length : 0
+        };
+        setStats(calculatedStats);
+
+        // Set data source for debugging
+        setDataSource(DATA_CONFIG.useBackendAPI ? 'Backend API' : 'Static JSON');
+
       } catch (error) {
-        console.error('❌ Error loading ESIID data:', error);
-        
-        // Fallback to sample data if import fails
+        console.error('Failed to load ESIID data:', error);
+        setError(`Failed to load ESIIDs: ${error.message}`);
+
+        // Set minimal fallback data
         const fallbackEsiids = [
           {
             id: 1,
@@ -70,11 +87,33 @@ const ESIIDDashboard = ({ onLogout, onNavigate }) => {
         ];
         setEsiids(fallbackEsiids);
         setFilteredEsiids(fallbackEsiids);
+        setDataSource('Fallback Data');
+      } finally {
+        setLoading(false);
       }
     };
-    
+
     loadESIIDData();
   }, []);
+
+  // Refresh data function
+  const handleRefresh = async () => {
+    dataServices.cache.clearKey('esiids');
+    setLoading(true);
+    setError(null);
+
+    try {
+      const esiids = await dataServices.esiids.getAll();
+      setEsiids(esiids);
+      setFilteredEsiids(esiids);
+      console.log(`🔄 Refreshed ${esiids.length} ESIIDs`);
+    } catch (error) {
+      console.error('Failed to refresh ESIIDs:', error);
+      setError(`Failed to refresh ESIIDs: ${error.message}`);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // Filter ESIIDs based on search query
   useEffect(() => {

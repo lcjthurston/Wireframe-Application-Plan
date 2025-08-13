@@ -32,36 +32,75 @@ import {
   Assessment as AssessmentIcon
 } from '@mui/icons-material';
 import NavBar from '../shared/NavBar';
+import { dataServices } from '../../services/dataService';
+import { DATA_CONFIG, DEV_CONFIG } from '../../config/app';
 
 const AnalyticsDashboard = ({ onLogout, onNavigate }) => {
   const [activeTab, setActiveTab] = useState(0);
   const [analyticsData, setAnalyticsData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [dataSource, setDataSource] = useState('Unknown');
 
-  // Load analytics data
+  // Load analytics data using data service (with backend API or JSON fallback)
   useEffect(() => {
     const loadAnalyticsData = async () => {
+      setLoading(true);
+      setError(null);
+
       try {
-        setLoading(true);
-        
-        // Import the analytics results
-        const analyticsResults = await import('../../data/analytics-results.json');
-        const realAnalytics = analyticsResults.default || analyticsResults;
-        
-        console.log(`📊 Loaded analytics data with ${realAnalytics.usage_analysis?.length || 0} usage analyses`);
-        setAnalyticsData(realAnalytics);
-        setError(null);
+        console.log(`🔄 Loading analytics data (Backend API: ${DATA_CONFIG.useBackendAPI ? 'Enabled' : 'Disabled'})`);
+
+        const analytics = await dataServices.analytics.getResults();
+        console.log(`✅ Loaded analytics data with ${analytics.usage_analysis?.length || 0} usage analyses`);
+
+        setAnalyticsData(analytics);
+
+        // Set data source for debugging
+        setDataSource(DATA_CONFIG.useBackendAPI ? 'Backend API' : 'Static JSON');
+
       } catch (error) {
-        console.error('❌ Error loading analytics data:', error);
-        setError('Failed to load analytics data. Please run the analytics engine first.');
+        console.error('Failed to load analytics data:', error);
+        setError(`Failed to load analytics: ${error.message}`);
+
+        // Set minimal fallback data
+        const fallbackAnalytics = {
+          usage_analysis: [],
+          commission_analysis: [],
+          pricing_analysis: [],
+          summary: {
+            total_accounts: 0,
+            total_usage: 0,
+            total_commissions: 0
+          }
+        };
+        setAnalyticsData(fallbackAnalytics);
+        setDataSource('Fallback Data');
       } finally {
         setLoading(false);
       }
     };
-    
+
     loadAnalyticsData();
   }, []);
+
+  // Refresh analytics data
+  const handleRefresh = async () => {
+    dataServices.cache.clearKey('analytics');
+    setLoading(true);
+    setError(null);
+
+    try {
+      const analytics = await dataServices.analytics.getResults();
+      setAnalyticsData(analytics);
+      console.log(`🔄 Refreshed analytics data`);
+    } catch (error) {
+      console.error('Failed to refresh analytics:', error);
+      setError(`Failed to refresh analytics: ${error.message}`);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleTabChange = (event, newValue) => {
     setActiveTab(newValue);
