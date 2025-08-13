@@ -31,6 +31,8 @@ import {
   MoreVert
 } from '@mui/icons-material';
 import NavBar from '../shared/NavBar';
+import { dataServices } from '../../services/dataService';
+import { DATA_CONFIG, DEV_CONFIG } from '../../config/app';
 
 const AccountsList = ({ onLogout, onNavigate }) => {
   const [accounts, setAccounts] = useState([]);
@@ -40,15 +42,22 @@ const AccountsList = ({ onLogout, onNavigate }) => {
   const [filterBy, setFilterBy] = useState('all');
   const [statusFilter, setStatusFilter] = useState('all');
   const [availableStatuses, setAvailableStatuses] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [dataSource, setDataSource] = useState('Unknown');
 
-  // Load real account data from JSON file
+  // Load account data using data service (with backend API or JSON fallback)
   useEffect(() => {
     const loadAccountsData = async () => {
+      setLoading(true);
+      setError(null);
+
       try {
-        // Import the JSON file directly
-        const accountsData = await import('../../data/accounts.json');
-        const accounts = accountsData.default || accountsData;
-        console.log(`Loaded ${accounts.length} accounts from JSON file`);
+        console.log(`🔄 Loading accounts data (Backend API: ${DATA_CONFIG.useBackendAPI ? 'Enabled' : 'Disabled'})`);
+
+        const accounts = await dataServices.accounts.getAll();
+        console.log(`✅ Loaded ${accounts.length} accounts`);
+
         setAccounts(accounts);
         setFilteredAccounts(accounts);
 
@@ -57,45 +66,68 @@ const AccountsList = ({ onLogout, onNavigate }) => {
           account.status || account.procurementStatus
         ).filter(Boolean))].sort();
         setAvailableStatuses(statuses);
+
+        // Set data source for debugging
+        setDataSource(DATA_CONFIG.useBackendAPI ? 'Backend API' : 'Static JSON');
+
       } catch (error) {
-        console.warn('Could not load accounts.json, using fallback data:', error);
-        // Fallback to mock data if JSON file is not available
-        const mockAccounts = [
+        console.error('Failed to load accounts data:', error);
+        setError(`Failed to load accounts: ${error.message}`);
+
+        // Set minimal fallback data
+        const fallbackAccounts = [
           {
             id: 1,
-            name: 'ABC Corporation',
-            accountName: 'ABC Corporation',
-            managerName: 'Sarah Johnson',
-            managementCompany: 'Property Management Inc.',
-            status: 'Needs Pricing',
-            address: '123 Business Ave, Suite 100, Houston, TX 77001',
-            telephone: '(713) 555-0123',
-            email: 'contact@abc-corp.com',
-            esiidCount: 5,
-            usage: '125,000 kWh/month'
-          },
-          {
-            id: 2,
-            name: 'XYZ Industries',
-            accountName: 'XYZ Industries',
-            managerName: null,
-            managementCompany: 'Commercial Properties LLC',
-            status: 'Good',
-            address: '456 Industrial Blvd, Houston, TX 77002',
-            telephone: '(713) 555-0456',
-            email: 'info@xyzind.com',
-            esiidCount: 3,
-            usage: '89,000 kWh/month'
+            name: 'Sample Account',
+            accountName: 'Sample Account',
+            managerName: 'Sample Manager',
+            managementCompany: 'Sample Company',
+            status: 'Sample Status',
+            address: 'Sample Address',
+            telephone: '(000) 000-0000',
+            email: 'sample@example.com',
+            esiidCount: 0,
+            usage: 'No data'
           }
         ];
-        setAccounts(mockAccounts);
-        setFilteredAccounts(mockAccounts);
-        setAvailableStatuses(['Needs Pricing', 'Good']);
+        setAccounts(fallbackAccounts);
+        setFilteredAccounts(fallbackAccounts);
+        setAvailableStatuses(['Sample Status']);
+        setDataSource('Fallback Data');
+      } finally {
+        setLoading(false);
       }
     };
 
     loadAccountsData();
   }, []);
+
+  // Refresh data function
+  const handleRefresh = async () => {
+    // Clear cache and reload data
+    dataServices.cache.clearKey('accounts');
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      const accounts = await dataServices.accounts.getAll();
+      setAccounts(accounts);
+      setFilteredAccounts(accounts);
+
+      const statuses = [...new Set(accounts.map(account =>
+        account.status || account.procurementStatus
+      ).filter(Boolean))].sort();
+      setAvailableStatuses(statuses);
+
+      console.log(`🔄 Refreshed ${accounts.length} accounts`);
+    } catch (error) {
+      console.error('Failed to refresh accounts:', error);
+      setError(`Failed to refresh accounts: ${error.message}`);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // Enhanced filtering logic
   useEffect(() => {
@@ -174,17 +206,35 @@ const AccountsList = ({ onLogout, onNavigate }) => {
       <Container maxWidth="xl" sx={{ py: 4 }}>
         <Box sx={{ p: 3 }}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-            <Typography variant="h4" component="h1">
-              Accounts
-            </Typography>
-            <Button
-              variant="contained"
-              startIcon={<Add />}
-              onClick={handleAddAccount}
-              size="large"
-            >
-              Add Account
-            </Button>
+            <Box>
+              <Typography variant="h4" component="h1">
+                Accounts
+              </Typography>
+              {DEV_CONFIG.showDataSource && (
+                <Typography variant="caption" color="text.secondary">
+                  Data Source: {dataSource} {loading && '(Loading...)'}
+                </Typography>
+              )}
+            </Box>
+            <Box sx={{ display: 'flex', gap: 1 }}>
+              <Button
+                variant="outlined"
+                startIcon={<Search />}
+                onClick={handleRefresh}
+                disabled={loading}
+                size="large"
+              >
+                Refresh
+              </Button>
+              <Button
+                variant="contained"
+                startIcon={<Add />}
+                onClick={handleAddAccount}
+                size="large"
+              >
+                Add Account
+              </Button>
+            </Box>
           </Box>
 
           <Card>
@@ -238,7 +288,29 @@ const AccountsList = ({ onLogout, onNavigate }) => {
                 </FormControl>
               </Box>
 
-              <TableContainer component={Paper} variant="outlined">
+              {/* Error State */}
+              {error && (
+                <Box sx={{ mb: 2 }}>
+                  <Typography color="error" variant="body2">
+                    ⚠️ {error}
+                  </Typography>
+                </Box>
+              )}
+
+              {/* Loading State */}
+              {loading ? (
+                <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
+                  <Box sx={{ textAlign: 'center' }}>
+                    <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                      Loading accounts data...
+                    </Typography>
+                    <Typography variant="caption" color="text.secondary">
+                      Source: {dataSource}
+                    </Typography>
+                  </Box>
+                </Box>
+              ) : (
+                <TableContainer component={Paper} variant="outlined">
                 <Table>
                   <TableHead>
                     <TableRow>
@@ -305,6 +377,7 @@ const AccountsList = ({ onLogout, onNavigate }) => {
                   </TableBody>
                 </Table>
               </TableContainer>
+              )}
 
               {/* Action Buttons */}
               <Box sx={{ mt: 3, display: 'flex', gap: 2, justifyContent: 'flex-start' }}>
