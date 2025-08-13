@@ -39,61 +39,62 @@ const AccountsList = ({ onLogout, onNavigate }) => {
   const [selectedAccount, setSelectedAccount] = useState(null);
   const [filterBy, setFilterBy] = useState('all');
   const [statusFilter, setStatusFilter] = useState('all');
+  const [availableStatuses, setAvailableStatuses] = useState([]);
 
-  // Enhanced mock data
+  // Load real account data from JSON file
   useEffect(() => {
-    const mockAccounts = [
-      {
-        id: 1,
-        name: 'ABC Corporation',
-        managerName: 'Sarah Johnson',
-        managementCompany: 'Property Management Inc.',
-        status: 'Needs Pricing',
-        address: '123 Business Ave, Suite 100, Houston, TX 77001',
-        phone: '(713) 555-0123',
-        email: 'contact@abc-corp.com',
-        esiidCount: 5,
-        usage: '125,000 kWh/month'
-      },
-      {
-        id: 2,
-        name: 'XYZ Industries',
-        managerName: null,
-        managementCompany: 'Commercial Properties LLC',
-        status: 'Good',
-        address: '456 Industrial Blvd, Houston, TX 77002',
-        phone: '(713) 555-0456',
-        email: 'info@xyzind.com',
-        esiidCount: 3,
-        usage: '89,000 kWh/month'
-      },
-      {
-        id: 3,
-        name: 'Main Street Plaza',
-        managerName: 'Mike Chen',
-        managementCompany: 'Plaza Management Co.',
-        status: 'Needs Contract Sent',
-        address: '789 Main Street, Houston, TX 77003',
-        phone: '(713) 555-0789',
-        email: 'manager@mainstreetplaza.com',
-        esiidCount: 8,
-        usage: '200,000 kWh/month'
-      },
-      {
-        id: 4,
-        name: 'Downtown Center',
-        managerName: null,
-        managementCompany: 'Metro Properties',
-        status: 'Needs Providers Selected',
-        address: '321 Downtown Ave, Houston, TX 77004',
-        phone: '(713) 555-0321',
-        email: 'contact@downtowncenter.com',
-        esiidCount: 12,
-        usage: '350,000 kWh/month'
+    const loadAccountsData = async () => {
+      try {
+        // Import the JSON file directly
+        const accountsData = await import('../../data/accounts.json');
+        const accounts = accountsData.default || accountsData;
+        console.log(`Loaded ${accounts.length} accounts from JSON file`);
+        setAccounts(accounts);
+        setFilteredAccounts(accounts);
+
+        // Extract unique statuses for filter dropdown
+        const statuses = [...new Set(accounts.map(account =>
+          account.status || account.procurementStatus
+        ).filter(Boolean))].sort();
+        setAvailableStatuses(statuses);
+      } catch (error) {
+        console.warn('Could not load accounts.json, using fallback data:', error);
+        // Fallback to mock data if JSON file is not available
+        const mockAccounts = [
+          {
+            id: 1,
+            name: 'ABC Corporation',
+            accountName: 'ABC Corporation',
+            managerName: 'Sarah Johnson',
+            managementCompany: 'Property Management Inc.',
+            status: 'Needs Pricing',
+            address: '123 Business Ave, Suite 100, Houston, TX 77001',
+            telephone: '(713) 555-0123',
+            email: 'contact@abc-corp.com',
+            esiidCount: 5,
+            usage: '125,000 kWh/month'
+          },
+          {
+            id: 2,
+            name: 'XYZ Industries',
+            accountName: 'XYZ Industries',
+            managerName: null,
+            managementCompany: 'Commercial Properties LLC',
+            status: 'Good',
+            address: '456 Industrial Blvd, Houston, TX 77002',
+            telephone: '(713) 555-0456',
+            email: 'info@xyzind.com',
+            esiidCount: 3,
+            usage: '89,000 kWh/month'
+          }
+        ];
+        setAccounts(mockAccounts);
+        setFilteredAccounts(mockAccounts);
+        setAvailableStatuses(['Needs Pricing', 'Good']);
       }
-    ];
-    setAccounts(mockAccounts);
-    setFilteredAccounts(mockAccounts);
+    };
+
+    loadAccountsData();
   }, []);
 
   // Enhanced filtering logic
@@ -102,11 +103,15 @@ const AccountsList = ({ onLogout, onNavigate }) => {
 
     // Filter by search term
     if (searchTerm) {
-      filtered = filtered.filter(account =>
-        account.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (account.managerName && account.managerName.toLowerCase().includes(searchTerm.toLowerCase())) ||
-        account.managementCompany.toLowerCase().includes(searchTerm.toLowerCase())
-      );
+      filtered = filtered.filter(account => {
+        const accountName = account.accountName || account.name || '';
+        const managerName = account.managerName || '';
+        const managementCompany = account.managementCompany || '';
+
+        return accountName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+               managerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+               managementCompany.toLowerCase().includes(searchTerm.toLowerCase());
+      });
     }
 
     // Filter by manager assignment
@@ -118,21 +123,31 @@ const AccountsList = ({ onLogout, onNavigate }) => {
 
     // Filter by status
     if (statusFilter !== 'all') {
-      filtered = filtered.filter(account => 
-        account.status.toLowerCase().replace(/\s+/g, '-') === statusFilter
-      );
+      filtered = filtered.filter(account => {
+        const status = account.status || account.procurementStatus || '';
+        return status.toLowerCase().replace(/\s+/g, '-') === statusFilter;
+      });
     }
 
     setFilteredAccounts(filtered);
   }, [searchTerm, accounts, filterBy, statusFilter]);
 
   const getStatusColor = (status) => {
-    switch (status.toLowerCase()) {
-      case 'good': return 'success';
-      case 'needs pricing': return 'warning';
-      case 'needs contract sent': return 'error';
-      case 'needs providers selected': return 'info';
-      default: return 'default';
+    if (!status) return 'default';
+
+    const statusLower = status.toLowerCase();
+
+    // Map common status values to colors
+    if (statusLower.includes('good') || statusLower.includes('active') || statusLower.includes('under kilo contract')) {
+      return 'success';
+    } else if (statusLower.includes('need') || statusLower.includes('pricing') || statusLower.includes('bill copies')) {
+      return 'warning';
+    } else if (statusLower.includes('contract') || statusLower.includes('sent') || statusLower.includes('error')) {
+      return 'error';
+    } else if (statusLower.includes('provider') || statusLower.includes('select') || statusLower.includes('usage')) {
+      return 'info';
+    } else {
+      return 'default';
     }
   };
 
@@ -211,10 +226,14 @@ const AccountsList = ({ onLogout, onNavigate }) => {
                     label="Filter by Status"
                   >
                     <MenuItem value="all">All Status</MenuItem>
-                    <MenuItem value="good">Good</MenuItem>
-                    <MenuItem value="needs-pricing">Needs Pricing</MenuItem>
-                    <MenuItem value="needs-contract-sent">Needs Contract Sent</MenuItem>
-                    <MenuItem value="needs-providers-selected">Needs Providers Selected</MenuItem>
+                    {availableStatuses.map((status) => (
+                      <MenuItem
+                        key={status}
+                        value={status.toLowerCase().replace(/\s+/g, '-')}
+                      >
+                        {status}
+                      </MenuItem>
+                    ))}
                   </Select>
                 </FormControl>
               </Box>
@@ -247,34 +266,34 @@ const AccountsList = ({ onLogout, onNavigate }) => {
                         </TableCell>
                         <TableCell onClick={() => handleAccountClick(account)}>
                           <Typography variant="subtitle2" fontWeight="medium">
-                            {account.name}
+                            {account.accountName || account.name}
                           </Typography>
                         </TableCell>
                         <TableCell onClick={() => handleAccountClick(account)}>
                           {account.managerName || (
-                            <Chip 
-                              label="No Manager" 
-                              color="warning" 
-                              size="small" 
+                            <Chip
+                              label="No Manager"
+                              color="warning"
+                              size="small"
                               variant="outlined"
                             />
                           )}
                         </TableCell>
                         <TableCell onClick={() => handleAccountClick(account)}>
-                          {account.managementCompany}
+                          {account.managementCompany || 'No Company'}
                         </TableCell>
                         <TableCell onClick={() => handleAccountClick(account)}>
                           <Chip
-                            label={account.status}
-                            color={getStatusColor(account.status)}
+                            label={account.status || account.procurementStatus || 'Unknown'}
+                            color={getStatusColor(account.status || account.procurementStatus)}
                             size="small"
                           />
                         </TableCell>
                         <TableCell onClick={() => handleAccountClick(account)}>
-                          {account.esiidCount}
+                          {account.esiidCount || 0}
                         </TableCell>
                         <TableCell onClick={() => handleAccountClick(account)}>
-                          {account.usage}
+                          {account.usage || 'No usage data'}
                         </TableCell>
                         <TableCell align="right">
                           <IconButton size="small">
