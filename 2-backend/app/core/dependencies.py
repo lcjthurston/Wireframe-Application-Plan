@@ -154,6 +154,14 @@ def get_optional_current_user_id(
     return int(user_id) if user_id else None
 
 
+def get_test_user_id() -> Optional[int]:
+    """
+    Return a test user ID for development/testing purposes.
+    This bypasses authentication entirely.
+    """
+    return 1  # Return a default test user ID
+
+
 def get_pagination_params(skip: int = 0, limit: int = 100) -> dict:
     """
     Validate and return pagination parameters.

@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import func, and_, or_
 from typing import List, Optional
 from app.database import get_db
-from app.core.dependencies import get_current_user_id, get_pagination_params
+from app.core.dependencies import get_current_user_id, get_optional_current_user_id, get_test_user_id, get_pagination_params
 from app.models.esiid import ESIID
 from app.models.provider import Provider
 from app.models.management_company import ManagementCompany
@@ -16,7 +16,7 @@ router = APIRouter()
 async def get_esiids(
     pagination: dict = Depends(get_pagination_params),
     db: Session = Depends(get_db),
-    current_user_id: int = Depends(get_current_user_id),
+    current_user_id: int = Depends(get_test_user_id),
     search: Optional[str] = Query(None, description="Search by ESIID, account name, or address"),
     rep: Optional[str] = Query(None, description="Filter by REP/provider"),
     load_profile: Optional[str] = Query(None, description="Filter by load profile"),

@@ -10,8 +10,8 @@ class Settings(BaseSettings):
     environment: str = "development"
     
     # Database
-    database_url: str = "postgresql://user:password@localhost/kilowatt_db"
-    database_test_url: str = "postgresql://user:password@localhost/kilowatt_test_db"
+    database_url: str = "sqlite:///./kilowatt_dev.db"
+    database_test_url: str = "sqlite:///./kilowatt_test.db"
     
     # Security
     secret_key: str = "your-secret-key-here-make-it-long-and-random"

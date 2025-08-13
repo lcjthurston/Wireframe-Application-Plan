@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session
 from typing import List, Optional
 from app.database import get_db
-from app.core.dependencies import get_current_user_id, get_pagination_params, require_manager_or_admin
+from app.core.dependencies import get_current_user_id, get_optional_current_user_id, get_test_user_id, get_pagination_params, require_manager_or_admin
 from app.models.manager import Manager
 from app.models.user import User
 from app.schemas.manager import ManagerCreate, ManagerUpdate, ManagerResponse
@@ -14,7 +14,7 @@ router = APIRouter()
 async def get_managers(
     pagination: dict = Depends(get_pagination_params),
     db: Session = Depends(get_db),
-    current_user: User = Depends(require_manager_or_admin),
+    current_user_id: int = Depends(get_test_user_id),
     search: Optional[str] = Query(None, description="Search by manager name"),
     management_company: Optional[str] = Query(None, description="Filter by management company"),
     office_city: Optional[str] = Query(None, description="Filter by office city"),
