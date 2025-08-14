@@ -1,7 +1,7 @@
 // Authentication utilities for token management and API calls
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
-const USE_MOCK_AUTH = process.env.REACT_APP_USE_MOCK_AUTH === 'true' || true; // Enable mock for testing
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8001';
+const USE_MOCK_AUTH = process.env.REACT_APP_USE_MOCK_AUTH === 'true';
 
 // Token storage keys
 const ACCESS_TOKEN_KEY = 'kilowatt_access_token';
@@ -90,12 +90,11 @@ export const refreshAccessToken = async () => {
   }
 
   try {
-    const response = await fetch(`${API_BASE_URL}/api/v1/auth/refresh`, {
+    const response = await fetch(`${API_BASE_URL}/api/v1/auth/refresh?refresh_token=${encodeURIComponent(refreshToken)}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ refresh_token: refreshToken }),
     });
 
     if (!response.ok) {

@@ -74,10 +74,10 @@ const CommissionDashboard = ({ onLogout, onNavigate }) => {
       setError(null);
 
       try {
-        console.log(`🔄 Loading commission data (Backend API: ${DATA_CONFIG.useBackendAPI ? 'Enabled' : 'Disabled'})`);
+        console.log(`Loading commission data (Backend API: ${DATA_CONFIG.useBackendAPI ? 'Enabled' : 'Disabled'})`);
 
         const commissions = await dataServices.commissions.getAll();
-        console.log(`✅ Loaded ${commissions.length} commissions`);
+        console.log(`Loaded ${commissions.length} commissions`);
 
         setCommissions(commissions);
 
@@ -133,9 +133,6 @@ const CommissionDashboard = ({ onLogout, onNavigate }) => {
     loadCommissionData();
   }, []);
 
-  // Energy Rep Overview data - derived from real commission stats
-  const [energyRepData, setEnergyRepData] = useState([]);
-
   // Process commission data to create energy rep overview
   useEffect(() => {
     const loadEnergyRepData = async () => {
@@ -155,7 +152,7 @@ const CommissionDashboard = ({ onLogout, onNavigate }) => {
           setEnergyRepData(repData);
         }
       } catch (error) {
-        console.error('❌ Error loading energy rep data:', error);
+        console.error('Error loading energy rep data:', error);
         // Fallback data
         setEnergyRepData([
           {

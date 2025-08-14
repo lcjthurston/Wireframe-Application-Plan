@@ -63,7 +63,7 @@ class LottieErrorBoundary extends React.Component {
           }}
           className={className}
         >
-          <Typography variant="h4">⚠️</Typography>
+          <Typography variant="h4">⚠</Typography>
           <Typography variant="h6" color="error">
             Animation Error
           </Typography>

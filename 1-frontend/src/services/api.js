@@ -1,7 +1,7 @@
 // API Service Layer for Backend Communication
 import { authenticatedFetch } from '../utils/auth';
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8001';
 
 // Generic API request handler
 const apiRequest = async (endpoint, options = {}) => {

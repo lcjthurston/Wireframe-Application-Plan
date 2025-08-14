@@ -135,5 +135,5 @@ export const getConfigSummary = () => {
 
 // Log configuration on startup (development only)
 if (DEV_CONFIG.debug) {
-  console.log('🔧 Kilowatt App Configuration:', getConfigSummary());
+  console.log('Kilowatt App Configuration:', getConfigSummary());
 }
