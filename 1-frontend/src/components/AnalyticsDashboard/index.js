@@ -49,10 +49,10 @@ const AnalyticsDashboard = ({ onLogout, onNavigate }) => {
       setError(null);
 
       try {
-        console.log(`🔄 Loading analytics data (Backend API: ${DATA_CONFIG.useBackendAPI ? 'Enabled' : 'Disabled'})`);
+        console.log(`Loading analytics data (Backend API: ${DATA_CONFIG.useBackendAPI ? 'Enabled' : 'Disabled'})`);
 
         const analytics = await dataServices.analytics.getResults();
-        console.log(`✅ Loaded analytics data with ${analytics.usage_analysis?.length || 0} usage analyses`);
+        console.log(`Loaded analytics data with ${analytics.usage_analysis?.length || 0} usage analyses`);
 
         setAnalyticsData(analytics);
 
@@ -93,7 +93,7 @@ const AnalyticsDashboard = ({ onLogout, onNavigate }) => {
     try {
       const analytics = await dataServices.analytics.getResults();
       setAnalyticsData(analytics);
-      console.log(`🔄 Refreshed analytics data`);
+      console.log(`Refreshed analytics data`);
     } catch (error) {
       console.error('Failed to refresh analytics:', error);
       setError(`Failed to refresh analytics: ${error.message}`);

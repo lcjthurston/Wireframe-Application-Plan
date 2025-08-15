@@ -2,8 +2,9 @@
 """
 Simple authentication server for testing real auth integration
 """
-from fastapi import FastAPI, HTTPException, status
+from fastapi import FastAPI, HTTPException, status, Depends
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from pydantic import BaseModel
 from datetime import datetime, timedelta
 import jwt
@@ -19,6 +20,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Security
+security = HTTPBearer()
 
 # Simple in-memory user store
 USERS = {
@@ -70,6 +74,27 @@ def verify_token(token: str):
         return payload
     except jwt.PyJWTError:
         return None
+
+def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(security)):
+    """Get current user from JWT token"""
+    token = credentials.credentials
+    payload = verify_token(token)
+    if not payload:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid authentication credentials",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+    username = payload.get("sub")
+    user = USERS.get(username)
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="User not found"
+        )
+
+    return user
 
 @app.get("/health")
 async def health_check():
@@ -143,29 +168,77 @@ async def refresh_token(refresh_token: str):
     }
 
 @app.get("/api/v1/auth/me", response_model=UserResponse)
-async def get_current_user():
+async def get_user_info(current_user: dict = Depends(get_current_user)):
     """Get current user information"""
-    # For simplicity, return admin user
-    user = USERS["admin"]
     return UserResponse(
-        username=user["username"],
-        email=user["email"],
-        is_active=user["is_active"],
-        role=user["role"]
+        username=current_user["username"],
+        email=current_user["email"],
+        is_active=current_user["is_active"],
+        role=current_user["role"]
     )
 
-# Add some basic data endpoints for testing
+# Add some basic data endpoints for testing (protected)
 @app.get("/api/v1/accounts")
-async def get_accounts():
-    return [{"id": 1, "name": "Test Account", "status": "active"}]
+async def get_accounts(current_user: dict = Depends(get_current_user)):
+    return [
+        {"id": 1, "accountName": "Test Account", "status": "active", "managerName": "John Doe"},
+        {"id": 2, "accountName": "Sample Corp", "status": "pending", "managerName": "Jane Smith"}
+    ]
 
 @app.get("/api/v1/esiids")
-async def get_esiids():
-    return [{"id": 1, "esiId": "12345", "accountName": "Test Account"}]
+async def get_esiids(current_user: dict = Depends(get_current_user)):
+    return [
+        {"id": 1, "esiId": "12345", "accountName": "Test Account", "rep": "RELIANT", "kwhMo": 1500, "totalBill": 200},
+        {"id": 2, "esiId": "67890", "accountName": "Sample Corp", "rep": "GEXA", "kwhMo": 2000, "totalBill": 250}
+    ]
 
 @app.get("/api/v1/commissions")
-async def get_commissions():
-    return [{"id": 1, "accountName": "Test Account", "amount": 1000}]
+async def get_commissions(current_user: dict = Depends(get_current_user)):
+    return [
+        {"id": 1, "accountName": "Test Account", "actualPaymentAmount": 1000, "status": "paid"},
+        {"id": 2, "accountName": "Sample Corp", "actualPaymentAmount": 750, "status": "pending"}
+    ]
+
+@app.get("/api/v1/providers")
+async def get_providers(current_user: dict = Depends(get_current_user)):
+    return [
+        {"id": 1, "providerName": "RELIANT", "status": "active", "phone": "555-0123", "email": "contact@reliant.com"},
+        {"id": 2, "providerName": "GEXA", "status": "active", "phone": "555-0456", "email": "info@gexa.com"}
+    ]
+
+@app.get("/api/v1/companies")
+async def get_companies(current_user: dict = Depends(get_current_user)):
+    return [
+        {"id": 1, "companyName": "ABC Corp", "companyCode": "ABC", "status": "active", "officeLocation": "Dallas"},
+        {"id": 2, "companyName": "XYZ Inc", "companyCode": "XYZ", "status": "pending", "officeLocation": "Houston"}
+    ]
+
+@app.get("/api/v1/managers")
+async def get_managers(current_user: dict = Depends(get_current_user)):
+    return [
+        {"id": 1, "managerName": "John Doe", "email": "john@company.com", "phone": "555-1234"},
+        {"id": 2, "managerName": "Jane Smith", "email": "jane@company.com", "phone": "555-5678"}
+    ]
+
+@app.get("/api/v1/pricing")
+async def get_pricing(current_user: dict = Depends(get_current_user)):
+    return [
+        {"id": 1, "providerName": "RELIANT", "rateType": "Fixed", "rate": 0.12, "term": 12},
+        {"id": 2, "providerName": "GEXA", "rateType": "Variable", "rate": 0.10, "term": 6}
+    ]
+
+@app.get("/api/v1/analytics")
+async def get_analytics(current_user: dict = Depends(get_current_user)):
+    return {
+        "usage_analysis": [
+            {"month": "Jan", "usage": 15000, "cost": 1800},
+            {"month": "Feb", "usage": 14000, "cost": 1680}
+        ],
+        "cost_analysis": [
+            {"provider": "RELIANT", "total_cost": 5000},
+            {"provider": "GEXA", "total_cost": 3500}
+        ]
+    }
 
 if __name__ == "__main__":
     import uvicorn

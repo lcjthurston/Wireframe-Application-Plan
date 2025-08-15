@@ -1,7 +1,7 @@
 // Authentication utilities for token management and API calls
 
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8001';
-const USE_MOCK_AUTH = process.env.REACT_APP_USE_MOCK_AUTH === 'true';
+const USE_MOCK_AUTH = process.env.REACT_APP_USE_MOCK_AUTH !== 'false'; // Default to true for development
 
 // Token storage keys
 const ACCESS_TOKEN_KEY = 'kilowatt_access_token';
@@ -68,13 +68,22 @@ export const isAuthenticated = () => {
  */
 export const isTokenExpired = (token) => {
   if (!token) return true;
-  
+
+  // For mock tokens, never expire them
+  if (USE_MOCK_AUTH && token.startsWith('mock_')) {
+    return false;
+  }
+
   try {
     const payload = JSON.parse(atob(token.split('.')[1]));
     const currentTime = Date.now() / 1000;
     return payload.exp < currentTime;
   } catch (error) {
     console.error('Error decoding token:', error);
+    // For mock auth, don't treat decode errors as expired tokens
+    if (USE_MOCK_AUTH) {
+      return false;
+    }
     return true;
   }
 };
@@ -118,7 +127,19 @@ export const refreshAccessToken = async () => {
  */
 export const authenticatedFetch = async (url, options = {}) => {
   let accessToken = getAccessToken();
-  
+
+  // For mock authentication, skip token validation and refresh
+  if (USE_MOCK_AUTH && accessToken && accessToken.startsWith('mock_')) {
+    // Make the API request without Authorization header for demo server
+    return await fetch(url, {
+      ...options,
+      headers: {
+        ...options.headers,
+        'Content-Type': 'application/json',
+      },
+    });
+  }
+
   // Check if access token is expired and refresh if needed
   if (!accessToken || isTokenExpired(accessToken)) {
     try {
@@ -142,7 +163,7 @@ export const authenticatedFetch = async (url, options = {}) => {
   if (response.status === 401) {
     try {
       accessToken = await refreshAccessToken();
-      
+
       // Retry the request with the new token
       return await fetch(url, {
         ...options,

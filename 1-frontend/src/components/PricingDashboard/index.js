@@ -46,10 +46,10 @@ const PricingDashboard = ({ onLogout, onNavigate }) => {
       setError(null);
 
       try {
-        console.log(`🔄 Loading pricing data (Backend API: ${DATA_CONFIG.useBackendAPI ? 'Enabled' : 'Disabled'})`);
+        console.log(`Loading pricing data (Backend API: ${DATA_CONFIG.useBackendAPI ? 'Enabled' : 'Disabled'})`);
 
         const pricing = await dataServices.pricing.getAll();
-        console.log(`✅ Loaded ${pricing.length} pricing records`);
+        console.log(`Loaded ${pricing.length} pricing records`);
 
         setPricingRecords(pricing);
         setFilteredRecords(pricing);

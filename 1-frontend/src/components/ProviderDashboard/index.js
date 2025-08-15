@@ -50,10 +50,10 @@ const ProviderDashboard = ({ onLogout, onNavigate }) => {
       setError(null);
 
       try {
-        console.log(`🔄 Loading provider data (Backend API: ${DATA_CONFIG.useBackendAPI ? 'Enabled' : 'Disabled'})`);
+        console.log(`Loading provider data (Backend API: ${DATA_CONFIG.useBackendAPI ? 'Enabled' : 'Disabled'})`);
 
         const providers = await dataServices.providers.getAll();
-        console.log(`✅ Loaded ${providers.length} providers`);
+        console.log(`Loaded ${providers.length} providers`);
 
         setProviders(providers);
 
@@ -263,12 +263,12 @@ const ProviderDashboard = ({ onLogout, onNavigate }) => {
                         <Box>
                           {provider.phone && provider.phone !== 'No Phone' && (
                             <Typography variant="body2" sx={{ display: 'flex', alignItems: 'center', mb: 0.5 }}>
-                              📞 {provider.phone}
+                              Phone: {provider.phone}
                             </Typography>
                           )}
                           {provider.email && provider.email !== 'No Email' && (
                             <Typography variant="body2" sx={{ display: 'flex', alignItems: 'center' }}>
-                              ✉️ {provider.email}
+                              Email: {provider.email}
                             </Typography>
                           )}
                         </Box>

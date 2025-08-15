@@ -46,10 +46,10 @@ const ESIIDDashboard = ({ onLogout, onNavigate }) => {
       setError(null);
 
       try {
-        console.log(`🔄 Loading ESIID data (Backend API: ${DATA_CONFIG.useBackendAPI ? 'Enabled' : 'Disabled'})`);
+        console.log(`Loading ESIID data (Backend API: ${DATA_CONFIG.useBackendAPI ? 'Enabled' : 'Disabled'})`);
 
         const esiids = await dataServices.esiids.getAll();
-        console.log(`✅ Loaded ${esiids.length} ESIIDs`);
+        console.log(`Loaded ${esiids.length} ESIIDs`);
 
         setEsiids(esiids);
         setFilteredEsiids(esiids);
@@ -106,7 +106,7 @@ const ESIIDDashboard = ({ onLogout, onNavigate }) => {
       const esiids = await dataServices.esiids.getAll();
       setEsiids(esiids);
       setFilteredEsiids(esiids);
-      console.log(`🔄 Refreshed ${esiids.length} ESIIDs`);
+      console.log(`Refreshed ${esiids.length} ESIIDs`);
     } catch (error) {
       console.error('Failed to refresh ESIIDs:', error);
       setError(`Failed to refresh ESIIDs: ${error.message}`);

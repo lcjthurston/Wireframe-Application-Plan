@@ -462,7 +462,7 @@ const CommissionDashboard = ({ onLogout, onNavigate }) => {
 
         {/* Stats Cards */}
         <Grid container spacing={3} sx={{ mb: 4 }}>
-          <Grid item xs={12} sm={6} md={3}>
+          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
             <Card sx={{ borderRadius: 2, boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
               <CardContent sx={{ textAlign: 'center', py: 3 }}>
                 <MoneyIcon sx={{ fontSize: 40, color: '#C82828', mb: 1 }} />
@@ -476,7 +476,7 @@ const CommissionDashboard = ({ onLogout, onNavigate }) => {
             </Card>
           </Grid>
 
-          <Grid item xs={12} sm={6} md={3}>
+          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
             <Card sx={{ borderRadius: 2, boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
               <CardContent sx={{ textAlign: 'center', py: 3 }}>
                 <TrendingUpIcon sx={{ fontSize: 40, color: '#FF9800', mb: 1 }} />
@@ -490,7 +490,7 @@ const CommissionDashboard = ({ onLogout, onNavigate }) => {
             </Card>
           </Grid>
 
-          <Grid item xs={12} sm={6} md={3}>
+          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
             <Card sx={{ borderRadius: 2, boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
               <CardContent sx={{ textAlign: 'center', py: 3 }}>
                 <VisibilityIcon sx={{ fontSize: 40, color: '#4CAF50', mb: 1 }} />
@@ -504,7 +504,7 @@ const CommissionDashboard = ({ onLogout, onNavigate }) => {
             </Card>
           </Grid>
 
-          <Grid item xs={12} sm={6} md={3}>
+          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
             <Card sx={{ borderRadius: 2, boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
               <CardContent sx={{ textAlign: 'center', py: 3 }}>
                 <BusinessIcon sx={{ fontSize: 40, color: '#2196F3', mb: 1 }} />
@@ -770,7 +770,7 @@ const CommissionDashboard = ({ onLogout, onNavigate }) => {
               </Typography>
               
               <Grid container spacing={3} sx={{ mt: 2 }}>
-                <Grid item xs={12} md={4}>
+                <Grid size={{ xs: 12, md: 4 }}>
                   <Card className="commission-summary-card">
                     <CardContent sx={{ textAlign: 'center' }}>
                       <Typography variant="h4" color="primary.main" sx={{ fontWeight: 700 }}>
@@ -782,8 +782,8 @@ const CommissionDashboard = ({ onLogout, onNavigate }) => {
                     </CardContent>
                   </Card>
                 </Grid>
-                
-                <Grid item xs={12} md={4}>
+
+                <Grid size={{ xs: 12, md: 4 }}>
                   <Card className="commission-summary-card">
                     <CardContent sx={{ textAlign: 'center' }}>
                       <Typography variant="h4" color="success.main" sx={{ fontWeight: 700 }}>
@@ -795,12 +795,12 @@ const CommissionDashboard = ({ onLogout, onNavigate }) => {
                     </CardContent>
                   </Card>
                 </Grid>
-                
-                <Grid item xs={12} md={4}>
+
+                <Grid size={{ xs: 12, md: 4 }}>
                   <Card className="commission-summary-card">
                     <CardContent sx={{ textAlign: 'center' }}>
-                      <Typography 
-                        variant="h4" 
+                      <Typography
+                        variant="h4"
                         color={projectedVsReceived.variance >= 0 ? 'success.main' : 'error.main'}
                         sx={{ fontWeight: 700 }}
                       >

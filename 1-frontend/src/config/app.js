@@ -2,9 +2,9 @@
 // This file controls whether the app uses backend APIs or static JSON files
 
 // Environment variables (can be set in .env file)
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8001';
 const USE_MOCK_AUTH = process.env.REACT_APP_USE_MOCK_AUTH !== 'false'; // Default to true for development
-const USE_BACKEND_API = process.env.REACT_APP_USE_BACKEND_API === 'true'; // Default to false for development
+const USE_BACKEND_API = process.env.REACT_APP_USE_BACKEND_API !== 'false'; // Default to true for development
 
 // Data source configuration
 export const DATA_CONFIG = {

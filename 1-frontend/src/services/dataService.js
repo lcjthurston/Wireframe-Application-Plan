@@ -8,7 +8,7 @@ const dataCache = new Map();
 // Helper function to log data source
 const logDataSource = (source, endpoint) => {
   if (DEV_CONFIG.debug) {
-    console.log(`📊 Data loaded from ${source} for ${endpoint}`);
+    console.log(`Data loaded from ${source} for ${endpoint}`);
   }
 };
 
@@ -32,7 +32,7 @@ const loadData = async (apiCall, jsonImport, cacheKey) => {
       return data;
     } catch (error) {
       console.warn(`Backend API failed for ${cacheKey}, falling back to JSON:`, error);
-      
+
       if (!DATA_CONFIG.fallbackToJSON) {
         throw error;
       }
@@ -300,12 +300,12 @@ export const healthService = {
 export const cacheService = {
   clear: () => {
     dataCache.clear();
-    console.log('🗑️ Data cache cleared');
+    console.log('Data cache cleared');
   },
 
   clearKey: (key) => {
     dataCache.delete(key);
-    console.log(`🗑️ Cache cleared for ${key}`);
+    console.log(`Cache cleared for ${key}`);
   },
 
   getStats: () => {

@@ -49,10 +49,10 @@ const ManagerDashboard = ({ onLogout, onNavigate }) => {
       setError(null);
 
       try {
-        console.log(`🔄 Loading manager data (Backend API: ${DATA_CONFIG.useBackendAPI ? 'Enabled' : 'Disabled'})`);
+        console.log(`Loading manager data (Backend API: ${DATA_CONFIG.useBackendAPI ? 'Enabled' : 'Disabled'})`);
 
         const managers = await dataServices.managers.getAll();
-        console.log(`✅ Loaded ${managers.length} managers`);
+        console.log(`Loaded ${managers.length} managers`);
 
         setManagers(managers);
         setFilteredManagers(managers);

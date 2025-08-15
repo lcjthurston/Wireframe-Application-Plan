@@ -53,10 +53,10 @@ const AccountsList = ({ onLogout, onNavigate }) => {
       setError(null);
 
       try {
-        console.log(`🔄 Loading accounts data (Backend API: ${DATA_CONFIG.useBackendAPI ? 'Enabled' : 'Disabled'})`);
+        console.log(`Loading accounts data (Backend API: ${DATA_CONFIG.useBackendAPI ? 'Enabled' : 'Disabled'})`);
 
         const accounts = await dataServices.accounts.getAll();
-        console.log(`✅ Loaded ${accounts.length} accounts`);
+        console.log(`Loaded ${accounts.length} accounts`);
 
         setAccounts(accounts);
         setFilteredAccounts(accounts);
@@ -120,7 +120,7 @@ const AccountsList = ({ onLogout, onNavigate }) => {
       ).filter(Boolean))].sort();
       setAvailableStatuses(statuses);
 
-      console.log(`🔄 Refreshed ${accounts.length} accounts`);
+      console.log(`Refreshed ${accounts.length} accounts`);
     } catch (error) {
       console.error('Failed to refresh accounts:', error);
       setError(`Failed to refresh accounts: ${error.message}`);
@@ -292,7 +292,7 @@ const AccountsList = ({ onLogout, onNavigate }) => {
               {error && (
                 <Box sx={{ mb: 2 }}>
                   <Typography color="error" variant="body2">
-                    ⚠️ {error}
+                    Warning: {error}
                   </Typography>
                 </Box>
               )}

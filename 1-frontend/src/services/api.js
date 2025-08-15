@@ -1,20 +1,35 @@
 // API Service Layer for Backend Communication
-import { authenticatedFetch } from '../utils/auth';
+import { authenticatedFetch, isAuthenticated } from '../utils/auth';
 
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8001';
+const USE_MOCK_AUTH = process.env.REACT_APP_USE_MOCK_AUTH !== 'false';
 
 // Generic API request handler
 const apiRequest = async (endpoint, options = {}) => {
   const url = `${API_BASE_URL}${endpoint}`;
-  
+
   try {
-    const response = await authenticatedFetch(url, {
-      headers: {
-        'Content-Type': 'application/json',
-        ...options.headers,
-      },
-      ...options,
-    });
+    let response;
+
+    // Use authenticated fetch only if we have authentication or if mock auth is disabled
+    if (!USE_MOCK_AUTH || isAuthenticated()) {
+      response = await authenticatedFetch(url, {
+        headers: {
+          'Content-Type': 'application/json',
+          ...options.headers,
+        },
+        ...options,
+      });
+    } else {
+      // Use regular fetch for demo server (no authentication required)
+      response = await fetch(url, {
+        headers: {
+          'Content-Type': 'application/json',
+          ...options.headers,
+        },
+        ...options,
+      });
+    }
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));

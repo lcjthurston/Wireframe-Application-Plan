@@ -126,6 +126,24 @@ export const AuthProvider = ({ children }) => {
           }
         } else {
           console.log('No stored tokens found');
+
+          // Auto-login for development with mock authentication
+          const USE_MOCK_AUTH = process.env.REACT_APP_USE_MOCK_AUTH !== 'false';
+          if (USE_MOCK_AUTH && process.env.NODE_ENV === 'development') {
+            console.log('Auto-logging in with mock authentication for development...');
+            try {
+              const result = await loginUser('admin', 'password');
+              dispatch({
+                type: AUTH_ACTIONS.LOGIN_SUCCESS,
+                payload: result,
+              });
+              console.log('Auto-login successful');
+              return;
+            } catch (error) {
+              console.warn('Auto-login failed:', error);
+            }
+          }
+
           dispatch({
             type: AUTH_ACTIONS.RESTORE_SESSION,
             payload: {

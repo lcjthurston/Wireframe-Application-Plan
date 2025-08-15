@@ -50,10 +50,10 @@ const CompanyDashboard = ({ onLogout, onNavigate }) => {
       setError(null);
 
       try {
-        console.log(`🔄 Loading company data (Backend API: ${DATA_CONFIG.useBackendAPI ? 'Enabled' : 'Disabled'})`);
+        console.log(`Loading company data (Backend API: ${DATA_CONFIG.useBackendAPI ? 'Enabled' : 'Disabled'})`);
 
         const companies = await dataServices.companies.getAll();
-        console.log(`✅ Loaded ${companies.length} companies`);
+        console.log(`Loaded ${companies.length} companies`);
 
         setCompanies(companies);
         setFilteredCompanies(companies);
